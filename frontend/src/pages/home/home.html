@@ -1,17 +1,27 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Home</ion-title>
+    <ion-title></ion-title>
+
+    <ion-searchbar 
+        [(ngModel)]="searchTerm" 
+        [showCancelButton]=true
+        (ionInput)="filterItems()" 
+        placeholder="Cerveja 300 ml, Fralda, Carne ..." >
+    </ion-searchbar>
+
+    <ion-buttons end>
+        <button ion-button icon-only (click)="showFilters()">
+            <ion-icon name="funnel"></ion-icon>
+        </button>
+        <button ion-button icon-only (click)="showConfig()">
+            <ion-icon name="settings"></ion-icon>
+        </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
     <div class="card-background-page">  
         <img src="/assets/img/sharing.png"/>
-    </div>
-    <div class="campo-search">
-      <ion-searchbar (click)="busca()" placeholder="Cerveja 300 ml, Fralda, Carne ..."></ion-searchbar>
     </div>
 </ion-content>
