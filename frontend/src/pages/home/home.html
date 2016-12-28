@@ -21,7 +21,20 @@
 </ion-header>
 
 <ion-content>
-    <div class="card-background-page">  
+
+    <div *ngIf="!produtos" class="card-background-page">  
         <img src="/assets/img/sharing.png"/>
     </div>
+
+    <ion-list>
+        <ion-item *ngFor="let produto of produtos">
+            {{ produto.descricao }}
+        </ion-item>
+    </ion-list>
+
+    <ion-fab right bottom>
+        <button ion-fab>
+            <ion-icon name="add" (click)="newProduto()"></ion-icon>
+        </button>        
+    </ion-fab>
 </ion-content>

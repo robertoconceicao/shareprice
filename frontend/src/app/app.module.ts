@@ -4,6 +4,7 @@ import { MyApp }  from './app.component';
 import { Home }   from '../pages/home/home';
 import { CadProdutoPage } from '../pages/cad-produto/cad-produto';
 import { FiltrosPage } from '../pages/filtros/filtros';
+import { ConfigPage } from '../pages/config/config';
 import { SharingService } from '../providers/sharing-service';
 
 @NgModule({
@@ -11,7 +12,8 @@ import { SharingService } from '../providers/sharing-service';
     MyApp,
     Home,
     CadProdutoPage,
-    FiltrosPage
+    FiltrosPage,
+    ConfigPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -21,7 +23,8 @@ import { SharingService } from '../providers/sharing-service';
     MyApp,
     Home,
     CadProdutoPage,
-    FiltrosPage
+    FiltrosPage,
+    ConfigPage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
     SharingService

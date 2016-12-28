@@ -7,12 +7,24 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>cad-produto</ion-title>
+    <ion-title>Produto</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+    <label>Categoria:</label>
+    <ion-list>
+        <ion-item>
+            <ion-label floating>Username</ion-label>
+            <ion-input type="text" [value]="username" (input)="username = $event.target.value"></ion-input>
+        </ion-item>
 
+        <ion-item>
+            <ion-label floating>Password</ion-label>
+            <ion-input  [value]="password" (input)="password = $event.target.value" type="password"></ion-input>
+        </ion-item>
+
+    </ion-list>
 </ion-content>
