@@ -4,6 +4,7 @@ import { MyApp }  from './app.component';
 import { Home }   from '../pages/home/home';
 import { CadProdutoPage } from '../pages/cad-produto/cad-produto';
 import { FiltrosPage } from '../pages/filtros/filtros';
+import { SharingService } from '../providers/sharing-service';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { FiltrosPage } from '../pages/filtros/filtros';
     CadProdutoPage,
     FiltrosPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}
+  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
+    SharingService
     ]
 })
 export class AppModule {}
