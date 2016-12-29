@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Produto } from '../../models/produto';
-
+import { Categoria } from '../../models/categoria';
+import { Unidademedida } from '../../models/unidademedida';
+import { AppSettings } from '../../app/app-settings';
 /*
   Generated class for the CadProduto page.
 
@@ -15,8 +17,12 @@ import { Produto } from '../../models/produto';
 export class CadProdutoPage {
 
   public produto: Produto;
+  public categorias: Array<Categoria> = AppSettings.categorias;
+  public unidademedidas: Array<Unidademedida> = AppSettings.unidademedidas;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
+      this.produto = new Produto();
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CadProdutoPage');
