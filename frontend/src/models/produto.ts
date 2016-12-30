@@ -1,6 +1,6 @@
 import { Categoria } from '../models/categoria';
 import { Loja } from '../models/loja';
-import { Unidademedida } from '../models/Unidademedida';
+import { Unidademedida } from '../models/unidademedida';
 
 export class Produto {
     categoria: Categoria;

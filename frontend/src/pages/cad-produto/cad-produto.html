@@ -7,6 +7,11 @@
 <ion-header>
   <ion-navbar>
     <ion-title>Produto</ion-title>
+    <ion-buttons end>        
+        <button ion-button color="danger" round (click)="save()">
+            Salvar
+        </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -14,12 +19,7 @@
     <ion-list>
         <ion-item>
             <ion-label stacked>Categoria</ion-label>
-            <ion-select [(ngModel)]="produto.categoria.codigo">
-                <!--                
-                <ion-option value="1">Bebida</ion-option>
-                <ion-option value="2">Carne</ion-option>
-                <ion-option value="3">Fralda</ion-option>
-                -->
+            <ion-select [(ngModel)]="produto.categoria.codigo">                
                 <ion-option [value]="categ.codigo" *ngFor="let categ of categorias">
                     {{categ.descricao}}
                 </ion-option>
@@ -47,8 +47,10 @@
         </ion-item>
         <ion-item>
             <ion-label stacked>Data Promoção</ion-label>
-             <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="produto.dtpromocao"></ion-datetime>
+            <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="produto.dtpromocao"></ion-datetime>
         </ion-item>
+        <!-- 
+        -->
     </ion-list>
 </ion-content>
 

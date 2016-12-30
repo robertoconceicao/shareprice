@@ -4,8 +4,14 @@ export class Unidademedida {
     sigla: string;
 
     constructor(codigo?:number, descricao?:string, sigla?: string){
-        this.codigo = codigo;
-        this.descricao = descricao;
-        this.sigla = sigla;
+        if(!!codigo){
+            this.codigo = codigo;
+        }
+        if(!!descricao) {
+            this.descricao = descricao;
+        }
+        if(!!sigla){
+            this.sigla = sigla;
+        }
     }
 }

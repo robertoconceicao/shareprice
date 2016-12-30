@@ -27,7 +27,6 @@ import { SharingService } from '../providers/sharing-service';
     ConfigPage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
-    SharingService
-    ]
+    SharingService]
 })
 export class AppModule {}
