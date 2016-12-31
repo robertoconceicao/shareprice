@@ -1,0 +1,14 @@
+{
+  "name": "tabaratoserver",
+  "version": "1.0.0",
+  "description": "Web Service para fornecer informações dos produtos anunciados pelos usuários",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Roberto da Conceicao",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}

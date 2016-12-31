@@ -3,8 +3,10 @@ import { Loja } from '../models/loja';
 import { Unidademedida } from '../models/unidademedida';
 
 export class Produto {
+    codigo: number;
     categoria: Categoria;
     descricao: string;
+    quantidade: number;
     preco: number;
     loja: Loja;
     unidademedida: Unidademedida;

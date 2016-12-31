@@ -5,6 +5,7 @@ import { CadProdutoPage } from '../cad-produto/cad-produto';
 import { ConfigPage } from '../config/config';
 
 import { Produto } from '../../models/produto';
+import { SharingService } from '../../providers/sharing-service';
 
 @Component({
    selector: 'page-home',
@@ -14,7 +15,12 @@ export class Home {
 
    public searchTerm: string = "";
    public produtos: Array<Produto>; 
-   constructor(public navCtrl: NavController) {
+   
+   constructor(public navCtrl: NavController, public sharingService: SharingService) {
+       sharingService.findProdutos("").subscribe(dados => {
+            this.produtos = dados;
+            console.log(this.produtos);
+        });
    }
 
    filterItems(){
@@ -31,5 +37,12 @@ export class Home {
    
    newProduto(){       
        this.navCtrl.push(CadProdutoPage);
+   }
+
+   isEmpty(){
+       if(!!this.produtos){
+          return this.produtos.length == 0;
+       }
+       return true;
    }
 }

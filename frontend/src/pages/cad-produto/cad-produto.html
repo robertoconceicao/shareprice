@@ -8,8 +8,8 @@
   <ion-navbar>
     <ion-title>Produto</ion-title>
     <ion-buttons end>        
-        <button ion-button color="danger" round (click)="save()">
-            Salvar
+        <button ion-button color="danger" round (click)="postar()">
+            Postar
         </button>
     </ion-buttons>
   </ion-navbar>
@@ -30,12 +30,8 @@
             <ion-input type="text" [(ngModel)]="produto.descricao"></ion-input>
         </ion-item>
         <ion-item>
-            <ion-label stacked>Preço R$</ion-label>
-            <ion-input type="number" [(ngModel)]="produto.preco"></ion-input>            
-        </ion-item>
-        <ion-item>
-            <ion-label stacked>Loja</ion-label>
-            <ion-input type="text" [(ngModel)]="produto.loja.nome"></ion-input>
+            <ion-label stacked>Quantidade</ion-label>
+            <ion-input type="text" [(ngModel)]="produto.quantidade"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label stacked>Unidade Medida</ion-label>
@@ -44,14 +40,70 @@
                     {{um.descricao}}
                 </ion-option>
             </ion-select>
+        </ion-item>    
+        <ion-item>
+            <ion-label stacked>Preço R$</ion-label>
+            <ion-input type="number" [(ngModel)]="produto.preco"></ion-input>            
         </ion-item>
         <ion-item>
-            <ion-label stacked>Data Promoção</ion-label>
+            <ion-label stacked>Loja</ion-label>
+            <ion-input type="text" [(ngModel)]="produto.loja.nome"></ion-input>
+        </ion-item>        
+        <ion-item>
+            <ion-label stacked>Validade da Promoção</ion-label>
             <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="produto.dtpromocao"></ion-datetime>
-        </ion-item>
-        <!-- 
-        -->
+        </ion-item>        
     </ion-list>
+    <!--
+
+    <ion-grid>
+        <ion-row class="header">
+            <ion-col width-30>
+                <ion-label stacked>Categoria</ion-label>
+                <ion-select [(ngModel)]="produto.categoria.codigo">                
+                    <ion-option [value]="categ.codigo" *ngFor="let categ of categorias">
+                        {{categ.descricao}}
+                    </ion-option>
+                </ion-select>
+            </ion-col>
+            <ion-col width-70 class="button-container">
+                <ion-label stacked>Descrição</ion-label>
+                <ion-input type="text" [(ngModel)]="produto.descricao"></ion-input>
+            </ion-col>
+        </ion-row>
+        
+        <ion-row>
+            <ion-col width-30>
+                <ion-label stacked>Quantidade</ion-label>
+                <ion-input type="text" [(ngModel)]="produto.quantidade"></ion-input>
+            </ion-col>
+            <ion-col width-70>
+                <ion-label stacked>Unidade Medida</ion-label>
+                <ion-select [(ngModel)]="produto.unidademedida.codigo">
+                    <ion-option [value]="um.codigo" *ngFor="let um of unidademedidas">
+                        {{um.descricao}}
+                    </ion-option>
+                </ion-select>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col width-20>
+                <ion-icon name="pin"></ion-icon> Adelaide
+            </ion-col>
+            <ion-col width-80>
+                <ion-icon name="link"></ion-icon> johnsmith.com
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col width-30>
+                <strong>300</strong> FOLLOWING
+            </ion-col>
+            <ion-col width-70>
+                <strong>300</strong> FOLLOWERS
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+     -->
 </ion-content>
 
 <!-- 

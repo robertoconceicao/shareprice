@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ToastController } from 'ionic-angular';
 import { Produto } from '../../models/produto';
 import { Categoria } from '../../models/categoria';
 import { Unidademedida } from '../../models/unidademedida';
 //import { AppSettings } from '../../app/app-settings';
+import { SharingService } from '../../providers/sharing-service';
 
 @Component({
   selector: 'page-cad-produto',
@@ -14,12 +15,13 @@ export class CadProdutoPage {
   public produto: Produto;
 
   public unidademedidas: Array<Unidademedida> = [
-       new Unidademedida(1, 'Litro', 'l'),
-       new Unidademedida(2, 'Quilograma', 'kg'),
-       new Unidademedida(3, 'Metro', 'm'),
-       new Unidademedida(4, 'Metro quadrado', 'm²'),
-       new Unidademedida(5, 'Metro cúbico', 'm³'),
-       new Unidademedida(6, 'Área', 'a')
+       new Unidademedida(1, 'Mililitro', 'ml'),
+       new Unidademedida(2, 'Litro', 'l'),
+       new Unidademedida(3, 'Quilograma', 'kg'),
+       new Unidademedida(4, 'Metro', 'm'),
+       new Unidademedida(5, 'Metro quadrado', 'm²'),
+       new Unidademedida(6, 'Metro cúbico', 'm³'),
+       new Unidademedida(7, 'Área', 'a')
    ];
    
   public categorias: Array<Categoria> = [
@@ -29,7 +31,10 @@ export class CadProdutoPage {
       new Categoria(4, 'Diversos')
   ];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, 
+              public navParams: NavParams,
+              public toastCtrl: ToastController, 
+              public sharingService: SharingService) {
       this.produto = new Produto();
   }
 
@@ -37,7 +42,21 @@ export class CadProdutoPage {
     console.log('ionViewDidLoad CadProdutoPage');
   }
 
-  save() {
-    //this.produto.dtpublicacao = new Date(); deixar q o servidor controla essa data
+  postar() {
+    this.sharingService.postar(this.produto)
+      .then(success => {
+            this.presentToast("Obrigado por cadastrar o produto");
+        })
+        .catch(error => {
+            this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
+        });
+  }
+
+  presentToast(msg: string) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 3000
+    });
+    toast.present();
   }
 }
