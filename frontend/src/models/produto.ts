@@ -1,22 +1,18 @@
-import { Categoria } from '../models/categoria';
 import { Loja } from '../models/loja';
-import { Unidademedida } from '../models/unidademedida';
 
 export class Produto {
-    codigo: number;
-    categoria: Categoria;
+    codigo: number;    
     descricao: string;
     quantidade: number;
     preco: number;
     loja: Loja;
-    unidademedida: Unidademedida;
+    cdCategoria: number;
+    cdUnidademedida: number;
     dtpromocao: Date;
     dtpublicacao: Date;
 
-    constructor(){
-        this.categoria = new Categoria();
-        this.loja = new Loja();
-        this.unidademedida = new Unidademedida();
+    constructor(){        
+        this.loja = new Loja();        
         this.dtpromocao = new Date();
     }
 }

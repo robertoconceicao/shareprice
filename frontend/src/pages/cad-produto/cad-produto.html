@@ -19,7 +19,7 @@
     <ion-list>
         <ion-item>
             <ion-label stacked>Categoria</ion-label>
-            <ion-select [(ngModel)]="produto.categoria.codigo">                
+            <ion-select [(ngModel)]="produto.cdCategoria">                
                 <ion-option [value]="categ.codigo" *ngFor="let categ of categorias">
                     {{categ.descricao}}
                 </ion-option>
@@ -35,7 +35,7 @@
         </ion-item>
         <ion-item>
             <ion-label stacked>Unidade Medida</ion-label>
-            <ion-select [(ngModel)]="produto.unidademedida.codigo">
+            <ion-select [(ngModel)]="produto.cdUnidademedida">
                 <ion-option [value]="um.codigo" *ngFor="let um of unidademedidas">
                     {{um.descricao}}
                 </ion-option>
@@ -48,6 +48,7 @@
         <ion-item>
             <ion-label stacked>Loja</ion-label>
             <ion-input type="text" [(ngModel)]="produto.loja.nome"></ion-input>
+            <ion-input type="hidden" [(ngModel)]="produto.loja.codigo"></ion-input>
         </ion-item>        
         <ion-item>
             <ion-label stacked>Validade da Promoção</ion-label>
