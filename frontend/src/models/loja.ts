@@ -1,9 +1,10 @@
 export class Loja {
     codigo: number;
     nome: string;    
-    latitude: number;
-    longitude: number;
-    logo?: string;
+    lat: number;
+    lng: number;
+    vicinity: string;
+    icon?: string;
 
     constructor(){
         

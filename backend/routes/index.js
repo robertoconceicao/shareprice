@@ -1,8 +1,9 @@
 // INICIANDO ==============================================
 // Define as bibliotecas que iremos utilizar
 var express = require('express');
-var logger = require('morgan');
+var logger  = require('morgan');
 var mysql   = require('mysql');
+var https   = require("https");
 var router  = express.Router();
 
 var pool  = mysql.createPool({  
@@ -13,6 +14,11 @@ var pool  = mysql.createPool({
   user     : 'root',
   password : 'security'
 });    
+
+var API_GOOGLE_PLACE = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+var API_KEY='key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc';
+var TYPES='types=grocery_or_supermarket'; //https://developers.google.com/places/supported_types?hl=pt-br
+var RADIUS='radius=500';
 
 //  PRODUTOS ============================================
 router.get('/api/produtos', function(req, res) {	
@@ -27,22 +33,40 @@ router.get('/api/produtos', function(req, res) {
     }); 
 });
 
-// NOVO PRODUTO =============================================
+/* NOVO PRODUTO =============================================
+    codigo: number;    
+    descricao: string;
+    quantidade: number;
+    preco: number;
+    loja: Loja;
+    cdCategoria: number;
+    cdUnidademedida: number;
+    dtpromocao: Date;
+    dtpublicacao: Date;
+*/
 router.post('/api/produto', function(req, res) {
-    // Cria um contato, as informações são enviadas por uma requisição AJAX pelo Angular    
-    console.log("Dados recebidos: "+JSON.stringify(req.body));
+    console.log("Dados recebidos: codigo: "+req.body.codigo);
     
-    /*
-    pool.getConnection(function(err, connection) {
-        connection.query('INSERT INTO produto SET ? ',[],function(err,result){
-            if(err) {
-                return res.status(400).json(err);
-            }
-            return res.status(200).json(result);            
-        });
+    pool.getConnection(function(err, connection) {        
+        connection.query('INSERT INTO produto SET ? ',
+            [{  codigo: req.body.codigo,    
+                descricao: req.body.descricao,
+                quantidade: req.body.quantidade,
+                preco: req.body.preco,
+                cdloja: req.body.loja.codigo,
+                cdCategoria: req.body.cdCategoria,
+                cdUnidademedida: 1,
+                dtpromocao: req.body.dtpromocao,
+                dtpublicacao: new Date()
+            }],
+            function(err,result){
+                if(err) {
+                    return res.status(400).json(err);
+                }
+                return res.status(200).json(result);            
+            });
         connection.release();       
     });
-    */     
 });
 
 //  CATEGORIAS ============================================
@@ -80,17 +104,96 @@ router.get('/api/unidademedidas', function(req, res) {
     });    
 });
 
-//  LOJAS ============================================
-router.get('/api/lojas', function(req, res) {	
+// LOJAS ============================================
+// http://pt.stackoverflow.com/questions/55669/identificar-se-conjunto-de-coordenadas-est%C3%A1-dentro-de-um-raio-em-android
+// Fórmula de Haversine
+// HAVING distance <= 5 (em kilometros)
+// Esse metodo busca a loja onde o usuário esta pela sua localizacao, estou mapeando um raio em 100 metros (0.1) 
+//https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-27.6210716,-48.6739947&radius=500&types=grocery_or_supermarket&key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc
+router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
+    console.log("Dados recebidos: lat: "+req.params.lat+", lng: "+req.params.lng);
+    
+    var location = "location="+req.params.lat + "," + req.params.lng;
+    var url = API_GOOGLE_PLACE;
+    url += '?'+location;
+    url += '&'+RADIUS;
+    url += '&'+TYPES;
+    url += '&'+API_KEY;
+
+    console.log("url: "+url);
+
+    https.get(url, function(response) {
+        // Continuously update stream with data
+        var body = '';
+        response.on('data', function(d) {
+            body += d;
+        });
+        response.on('end', function() {            
+            // Data reception is done, do whatever with it!
+            /*
+            "geometry": {
+            "location": {
+            "lat": -27.6227852,
+            "lng": -48.6774436
+            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png",
+            "id": "3b6ea34712d3fef2c9d00d54342fa038604ab79d",
+            "name": "Hippo"
+            "vicinity" : "Rua da Universidade, 346 - Passeio Pedra Branca, Palhoça"
+            */
+            var parsed = JSON.parse(body);
+            res.send(listaLojas(parsed));
+        });
+    });
+
+    /*
+        codigo: number;
+        nome: string;    
+        lat: number;
+        lng: number;
+        icon?: string;
+        vicinity: string
+    */
+    function listaLojas(parsed){
+        var results = parsed.results;
+        var retorno = new Array();
+        var idAnterior = "-1";
+        for(var i = 0; i < results.length; i++){
+            var obj = results[0];
+            if(idAnterior != obj.id){
+                idAnterior = obj.id;
+                retorno.push({
+                    codigo: obj.id,
+                    nome: obj.name,
+                    icon: obj.icon,
+                    vicinity: obj.vicinity,
+                    lat: obj.geometry.location.lat,
+                    lng: obj.geometry.location.lng
+
+                });
+            }
+        }
+        return retorno;
+    }
+
+    /*    	
     pool.getConnection(function(err, connection) {
-        connection.query('SELECT * FROM loja',[],function(err,result){
+        connection.query(`SELECT *, (6371 * 
+                acos(
+                    cos(radians( ? )) *
+                    cos(radians(lat)) *
+                    cos(radians( ? ) - radians(lng)) +
+                    sin(radians( ? )) *
+                    sin(radians(lat))
+                )) AS distance
+                FROM loja HAVING distance <= 0.1`,[req.params.lat, req.params.lng, req.params.lat],function(err,result){
             if(err) {
                 return res.status(400).json(err);
             }
             return res.json(result);           
         });
         connection.release();
-    });    
+    });
+    */    
 });
 
 pool.on('connection', function (connection) {   

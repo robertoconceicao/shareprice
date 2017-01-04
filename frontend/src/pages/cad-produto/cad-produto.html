@@ -15,11 +15,20 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
     <ion-list>
         <ion-item>
-            <ion-label stacked>Categoria</ion-label>
-            <ion-select [(ngModel)]="produto.cdCategoria">                
+            <ion-thumbnail item-left>
+                <img [src]="produto.loja.icon">
+            </ion-thumbnail>
+            <h2>{{produto.loja.nome}}</h2>                        
+            <p>{{produto.loja.vicinity}}</p>
+        </ion-item>
+
+        <ion-item>
+            <ion-label>Categoria</ion-label>
+            <ion-select [(ngModel)]="produto.cdCategoria">
+                <ion-icon ios="ios-beer" md="md-beer"></ion-icon>                
                 <ion-option [value]="categ.codigo" *ngFor="let categ of categorias">
                     {{categ.descricao}}
                 </ion-option>
@@ -27,36 +36,19 @@
         </ion-item>
         <ion-item>
             <ion-label stacked>Descrição</ion-label>
-            <ion-input type="text" [(ngModel)]="produto.descricao"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label stacked>Quantidade</ion-label>
-            <ion-input type="text" [(ngModel)]="produto.quantidade"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label stacked>Unidade Medida</ion-label>
-            <ion-select [(ngModel)]="produto.cdUnidademedida">
-                <ion-option [value]="um.codigo" *ngFor="let um of unidademedidas">
-                    {{um.descricao}}
-                </ion-option>
-            </ion-select>
-        </ion-item>    
+            <ion-input type="text" [(ngModel)]="produto.descricao" placeholder="Cerveja 300 ml, Fralda pct, Contra Filé 1kg  ..."></ion-input>
+        </ion-item>            
         <ion-item>
             <ion-label stacked>Preço R$</ion-label>
             <ion-input type="number" [(ngModel)]="produto.preco"></ion-input>            
-        </ion-item>
-        <ion-item>
-            <ion-label stacked>Loja</ion-label>
-            <ion-input type="text" [(ngModel)]="produto.loja.nome"></ion-input>
-            <ion-input type="hidden" [(ngModel)]="produto.loja.codigo"></ion-input>
-        </ion-item>        
+        </ion-item>                
         <ion-item>
             <ion-label stacked>Validade da Promoção</ion-label>
             <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="produto.dtpromocao"></ion-datetime>
         </ion-item>        
     </ion-list>
-    <!--
 
+    <!--
     <ion-grid>
         <ion-row class="header">
             <ion-col width-30>

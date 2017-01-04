@@ -9,6 +9,8 @@ var mysql      = require('mysql');
 var logger = require('morgan');
 // puxar informações por POST HTML (express4)
 var bodyParser = require('body-parser');
+
+var https = require("https");
  
 // DEFININDO A APLICAÇÃO ==============================
 // definindo local de arquivos públicos

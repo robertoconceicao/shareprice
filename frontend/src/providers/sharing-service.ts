@@ -4,9 +4,6 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Rx';
 import { Produto }      from '../models/produto';
-import { Categoria }      from '../models/categoria';
-import { Unidademedida }      from '../models/unidademedida';
-import { Loja }      from '../models/loja';
 import { AppSettings }  from '../app/app-settings';
 
 @Injectable()
@@ -25,9 +22,7 @@ export class SharingService {
     return this.http
                 .post(AppSettings.API_ENDPOINT + AppSettings.POST_PRODUTO, 
                       JSON.stringify(produto),{headers: headers}
-                ).toPromise();
-                //.then(res => res.json())
-                //.catch(this.handleError);
+                ).toPromise();                
   }
 
   findProdutos(paramsUrl: string): Observable<Produto[]> {
@@ -39,33 +34,36 @@ export class SharingService {
     return this.http.get(AppSettings.API_ENDPOINT + AppSettings.GET_CATEGORIAS)
         .toPromise()
         .then(res => res.json())
-		 	  .catch(this.handleError);
-        //.map(res => <Categoria[]> res.json());
+		 	  .catch((error) => {
+           this.handleError(error);
+        });
   }
 
   getUnidademedidas() {
     return this.http.get(AppSettings.API_ENDPOINT + AppSettings.GET_UNIDADEMEDIDAS)
         .toPromise()
         .then(res => res.json())
-		 	  .catch(this.handleError);
-        //.map(res => <Unidademedida[]> res.json());
+		 	  .catch((error) => {
+           this.handleError(error);
+        });
   }
 
-  findLojas(paramsUrl: string) {
-    return this.http.get(AppSettings.API_ENDPOINT + AppSettings.GET_LOJAS)
+  findLojasByLocation(lat: any, lng: any) {
+    //let params: URLSearchParams = new URLSearchParams();
+    //params.set('lat', lat);
+    //params.set('lng', lng); {search: params}
+    
+    let params: string = "/"+lat+"/"+lng;
+
+    return this.http.get(AppSettings.API_ENDPOINT + AppSettings.GET_LOJAS + params )
         .toPromise()
         .then(res => res.json())
-		 	  .catch(this.handleError);
-        //.map(res => <Loja[]> res.json());
+		 	  .catch((error) => {
+           this.handleError(error);
+        });        
   }
 
-  handleError(){
-    console.log("Erro na requisicao");
-  }
-  /*
-  findProdutos(paramsUrl: string) {
-    return this.http.get(AppSettings.API_ENDPOINT + AppSettings.GET_PRODUTOS)
-              .toPromise();
-  }
-  */
+  handleError(error: string){
+    console.log("Erro na requisicao: "+error);
+  }  
 }

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController  } from 'ionic-angular';
+import { Geolocation } from 'ionic-native';
 import { Produto } from '../../models/produto';
 import { Categoria } from '../../models/categoria';
-import { Unidademedida } from '../../models/unidademedida';
 import { Loja } from '../../models/loja';
 //import { AppSettings } from '../../app/app-settings';
 import { SharingService } from '../../providers/sharing-service';
@@ -17,35 +17,19 @@ export class CadProdutoPage {
 
   public produto: Produto;
 
-  public unidademedidas: Array<Unidademedida> = [];
   public categorias: Array<Categoria> = [];
-/*
-       new Unidademedida(1, 'Mililitro', 'ml'),
-       new Unidademedida(2, 'Litro', 'l'),
-       new Unidademedida(3, 'Quilograma', 'kg'),
-       new Unidademedida(4, 'Metro', 'm'),
-       new Unidademedida(5, 'Metro quadrado', 'm²'),
-       new Unidademedida(6, 'Metro cúbico', 'm³'),
-       new Unidademedida(7, 'Área', 'a')
-   ];
-   
-      new Categoria(1, 'Bebidas'),  
-      new Categoria(2, 'Churrasco'),
-      new Categoria(3, 'Limpeza'),
-      new Categoria(4, 'Diversos')
-  ];
-*/
+  public lat: any;
+  public lng: any;
+
+  public lojas: Array<Loja> = [];
+
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               public toastCtrl: ToastController, 
               public sharingService: SharingService,
               public loadingCtrl: LoadingController) {
-      this.produto = new Produto();
-      this.produto.descricao="Novo produto";      
-      this.produto.quantidade = 1;
-      this.produto.preco=100;
+      this.produto = new Produto();      
       this.produto.loja = new Loja();
-      
   }
 
   ionViewDidLoad() {
@@ -59,21 +43,38 @@ export class CadProdutoPage {
     //get categorias
     this.sharingService.getCategorias() 
         .then(categorias => {
-          this.categorias = categorias;
-          // get unidademedidas
-          this.sharingService.getUnidademedidas()
-            .then(unidademedidas =>  {
-                this.unidademedidas = unidademedidas;    
-                loading.dismiss();
-            })
-            .catch(error => {
-                this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
-                loading.dismiss();
-            });
+            this.categorias = categorias;
+            if(this.categorias.length > 0){
+              this.produto.cdCategoria = this.categorias[0].codigo;
+            }
+
+            //pega a localizacao do usuario
+            Geolocation.getCurrentPosition().then((resp) => {
+              this.lat = resp.coords.latitude;
+              this.lng = resp.coords.longitude;
+
+              this.sharingService.findLojasByLocation(this.lat, this.lng)
+                  .then(lojas => {
+                    this.lojas = lojas;
+                    
+                    if(!!lojas && lojas.length > 0){                          
+                      this.produto.loja = lojas[0];
+                    }
+                    loading.dismiss();
+                  })
+                  .catch((error) => {
+                      console.log('Error ao tentar buscar lojas', error);
+                      loading.dismiss();        
+                  })
+            }).catch((error) => {
+              console.log('Error getting location', error);
+              loading.dismiss();
+            });            
         })
         .catch(error => {
             this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
             loading.dismiss();
+            this.goBack();
         });
   }
 
@@ -81,6 +82,7 @@ export class CadProdutoPage {
     this.sharingService.postar(this.produto)
       .then(success => {
             this.presentToast("Obrigado por cadastrar o produto");
+            this.goBack();
         })
         .catch(error => {
             this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
@@ -93,5 +95,9 @@ export class CadProdutoPage {
       duration: 3000
     });
     toast.present();
-  } 
+  }
+
+  goBack(){
+    this.navCtrl.pop();
+  }
 }
