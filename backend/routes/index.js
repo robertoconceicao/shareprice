@@ -38,24 +38,23 @@ router.get('/api/produtos', function(req, res) {
     descricao: string;
     quantidade: number;
     preco: number;
-    loja: Loja;
-    cdCategoria: number;
-    cdUnidademedida: number;
+    cdloja: cdloja;
+    cdcategoria: number;    
     dtpromocao: Date;
     dtpublicacao: Date;
 */
 router.post('/api/produto', function(req, res) {
     console.log("Dados recebidos: codigo: "+req.body.codigo);
-    
+
     pool.getConnection(function(err, connection) {        
         connection.query('INSERT INTO produto SET ? ',
             [{  codigo: req.body.codigo,    
                 descricao: req.body.descricao,
                 quantidade: req.body.quantidade,
                 preco: req.body.preco,
-                cdloja: req.body.loja.codigo,
-                cdCategoria: req.body.cdCategoria,
-                cdUnidademedida: 1,
+                cdloja: req.body.cdloja,
+                cdcategoria: req.body.cdcategoria,
+                cdunidademedida: 1,
                 dtpromocao: req.body.dtpromocao,
                 dtpublicacao: new Date()
             }],
@@ -113,37 +112,81 @@ router.get('/api/unidademedidas', function(req, res) {
 router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
     console.log("Dados recebidos: lat: "+req.params.lat+", lng: "+req.params.lng);
     
-    var location = "location="+req.params.lat + "," + req.params.lng;
-    var url = API_GOOGLE_PLACE;
-    url += '?'+location;
-    url += '&'+RADIUS;
-    url += '&'+TYPES;
-    url += '&'+API_KEY;
+    //Primeiro Passo é buscar na base local
+    pool.getConnection(function(err, connection) {
+        console.log("Primeiro Passo é buscar na base local");
+        connection.query(`SELECT *, (6371 * 
+                acos(
+                    cos(radians( ? )) *
+                    cos(radians(lat)) *
+                    cos(radians( ? ) - radians(lng)) +
+                    sin(radians( ? )) *
+                    sin(radians(lat))
+                )) AS distance
+                FROM loja HAVING distance <= 0.5`,[req.params.lat, req.params.lng, req.params.lat],function(err,result){
 
-    console.log("url: "+url);
+                if(result.length > 0) {
+                    return res.json(result);
+                } 
 
-    https.get(url, function(response) {
-        // Continuously update stream with data
-        var body = '';
-        response.on('data', function(d) {
-            body += d;
+                console.log("Segundo Passo se não encontrou na base local, busca na API place");
+                //Segundo Passo se não encontrou na base local, busca na API place
+                var location = "location="+req.params.lat + "," + req.params.lng;
+                var url = API_GOOGLE_PLACE;
+                url += '?'+location;
+                url += '&'+RADIUS;
+                url += '&'+TYPES;
+                url += '&'+API_KEY;
+
+                console.log("url: "+url);
+
+                https.get(url, function(response) {
+                    // Continuously update stream with data
+                    var body = '';
+                    response.on('data', function(d) {
+                        body += d;
+                    });
+                    response.on('end', function() {            
+                        // Data reception is done, do whatever with it!
+                        /*
+                        "geometry": {
+                        "location": {
+                        "lat": -27.6227852,
+                        "lng": -48.6774436
+                        "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png",
+                        "id": "3b6ea34712d3fef2c9d00d54342fa038604ab79d",
+                        "name": "Hippo"
+                        "vicinity" : "Rua da Universidade, 346 - Passeio Pedra Branca, Palhoça"
+                        */
+                        var parsed = JSON.parse(body);
+                        var lojas = listaLojas(parsed);
+                        // envia resposta para o usuário
+                        res.send(lojas);
+                        
+                        persisteNovasLojas(lojas);
+                    });
+                });                      
         });
-        response.on('end', function() {            
-            // Data reception is done, do whatever with it!
-            /*
-            "geometry": {
-            "location": {
-            "lat": -27.6227852,
-            "lng": -48.6774436
-            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png",
-            "id": "3b6ea34712d3fef2c9d00d54342fa038604ab79d",
-            "name": "Hippo"
-            "vicinity" : "Rua da Universidade, 346 - Passeio Pedra Branca, Palhoça"
-            */
-            var parsed = JSON.parse(body);
-            res.send(listaLojas(parsed));
+        connection.release();
+    });     
+
+    function persisteNovasLojas(lojas){
+        console.log("Persistindo na base local novas lojas");
+         pool.getConnection(function(err, connection) {
+            for(var i=0; i < lojas.length; i++){
+                connection.query('INSERT INTO loja SET ? ',
+                    lojas[0],
+                    function(err,result){
+                        if(err) {
+                           console.log("Erro ao inserir nova loja: "+err);
+                        } else {
+                            console.log("Nova loja inserida com sucesso: "+result);
+                        }
+                    });
+            }        
+            connection.release();       
         });
-    });
+    }
 
     /*
         codigo: number;
@@ -174,26 +217,6 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
         }
         return retorno;
     }
-
-    /*    	
-    pool.getConnection(function(err, connection) {
-        connection.query(`SELECT *, (6371 * 
-                acos(
-                    cos(radians( ? )) *
-                    cos(radians(lat)) *
-                    cos(radians( ? ) - radians(lng)) +
-                    sin(radians( ? )) *
-                    sin(radians(lat))
-                )) AS distance
-                FROM loja HAVING distance <= 0.1`,[req.params.lat, req.params.lng, req.params.lat],function(err,result){
-            if(err) {
-                return res.status(400).json(err);
-            }
-            return res.json(result);           
-        });
-        connection.release();
-    });
-    */    
 });
 
 pool.on('connection', function (connection) {   

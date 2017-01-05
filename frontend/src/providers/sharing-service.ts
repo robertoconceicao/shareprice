@@ -6,6 +6,10 @@ import { Observable } from 'rxjs/Rx';
 import { Produto }      from '../models/produto';
 import { AppSettings }  from '../app/app-settings';
 
+
+export const contentHeaders = new Headers();
+contentHeaders.append('Content-Type','application/json');
+
 @Injectable()
 export class SharingService {
   
@@ -16,13 +20,13 @@ export class SharingService {
     this.produtos = new Array<Produto>();
   }
   
-  postar(produto: Produto) :Promise<any> {   
-    console.log("Dados enviados: "+JSON.stringify(produto));
-    let headers = new Headers({'Content-Type':'application/json'});
+  postar(produto: Produto) :Promise<any> {
+    console.log("Dados enviados: "+JSON.stringify(produto));    
     return this.http
                 .post(AppSettings.API_ENDPOINT + AppSettings.POST_PRODUTO, 
-                      JSON.stringify(produto),{headers: headers}
-                ).toPromise();                
+                      JSON.stringify(produto), 
+                      {headers: contentHeaders}
+                ).toPromise();
   }
 
   findProdutos(paramsUrl: string): Observable<Produto[]> {
@@ -49,10 +53,6 @@ export class SharingService {
   }
 
   findLojasByLocation(lat: any, lng: any) {
-    //let params: URLSearchParams = new URLSearchParams();
-    //params.set('lat', lat);
-    //params.set('lng', lng); {search: params}
-    
     let params: string = "/"+lat+"/"+lng;
 
     return this.http.get(AppSettings.API_ENDPOINT + AppSettings.GET_LOJAS + params )

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- M√°quina: localhost
--- Data de Cria√ß√£o: 03-Jan-2017 √†s 12:53
+-- Data de Cria√ß√£o: 05-Jan-2017 √†s 10:28
 -- Vers√£o do servidor: 5.5.34
 -- vers√£o do PHP: 5.3.27
 
@@ -50,19 +50,23 @@ INSERT INTO `categoria` (`codigo`, `descricao`, `icon`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `loja` (
-  `codigo` int(11) NOT NULL AUTO_INCREMENT,
+  `codigo` varchar(80) NOT NULL,
   `nome` varchar(100) NOT NULL,
-  `geom` geometry NOT NULL,
-  `logo` text,
-  PRIMARY KEY (`codigo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+  `icon` text,
+  `lat` double NOT NULL,
+  `lng` double NOT NULL,
+  `vicinity` text,
+  PRIMARY KEY (`codigo`),
+  UNIQUE KEY `codigo` (`codigo`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `loja`
 --
 
-INSERT INTO `loja` (`codigo`, `nome`, `geom`, `logo`) VALUES
-(1, 'Fort', '\0\0\0\0\0\0\0rybå˛û;¿≥UuEVH¿', '''https://cdn3.iconfinder.com/data/icons/fillies-medium/64/shopping-card-512.png''');
+INSERT INTO `loja` (`codigo`, `nome`, `icon`, `lat`, `lng`, `vicinity`) VALUES
+('3b6ea34712d3fef2c9d00d54342fa038604ab79d', 'Hippo', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.6227852, -48.6774436, 'Rua da Universidade, 346 - Passeio Pedra Branca, Palho√ßa'),
+('c703fb5f1374405c6777e1b6b214bec390736353', 'Supermercados Xande', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.5956175, -48.5510944, 'Rua Deodoro, 281 - Centro, Florian√≥polis');
 
 -- --------------------------------------------------------
 

@@ -1,5 +1,5 @@
 export class Loja {
-    codigo: number;
+    codigo: string;
     nome: string;    
     lat: number;
     lng: number;

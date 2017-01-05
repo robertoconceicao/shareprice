@@ -19,15 +19,15 @@
     <ion-list>
         <ion-item>
             <ion-thumbnail item-left>
-                <img [src]="produto.loja.icon">
+                <img [src]="loja.icon">
             </ion-thumbnail>
-            <h2>{{produto.loja.nome}}</h2>                        
-            <p>{{produto.loja.vicinity}}</p>
+            <h2>{{loja.nome}}</h2>                        
+            <p>{{loja.vicinity}}</p>
         </ion-item>
 
         <ion-item>
             <ion-label>Categoria</ion-label>
-            <ion-select [(ngModel)]="produto.cdCategoria">
+            <ion-select [(ngModel)]="produto.cdcategoria">
                 <ion-icon ios="ios-beer" md="md-beer"></ion-icon>                
                 <ion-option [value]="categ.codigo" *ngFor="let categ of categorias">
                     {{categ.descricao}}

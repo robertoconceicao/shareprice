@@ -20,16 +20,19 @@ export class CadProdutoPage {
   public categorias: Array<Categoria> = [];
   public lat: any;
   public lng: any;
-
+  
+  //por enquanto estou usando só a primeira loja q vem no array mas pode ser q eu precise mostrar uma lista de lojas por isso coloquei esse array
   public lojas: Array<Loja> = [];
+
+  public loja: Loja;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               public toastCtrl: ToastController, 
               public sharingService: SharingService,
               public loadingCtrl: LoadingController) {
-      this.produto = new Produto();      
-      this.produto.loja = new Loja();
+      this.produto = new Produto();
+      this.loja = new Loja();
   }
 
   ionViewDidLoad() {
@@ -45,7 +48,7 @@ export class CadProdutoPage {
         .then(categorias => {
             this.categorias = categorias;
             if(this.categorias.length > 0){
-              this.produto.cdCategoria = this.categorias[0].codigo;
+              this.produto.cdcategoria = this.categorias[0].codigo;
             }
 
             //pega a localizacao do usuario
@@ -56,9 +59,10 @@ export class CadProdutoPage {
               this.sharingService.findLojasByLocation(this.lat, this.lng)
                   .then(lojas => {
                     this.lojas = lojas;
-                    
+
                     if(!!lojas && lojas.length > 0){                          
-                      this.produto.loja = lojas[0];
+                      this.loja = this.lojas[0];
+                      this.produto.cdloja = this.loja.codigo;
                     }
                     loading.dismiss();
                   })
