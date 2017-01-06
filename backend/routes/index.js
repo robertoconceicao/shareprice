@@ -44,20 +44,10 @@ router.get('/api/produtos', function(req, res) {
     dtpublicacao: Date;
 */
 router.post('/api/produto', function(req, res) {
-    console.log("Dados recebidos: codigo: "+req.body.codigo);
-
+    console.log("Dados recebidos: "+JSON.stringify(req.body.cdtipo));
+    
     pool.getConnection(function(err, connection) {        
-        connection.query('INSERT INTO produto SET ? ',
-            [{  codigo: req.body.codigo,    
-                descricao: req.body.descricao,
-                quantidade: req.body.quantidade,
-                preco: req.body.preco,
-                cdloja: req.body.cdloja,
-                cdcategoria: req.body.cdcategoria,
-                cdunidademedida: 1,
-                dtpromocao: req.body.dtpromocao,
-                dtpublicacao: new Date()
-            }],
+        connection.query('INSERT INTO produto SET ? ', req.body,
             function(err,result){
                 if(err) {
                     return res.status(400).json(err);
@@ -65,13 +55,13 @@ router.post('/api/produto', function(req, res) {
                 return res.status(200).json(result);            
             });
         connection.release();       
-    });
+    });    
 });
 
-//  CATEGORIAS ============================================
-router.get('/api/categorias', function(req, res) {	
+// MARCAS ============================================
+router.get('/api/marcas', function(req, res) {	
     pool.getConnection(function(err, connection) {
-        connection.query('SELECT * FROM categoria',[],function(err,result){
+        connection.query('SELECT * FROM marca',[],function(err,result){
             if(err) {
                 return res.status(400).json(err);
             }
@@ -81,19 +71,10 @@ router.get('/api/categorias', function(req, res) {
     });
 });
 
-router.post('/api/categoria', function(req, res) {
-    // Cria um contato, as informações são enviadas por uma requisição AJAX pelo Angular    
-    console.log("Dados recebidos: codigo: "+req.body.codigo+", descricao:"    
-    +req.body.descricao+", icon: "
-    +req.body.icon);
-       
-    return res.json(req.body);
-});
-
-//  UNIDADEMEDIDAS ============================================
-router.get('/api/unidademedidas', function(req, res) {	
+// MEDIDAS ============================================
+router.get('/api/medidas', function(req, res) {	
     pool.getConnection(function(err, connection) {
-        connection.query('SELECT * FROM unidademedida',[],function(err,result){
+        connection.query('SELECT * FROM medida',[],function(err,result){
             if(err) {
                 return res.status(400).json(err);
             }
@@ -102,6 +83,38 @@ router.get('/api/unidademedidas', function(req, res) {
         connection.release();
     });    
 });
+
+// TIPOS ============================================
+router.get('/api/tipos', function(req, res) {	
+    pool.getConnection(function(err, connection) {
+        connection.query('SELECT * FROM tipo',[],function(err,result){
+            if(err) {
+                return res.status(400).json(err);
+            }
+            return res.json(result);         
+        });
+        connection.release();
+    });    
+});
+
+
+// BUSCA ICONE DO PRODUTO ============================
+router.get('/api/icone/:cdmarca/:cdtipo/:cdmedida', function(req, res, callback) {
+    console.log("Buscar icone: cdmarca: "+req.params.cdmarca+", cdtipo: "+req.params.cdtipo+", cdmedida: "+req.params.cdmedida);
+    //Primeiro Passo é buscar na base local
+    pool.getConnection(function(err, connection) {        
+        connection.query(`SELECT icon
+                FROM iconproduto 
+                WHERE cdmarca = ? and cdtipo = ? and cdmedida = ? `,[req.params.cdmarca, req.params.cdtipo, req.params.cdmedida],function(err,result){
+
+                if(result.length > 0) {
+                    return res.json(result);
+                }     
+        });
+        connection.release();
+    });
+});
+
 
 // LOJAS ============================================
 // http://pt.stackoverflow.com/questions/55669/identificar-se-conjunto-de-coordenadas-est%C3%A1-dentro-de-um-raio-em-android
@@ -175,7 +188,7 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
          pool.getConnection(function(err, connection) {
             for(var i=0; i < lojas.length; i++){
                 connection.query('INSERT INTO loja SET ? ',
-                    lojas[0],
+                    lojas[i],
                     function(err,result){
                         if(err) {
                            console.log("Erro ao inserir nova loja: "+err);
@@ -189,12 +202,13 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
     }
 
     /*
-        codigo: number;
-        nome: string;    
-        lat: number;
-        lng: number;
-        icon?: string;
-        vicinity: string
+    cdloja: string;
+    nome: string;    
+    lat: number;
+    lng: number;
+    vicinity: string; // endereço
+    icon?: string;
+    dtcadastro?: Date;
     */
     function listaLojas(parsed){
         var results = parsed.results;
@@ -205,10 +219,11 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
             if(idAnterior != obj.id){
                 idAnterior = obj.id;
                 retorno.push({
-                    codigo: obj.id,
+                    cdloja: obj.id,
                     nome: obj.name,
                     icon: obj.icon,
                     vicinity: obj.vicinity,
+                    dtcadastro: new Date(),                    
                     lat: obj.geometry.location.lat,
                     lng: obj.geometry.location.lng
 

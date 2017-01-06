@@ -1,10 +1,11 @@
 export class Loja {
-    codigo: string;
+    cdloja: string;    
     nome: string;    
     lat: number;
     lng: number;
-    vicinity: string;
+    vicinity: string; // endereço
     icon?: string;
+    dtcadastro?: Date;
 
     constructor(){
         

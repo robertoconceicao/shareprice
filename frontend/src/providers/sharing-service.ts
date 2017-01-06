@@ -21,10 +21,19 @@ export class SharingService {
   }
   
   postar(produto: Produto) :Promise<any> {
-    console.log("Dados enviados: "+JSON.stringify(produto));    
+    let jsonProduto = {
+      cdtipo: produto.tipo.cdtipo,
+      cdmarca: produto.marca.cdmarca,
+      cdloja: produto.loja.cdloja,
+      cdmedida: produto.medida.cdmedida,
+      preco: produto.preco,
+      dtpublicacao: produto.dtpublicacao
+    };
+    console.log("Dados enviados: "+JSON.stringify(jsonProduto));
+
     return this.http
                 .post(AppSettings.API_ENDPOINT + AppSettings.POST_PRODUTO, 
-                      JSON.stringify(produto), 
+                      JSON.stringify(jsonProduto), 
                       {headers: contentHeaders}
                 ).toPromise();
   }
@@ -34,33 +43,35 @@ export class SharingService {
         .map(res => <Produto[]> res.json());
   }
 
-  getCategorias() {
-    return this.http.get(AppSettings.API_ENDPOINT + AppSettings.GET_CATEGORIAS)
-        .toPromise()
-        .then(res => res.json())
-		 	  .catch((error) => {
-           this.handleError(error);
-        });
+  getMarcas() {
+    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MARCAS);
   }
 
-  getUnidademedidas() {
-    return this.http.get(AppSettings.API_ENDPOINT + AppSettings.GET_UNIDADEMEDIDAS)
-        .toPromise()
-        .then(res => res.json())
-		 	  .catch((error) => {
-           this.handleError(error);
-        });
+  getTipos() {
+    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_TIPOS);
+  }
+
+  getMedidas() {
+    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MEDIDAS);
   }
 
   findLojasByLocation(lat: any, lng: any) {
     let params: string = "/"+lat+"/"+lng;
+    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_LOJAS + params);            
+  }
 
-    return this.http.get(AppSettings.API_ENDPOINT + AppSettings.GET_LOJAS + params )
-        .toPromise()
-        .then(res => res.json())
-		 	  .catch((error) => {
-           this.handleError(error);
-        });        
+  findIconeCerveja(cdmarca: any, cdtipo: any, cdmedida: any) {
+    let params: string = "/"+cdmarca+"/"+cdtipo+"/"+cdmedida;
+    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_ICONE + params);            
+  }
+
+  private getHttp(url: string){
+    return this.http.get(url)
+          .toPromise()
+          .then(res => res.json())
+          .catch((error) => {
+            this.handleError(error);
+          });
   }
 
   handleError(error: string){
