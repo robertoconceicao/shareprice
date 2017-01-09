@@ -1,0 +1,58 @@
+{
+  "name": "tipoproduto",
+  "base": "PersistedModel",
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "mysql": {
+    "schema": "shareprice",
+    "table": "esprTipoproduto"
+  },
+  "properties": {
+    "detipoproduto": {
+      "type": "string",
+      "required": false,
+      "length": 50,
+      "precision": null,
+      "scale": null,
+      "mysql": {
+        "columnName": "deTipoproduto",
+        "dataType": "varchar",
+        "dataLength": 50,
+        "dataPrecision": null,
+        "dataScale": null,
+        "nullable": "Y"
+      },
+      "_selectable": true
+    },
+    "cdtipoproduto": {
+      "type": "number",
+      "id": true,
+      "required": true,
+      "index": false,
+      "length": null,
+      "precision": 10,
+      "scale": 0,
+      "mysql": {
+        "columnName": "cdTipoproduto",
+        "dataType": "int",
+        "dataLength": null,
+        "dataPrecision": 10,
+        "dataScale": 0,
+        "nullable": "N"
+      },
+      "_selectable": false
+    }
+  },
+  "validations": [],
+  "relations": {
+    "tipoproduto_icone": {
+      "type": "hasMany",
+      "model": "icone",
+      "foreignKey": "cdtipoproduto"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

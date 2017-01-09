@@ -1,0 +1,18 @@
+insert into esprMarca(cdMarca, nmMarca) values (1, 'Skol');
+insert into esprMarca(cdMarca, nmMarca) values (2, 'Brahma');
+insert into esprMarca(cdMarca, nmMarca) values (3, 'Itaipava');
+insert into esprMarca(cdMarca, nmMarca) values (4, 'Bohemia');
+insert into esprMarca(cdMarca, nmMarca) values (5, 'Antartica');
+insert into esprMarca(cdMarca, nmMarca) values (6, 'Heineken');
+insert into esprMarca(cdMarca, nmMarca) values (7, 'Nova Schin');
+insert into esprMarca(cdMarca, nmMarca) values (8, 'Kaiser');
+insert into esprMarca(cdMarca, nmMarca) values (9, 'Stella Artois');
+insert into esprMarca(cdMarca, nmMarca) values (10, 'Budweiser');
+insert into esprMarca(cdMarca, nmMarca) values (11, 'Eisenbahn');
+insert into esprMarca(cdMarca, nmMarca) values (12, 'Saint Bier');
+insert into esprMarca(cdMarca, nmMarca) values (13, 'Amstel');
+insert into esprMarca(cdMarca, nmMarca) values (14, 'Corona');
+insert into esprMarca(cdMarca, nmMarca) values (15, 'Sol');
+insert into esprMarca(cdMarca, nmMarca) values (16, 'Bavaria');
+insert into esprMarca(cdMarca, nmMarca) values (17, 'Devasa');
+insert into esprMarca(cdMarca, nmMarca) values (18, 'Crystal');

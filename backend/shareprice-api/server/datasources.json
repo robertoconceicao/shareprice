@@ -1,0 +1,15 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  "shareprice-ds": {
+    "host": "localhost",
+    "port": 3306,
+    "database": "shareprice",
+    "password": "shareprice01",
+    "name": "shareprice-ds",
+    "user": "shareprice",
+    "connector": "mysql"
+  }
+}

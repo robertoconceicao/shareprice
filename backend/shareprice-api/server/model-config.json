@@ -1,0 +1,79 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "loopback/server/mixins",
+      "../common/mixins",
+      "./mixins"
+    ]
+  },
+  "User": {
+    "dataSource": "db"
+  },
+  "AccessToken": {
+    "dataSource": "db",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "db",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Role": {
+    "dataSource": "db",
+    "public": false
+  },
+  "tipoproduto": {
+    "dataSource": "shareprice-ds",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "medida": {
+    "dataSource": "shareprice-ds",
+    "public": true
+  },
+  "marca": {
+    "dataSource": "shareprice-ds",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "classeproduto": {
+    "dataSource": "shareprice-ds",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "estabelecimento": {
+    "dataSource": "shareprice-ds",
+    "public": true
+  },
+  "icone": {
+    "dataSource": "shareprice-ds",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "produto": {
+    "dataSource": "shareprice-ds",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "produdoestabelecimento": {
+    "dataSource": "shareprice-ds",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  }
+}
