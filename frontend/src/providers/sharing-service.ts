@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-import { Observable } from 'rxjs/Rx';
+//import { Observable } from 'rxjs/Rx';
 import { Produto }      from '../models/produto';
 import { AppSettings }  from '../app/app-settings';
 
@@ -38,9 +38,12 @@ export class SharingService {
                 ).toPromise();
   }
 
-  findProdutos(paramsUrl: string): Observable<Produto[]> {
-    return this.http.get(AppSettings.API_ENDPOINT + AppSettings.GET_PRODUTOS)
-        .map(res => <Produto[]> res.json());
+  /* 
+  result do sql
+  codigo	preco	dtpublicacao	cdloja	cdmarca	cdtipo	cdmedida	marca	loja	tipo	medida
+   */
+  findProdutos(paramsUrl: string) {
+    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_PRODUTOS);    
   }
 
   getMarcas() {

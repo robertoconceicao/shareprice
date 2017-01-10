@@ -7,9 +7,9 @@
     "host": "localhost",
     "port": 3306,
     "database": "shareprice",
-    "password": "shareprice01",
+    "password": "security",
     "name": "shareprice-ds",
-    "user": "shareprice",
+    "user": "root",
     "connector": "mysql"
   }
 }

@@ -23,7 +23,17 @@ var RADIUS='radius=500';
 //  PRODUTOS ============================================
 router.get('/api/produtos', function(req, res) {	
     pool.getConnection(function(err, connection) {
-        connection.query('SELECT * FROM produto',[],function(err,result){
+        connection.query(`
+        SELECT p . * , m.descricao AS marca, l.nome AS loja, t.descricao AS tipo, md.descricao AS medida, i.icon as icon
+        FROM produto p
+        JOIN loja l ON l.cdloja = p.cdloja
+        JOIN marca m ON m.cdmarca = p.cdmarca
+        JOIN tipo t ON t.cdtipo = p.cdtipo
+        JOIN medida md ON md.cdmedida = p.cdmedida
+        join iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
+        WHERE 1 
+        LIMIT 0 , 30
+        `,[],function(err,result){
             if(err) {
                 return res.status(400).json(err);
             }
