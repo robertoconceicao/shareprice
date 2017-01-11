@@ -1,19 +1,22 @@
+import { Produto } from '../models/produto';
+
 export class AppSettings {
-   public static get API_ENDPOINT(): string { 
-       return 'http://localhost:9000/api/'; 
+   public static get API_ENDPOINT(): string {
+       return 'http://localhost:9000/api/';
    }
 
    //API marca
    public static GET_MARCAS = 'marcas';
-   
+
    //API tipo
    public static GET_TIPOS = 'tipos';
-   
+
    //API medidas
    public static GET_MEDIDAS = 'medidas';
 
    //API produto
    public static GET_PRODUTOS = 'produtos';
+   public static GET_PRODUTO = 'produto';
    public static POST_PRODUTO = 'produto';
 
    //API loja
@@ -21,5 +24,23 @@ export class AppSettings {
 
    //API Icone
    public static GET_ICONE = 'icone';
+
+
+   public static get convertToProduto(data): Produto {
+     var produto = new Produto();
+     produto.codigo = data.codigo;
+     produto.preco = data.preco;
+     produto.dtpublicacao = data.dtpublicacao;
+     produto.loja.cdloja = data.cdloja;
+     produto.loja.nome = data.loja;
+     produto.marca.cdmarca = data.cdmarca;
+     produto.marca.descricao = data.marca;
+     produto.tipo.cdtipo = data.cdtipo;
+     produto.tipo.descricao = data.tipo;
+     produto.medida.cdmedida = data.cdmedida;
+     produto.medida.descricao = data.medida;
+     produto.icon = data.icon;
+     return produto;
+   }
 
 }

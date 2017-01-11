@@ -25,16 +25,18 @@ export class CadProdutoPage {
 
   public lat: any;
   public lng: any;
+  public codigo: any;
   public loading: any;
   //por enquanto estou usando só a primeira loja q vem no array mas pode ser q eu precise mostrar uma lista de lojas por isso coloquei esse array
   public lojas: Array<Loja> = [];
 
-  constructor(public navCtrl: NavController, 
+  constructor(public navCtrl: NavController,
               public navParams: NavParams,
-              public toastCtrl: ToastController, 
+              public toastCtrl: ToastController,
               public sharingService: SharingService,
               public loadingCtrl: LoadingController) {
       this.produto = new Produto();
+      this.codigo = this.navParams.get('codigo');
   }
 
   ionViewDidLoad() {
@@ -42,11 +44,28 @@ export class CadProdutoPage {
     this.loading = this.loadingCtrl.create({
       content: 'Carregando informações...'
     });
- 
+
     this.loading.present();
 
     // chama em cascata o getTipos, getMedidas e as lojas pela localizacao do usuario.
-    this.getMarcas();
+    if(!!this.codigo){
+        this.editarProduto();
+    } else {
+        this.getMarcas();
+    }
+  }
+
+  editarProduto(){
+    this.sharingService.findProdutoById(this.codigo)
+      .then(produto => {
+          this.produto = produto;
+          this.loading.dismiss();
+      })
+      .catch(error => {
+          this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
+          this.loading.dismiss();
+          this.goBack();
+      });
   }
 
   postar(): void{
@@ -74,14 +93,14 @@ export class CadProdutoPage {
 
   getMarcas(){
     //get marcas
-    this.sharingService.getMarcas() 
+    this.sharingService.getMarcas()
         .then(marcas => {
             this.marcas = marcas;
             if(this.marcas.length > 0){
               this.produto.marca = this.marcas[0];
             }
             // get tipos
-            this.getTipos();                        
+            this.getTipos();
         })
         .catch(error => {
             this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
@@ -92,14 +111,14 @@ export class CadProdutoPage {
 
   getTipos(){
     //get tipos
-    this.sharingService.getTipos() 
+    this.sharingService.getTipos()
         .then(tipos => {
             this.tipos = tipos;
             if(this.tipos.length > 0){
               this.produto.tipo = this.tipos[0];
             }
             // get medidas
-            this.getMedidas();                        
+            this.getMedidas();
         })
         .catch(error => {
             this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
@@ -110,7 +129,7 @@ export class CadProdutoPage {
 
   getMedidas(){
     //get medidas
-    this.sharingService.getMedidas() 
+    this.sharingService.getMedidas()
         .then(medidas => {
             this.medidas = medidas;
             if(this.medidas.length > 0){
@@ -136,15 +155,15 @@ export class CadProdutoPage {
           .then(lojas => {
             this.lojas = lojas;
 
-            if(!!lojas && lojas.length > 0){                          
-              this.produto.loja = this.lojas[0];              
+            if(!!lojas && lojas.length > 0){
+              this.produto.loja = this.lojas[0];
             }
             this.loading.dismiss();
           })
           .catch((error) => {
               console.log('Error ao tentar buscar lojas', error);
               this.loading.dismiss();
-              this.goBack();        
+              this.goBack();
           })
     }).catch((error) => {
       console.log('Error getting location', error);
@@ -153,7 +172,7 @@ export class CadProdutoPage {
     });
   }
 
-  buscarIconeCerveja(){    
+  buscarIconeCerveja(){
     if(this.produto.marca.cdmarca != 0 && this.produto.tipo.cdtipo != 0 && this.produto.medida.cdmedida != 0){
        this.sharingService.findIconeCerveja(this.produto.marca.cdmarca, this.produto.tipo.cdtipo, this.produto.medida.cdmedida)
         .then(icon => {
@@ -162,7 +181,7 @@ export class CadProdutoPage {
            }
         })
         .catch((error) => {
-            console.log('Error ao tentar buscar icone', error);                
+            console.log('Error ao tentar buscar icone', error);
         });
     }
   }
@@ -171,7 +190,7 @@ export class CadProdutoPage {
     this.produto.marca.cdmarca = event;
     this.buscarIconeCerveja();
   }
-  
+
   onChangeTipo(event){
     this.produto.tipo.cdtipo = event;
     this.buscarIconeCerveja();

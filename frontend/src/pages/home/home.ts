@@ -3,13 +3,7 @@ import { NavController, LoadingController }  from 'ionic-angular';
 import { FiltrosPage }         from '../filtros/filtros';
 import { CadProdutoPage } from '../cad-produto/cad-produto';
 import { ConfigPage } from '../config/config';
-
 import { Produto } from '../../models/produto';
-import { Loja } from '../../models/loja';
-import { Marca } from '../../models/marca';
-import { Tipo } from '../../models/tipo';
-import { Medida } from '../../models/medida';
-
 import { SharingService } from '../../providers/sharing-service';
 
 @Component({
@@ -19,12 +13,12 @@ import { SharingService } from '../../providers/sharing-service';
 export class Home {
 
    public searchTerm: string = "";
-   public produtos: Array<Produto>; 
+   public produtos: Array<Produto>;
    public loading: any;
 
-   constructor(public navCtrl: NavController, 
+   constructor(public navCtrl: NavController,
                public sharingService: SharingService,
-               public loadingCtrl: LoadingController) {       
+               public loadingCtrl: LoadingController) {
    }
 
    ionViewDidLoad() {
@@ -32,8 +26,8 @@ export class Home {
         this.loading = this.loadingCtrl.create({
             content: 'Carregando informações...'
         });
-    
-        this.loading.present();        
+
+        this.loading.present();
 
         this.findProdutos();
    }
@@ -69,6 +63,11 @@ export class Home {
         });
    }
 
+   itemSelected(codigoParam){
+       console.log("codigo: "+codigo);
+       this.navCtrl.push(CadProdutoPage, {codigo: codigoParam});
+   }
+
    filterItems(){
 
    }
@@ -80,8 +79,8 @@ export class Home {
    showConfig(){
       this.navCtrl.push(ConfigPage);
    }
-   
-   newProduto(){       
+
+   newProduto(){
        this.navCtrl.push(CadProdutoPage);
    }
 

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Máquina: localhost
--- Data de Criação: 06-Jan-2017 às 12:30
+-- Data de Criação: 11-Jan-2017 às 19:40
 -- Versão do servidor: 5.5.34
 -- versão do PHP: 5.3.27
 
@@ -39,7 +39,18 @@ CREATE TABLE IF NOT EXISTS `iconproduto` (
 --
 
 INSERT INTO `iconproduto` (`cdtipo`, `cdmarca`, `cdmedida`, `icon`) VALUES
-(1, 2, 5, 'https://storage.googleapis.com/iconescerveja/brahma-lata.png');
+(1, 1, 1, 'https://storage.googleapis.com/iconescerveja/skollitrao.png'),
+(1, 1, 2, 'https://storage.googleapis.com/iconescerveja/skol-600.png'),
+(1, 1, 3, 'https://storage.googleapis.com/iconescerveja/skol-latao.png'),
+(1, 1, 4, 'https://storage.googleapis.com/iconescerveja/skol-long-neck.png'),
+(1, 1, 5, 'https://storage.googleapis.com/iconescerveja/skol-lata.png'),
+(1, 1, 6, 'https://storage.googleapis.com/iconescerveja/skol-garrafinha.png'),
+(1, 2, 1, 'https://storage.googleapis.com/iconescerveja/brahma-litrao.png'),
+(1, 2, 2, 'https://storage.googleapis.com/iconescerveja/brahma-600.jpg'),
+(1, 2, 3, 'https://storage.googleapis.com/iconescerveja/brahma-latao.png'),
+(1, 2, 4, 'https://storage.googleapis.com/iconescerveja/brahma-longneck.png'),
+(1, 2, 5, 'https://storage.googleapis.com/iconescerveja/brahma-lata.png'),
+(1, 2, 6, 'https://storage.googleapis.com/iconescerveja/brahma-garrafinha.png');
 
 -- --------------------------------------------------------
 
@@ -48,22 +59,22 @@ INSERT INTO `iconproduto` (`cdtipo`, `cdmarca`, `cdmedida`, `icon`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `loja` (
-  `codigo` varchar(80) NOT NULL,
+  `cdloja` varchar(80) NOT NULL,
   `nome` varchar(100) NOT NULL,
   `icon` text,
   `lat` double NOT NULL,
   `lng` double NOT NULL,
   `vicinity` text,
   `dtcadastro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`codigo`),
-  UNIQUE KEY `codigo` (`codigo`)
+  PRIMARY KEY (`cdloja`),
+  UNIQUE KEY `codigo` (`cdloja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `loja`
 --
 
-INSERT INTO `loja` (`codigo`, `nome`, `icon`, `lat`, `lng`, `vicinity`, `dtcadastro`) VALUES
+INSERT INTO `loja` (`cdloja`, `nome`, `icon`, `lat`, `lng`, `vicinity`, `dtcadastro`) VALUES
 ('3b6ea34712d3fef2c9d00d54342fa038604ab79d', 'Hippo', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.6227852, -48.6774436, 'Rua da Universidade, 346 - Passeio Pedra Branca, Palhoça', '0000-00-00 00:00:00'),
 ('c703fb5f1374405c6777e1b6b214bec390736353', 'Supermercados Xande', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.5956175, -48.5510944, 'Rua Deodoro, 281 - Centro, Florianópolis', '0000-00-00 00:00:00');
 
@@ -143,7 +154,15 @@ CREATE TABLE IF NOT EXISTS `produto` (
   `cdtipo` int(11) NOT NULL,
   `cdmedida` int(11) NOT NULL,
   PRIMARY KEY (`codigo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Extraindo dados da tabela `produto`
+--
+
+INSERT INTO `produto` (`codigo`, `preco`, `dtpublicacao`, `cdloja`, `cdmarca`, `cdtipo`, `cdmedida`) VALUES
+(3, '2', '2017-01-06 19:10:26', 'c703fb5f1374405c6777e1b6b214bec390736353', 2, 1, 5),
+(4, '5', '2017-01-06 19:55:38', 'c703fb5f1374405c6777e1b6b214bec390736353', 1, 1, 1);
 
 -- --------------------------------------------------------
 

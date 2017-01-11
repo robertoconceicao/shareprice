@@ -21,6 +21,28 @@ var TYPES='types=grocery_or_supermarket'; //https://developers.google.com/places
 var RADIUS='radius=500';
 
 //  PRODUTOS ============================================
+router.get('/api/produto/:codigo', function(req, res) {	    
+    pool.getConnection(function(err, connection) {
+        connection.query(`
+        SELECT p . * , m.descricao AS marca, l.nome AS loja, t.descricao AS tipo, md.descricao AS medida, i.icon as icon
+        FROM produto p
+        JOIN loja l ON l.cdloja = p.cdloja
+        JOIN marca m ON m.cdmarca = p.cdmarca
+        JOIN tipo t ON t.cdtipo = p.cdtipo
+        JOIN medida md ON md.cdmedida = p.cdmedida
+        join iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
+        WHERE p.codigo = ?        
+        `,[req.params.codigo],function(err,result){
+            if(err) {
+                return res.status(400).json(err);
+            }
+            return res.json(result);           
+        });
+        connection.release();
+    }); 
+});
+
+
 router.get('/api/produtos', function(req, res) {	
     pool.getConnection(function(err, connection) {
         connection.query(`

@@ -27,16 +27,17 @@
     </div>
 
     <ion-list>
-        <ion-item *ngFor="let produto of produtos">
+        <button ion-item *ngFor="let produto of produtos" (click)="itemSelected(produto.codigo)">
             <ion-thumbnail item-left>
                 <img [src]="produto.icon">
             </ion-thumbnail>
             <h2>{{ produto.marca.descricao + ' ' +  produto.tipo.descricao  + ' ' + produto.medida.descricao }}</h2>
             <p>{{ produto.loja.nome }}</p>
-            <button ion-button clear item-right>
-                {{produto.preco}}
-            </button>
-        </ion-item>
+            <p>{{ produto.dtpublicacao | date: 'dd/MM/yyyy' }}</p>
+            <ion-note item-right>
+                R$ {{produto.preco}}
+            </ion-note>            
+        </button>
 
     </ion-list>
 
