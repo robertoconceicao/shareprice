@@ -46,6 +46,11 @@ export class SharingService {
     return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_PRODUTOS);    
   }
 
+  findProdutoById(codigo: any){
+    let params: string = "/"+codigo;
+    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_PRODUTO + params);            
+  }
+
   getMarcas() {
     return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MARCAS);
   }

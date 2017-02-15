@@ -11,26 +11,35 @@ var pool  = mysql.createPool({
   host     : 'localhost',
   port : 3306, 
   database:'tabarato',
-  user     : 'root',
+  user     : 'tabarato',
   password : 'security'
 });    
 
-var API_GOOGLE_PLACE = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
-var API_KEY='key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc';
-var TYPES='types=grocery_or_supermarket'; //https://developers.google.com/places/supported_types?hl=pt-br
-var RADIUS='radius=500';
+const API_GOOGLE_PLACE = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+const API_KEY='key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc';
+const TYPES='types=grocery_or_supermarket'; //https://developers.google.com/places/supported_types?hl=pt-br
+const RADIUS='radius=5000'; // 1km
 
 //  PRODUTOS ============================================
 router.get('/api/produto/:codigo', function(req, res) {	    
     pool.getConnection(function(err, connection) {
         connection.query(`
-        SELECT p . * , m.descricao AS marca, l.nome AS loja, t.descricao AS tipo, md.descricao AS medida, i.icon as icon
+        SELECT p.* , 
+            m.descricao AS marca, 
+            l.nome AS loja, 
+            l.icon as iconloja,
+            l.vicinity as vicinity,
+            l.lat as lat,
+            l.lng as lng,
+            t.descricao AS tipo, 
+            md.descricao AS medida, 
+            i.icon as icon
         FROM produto p
         JOIN loja l ON l.cdloja = p.cdloja
         JOIN marca m ON m.cdmarca = p.cdmarca
         JOIN tipo t ON t.cdtipo = p.cdtipo
         JOIN medida md ON md.cdmedida = p.cdmedida
-        join iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
+        JOIN iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
         WHERE p.codigo = ?        
         `,[req.params.codigo],function(err,result){
             if(err) {
@@ -76,7 +85,7 @@ router.get('/api/produtos', function(req, res) {
     dtpublicacao: Date;
 */
 router.post('/api/produto', function(req, res) {
-    console.log("Dados recebidos: "+JSON.stringify(req.body.cdtipo));
+    console.log("Dados recebidos: "+JSON.stringify(req.body));
     
     pool.getConnection(function(err, connection) {        
         connection.query('INSERT INTO produto SET ? ', req.body,
@@ -168,7 +177,7 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
                     sin(radians( ? )) *
                     sin(radians(lat))
                 )) AS distance
-                FROM loja HAVING distance <= 0.5`,[req.params.lat, req.params.lng, req.params.lat],function(err,result){
+                FROM loja HAVING distance <= 5.0`,[req.params.lat, req.params.lng, req.params.lat],function(err,result){
 
                 if(result.length > 0) {
                     return res.json(result);
@@ -247,7 +256,7 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
         var retorno = new Array();
         var idAnterior = "-1";
         for(var i = 0; i < results.length; i++){
-            var obj = results[0];
+            var obj = results[i];
             if(idAnterior != obj.id){
                 idAnterior = obj.id;
                 retorno.push({

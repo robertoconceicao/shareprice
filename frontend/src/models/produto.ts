@@ -9,7 +9,7 @@ export class Produto {
     tipo: Tipo;
     marca: Marca;
     medida: Medida;
-    preco: number;    
+    preco: string;    
     dtpublicacao: Date;
     icon: string;
 
@@ -18,7 +18,7 @@ export class Produto {
         this.tipo = new Tipo();
         this.marca = new Marca();
         this.medida = new Medida();
-        this.preco = 0;        
+        this.preco = '0,00';        
         this.dtpublicacao = new Date();
     }
 }

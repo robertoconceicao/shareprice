@@ -41,25 +41,43 @@
                     </ion-option>
                 </ion-select>
             </ion-item>
-            
+
             <ion-item>            
                 <ion-label>Preço R$</ion-label>
-                <ion-input #preco="ngModel" type="number" [(ngModel)]="produto.preco" required name="preco"></ion-input>
+                <ion-input [ngModel]="produto.preco" 
+                    type="text" 
+                    name="xxx"
+                    (keyup)="onChangePreco($event)"
+                    ></ion-input>
             </ion-item>
 
-            <ion-item [hidden]="preco.valid || preco.pristine" class="alert alert-danger">
+            
+
+            <!--                     
+                <ion-item [hidden]="preco.valid || preco.pristine" class="alert alert-danger">
                 <p class="help-block">O campo preço deve ser preenchido.</p>                
             </ion-item>
-        
+                    (ngModelChange)="onChangePreco($event)" 
+            <campo-moeda
+                [ngModel]="produto.preco" 
+                name="preco"
+                (onCampoValor)="onChangePreco($event)">
+            </campo-moeda>
+            !-->
+                <!--
+                !-->
+           
+
             <ion-list-header>
                 <h2>Estabelicimento</h2>
             </ion-list-header>
+
             <ion-item>
-                <ion-thumbnail item-left>
-                    <img [src]="produto.loja.icon">
-                </ion-thumbnail>
-                <h2>{{produto.loja.nome}}</h2>                        
+                <ion-icon name="basket" item-left large (click)="changeLoja()"></ion-icon>
+                <h2 (click)="changeLoja()">{{produto.loja.nome}}</h2>
                 <p>{{produto.loja.vicinity}}</p>
+                
+                <ion-icon name="pin" item-right (click)="abrirMapa()"></ion-icon>                
             </ion-item>
         </ion-list>
 

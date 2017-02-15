@@ -5,6 +5,7 @@ import { CadProdutoPage } from '../cad-produto/cad-produto';
 import { ConfigPage } from '../config/config';
 import { Produto } from '../../models/produto';
 import { SharingService } from '../../providers/sharing-service';
+import { AppSettings }  from '../../app/app-settings';
 
 @Component({
    selector: 'page-home',
@@ -23,7 +24,16 @@ export class Home {
 
    ionViewDidLoad() {
         console.log('ionViewDidLoad HomePage');
-        this.loading = this.loadingCtrl.create({
+        this.carregandoPage();
+   }
+
+   ionViewWillEnter() {
+       console.log("ionViewWillEnter HomePage");
+       this.carregandoPage();
+   }
+
+   carregandoPage(){
+       this.loading = this.loadingCtrl.create({
             content: 'Carregando informações...'
         });
 
@@ -38,7 +48,9 @@ export class Home {
        .then(dados => {
            this.produtos = new Array();
             for(let data of dados){
-                var produto = new Produto();
+
+                var produto = AppSettings.convertToProduto(data);
+                /*
                 produto.codigo = data.codigo;
                 produto.preco = data.preco;
                 produto.dtpublicacao = data.dtpublicacao;
@@ -51,7 +63,7 @@ export class Home {
                 produto.medida.cdmedida = data.cdmedida;
                 produto.medida.descricao = data.medida;
                 produto.icon = data.icon;
-
+                */
                 this.produtos.push(produto);
             }
             console.log(this.produtos);
@@ -64,7 +76,7 @@ export class Home {
    }
 
    itemSelected(codigoParam){
-       console.log("codigo: "+codigo);
+       console.log("codigo: "+codigoParam);
        this.navCtrl.push(CadProdutoPage, {codigo: codigoParam});
    }
 

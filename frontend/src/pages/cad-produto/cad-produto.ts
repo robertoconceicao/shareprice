@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController, LoadingController  } from 'ionic-angular';
+import { NavController, NavParams, ToastController, LoadingController, ModalController  } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 import { Produto } from '../../models/produto';
 import { Marca } from '../../models/marca';
 import { Medida } from '../../models/medida';
 import { Tipo } from '../../models/tipo';
 import { Loja } from '../../models/loja';
-
+import { AppSettings }  from '../../app/app-settings';
+import { LojaPage } from '../loja/loja-page';
 import { SharingService } from '../../providers/sharing-service';
 
 import 'rxjs/add/operator/toPromise';
@@ -34,7 +35,8 @@ export class CadProdutoPage {
               public navParams: NavParams,
               public toastCtrl: ToastController,
               public sharingService: SharingService,
-              public loadingCtrl: LoadingController) {
+              public loadingCtrl: LoadingController,
+              public modalCtrl: ModalController) {
       this.produto = new Produto();
       this.codigo = this.navParams.get('codigo');
   }
@@ -47,18 +49,22 @@ export class CadProdutoPage {
 
     this.loading.present();
 
-    // chama em cascata o getTipos, getMedidas e as lojas pela localizacao do usuario.
     if(!!this.codigo){
         this.editarProduto();
     } else {
-        this.getMarcas();
+      // chama em cascata o getTipos, getMedidas e as lojas pela localizacao do usuario.
+      this.getMarcas();
     }
   }
 
   editarProduto(){
     this.sharingService.findProdutoById(this.codigo)
       .then(produto => {
-          this.produto = produto;
+          this.produto = AppSettings.convertToProduto(produto[0]);
+          this.medidas[
+            0] = this.produto.medida;
+          this.tipos[0] = this.produto.tipo;
+          this.marcas[0] = this.produto.marca;
           this.loading.dismiss();
       })
       .catch(error => {
@@ -69,6 +75,7 @@ export class CadProdutoPage {
   }
 
   postar(): void{
+    this.produto.preco = this.produto.preco.replace(/,/, '.'); //replace , por .
     this.sharingService.postar(this.produto)
       .then(success => {
             this.presentToast("Obrigado por cadastrar o produto");
@@ -186,6 +193,16 @@ export class CadProdutoPage {
     }
   }
 
+  changeLoja(){
+    let lojaModal = this.modalCtrl.create(LojaPage, {'lojas': this.lojas});
+    lojaModal.onDidDismiss(data => {
+      if(!!data){
+        this.produto.loja = data;
+      }
+    });
+    lojaModal.present();
+  }
+
   onChangeMarca(event){
     this.produto.marca.cdmarca = event;
     this.buscarIconeCerveja();
@@ -199,5 +216,67 @@ export class CadProdutoPage {
   onChangeMedida(event){
     this.produto.medida.cdmedida = event;
     this.buscarIconeCerveja();
+  }
+  
+  /*
+  ^\d{1,3}(?:\.\d{3})*,\d{2}$
+  ^\s*\d{1,3}(?:\.\d{3})*,\d{2}$
+  ^\s*(?:[1-9]\d{0,2}(?:\.\d{3})*|0),\d{2}$
+  ^\s*(?:[1-9]\d{0,2}(?:\.\d{3})*|0)(?:,\d{1,2})?$
+
+  get preco(){
+    console.log("GET preco: "+this.produto.preco);
+    return this.produto.preco;
+  }
+
+  set preco(valor){
+    console.log("SET preco: "+this.produto.preco);
+    this.onChangePreco(valor);  
+  }
+  */
+  
+  addZerosEsquerda(valor){
+      var re = /\D/g; 
+      var newValor = valor.replace(re, ''); //limpa a formatacao
+      console.log("Antes: "+valor+" Depois: "+newValor);
+      
+      //add zeros a esquerda
+      if(newValor.length == 0){
+        newValor = "000";
+      }
+      if(newValor.length == 1){
+        newValor = "00"+newValor;
+      }
+      if(newValor.length == 2){
+        newValor = "0"+newValor;
+      }
+
+      if(newValor.length == 4){
+        if(newValor.indexOf(0) == 0){
+          newValor = newValor.substr(1);
+        }
+      }
+
+      if(newValor.length > 4){
+        newValor = newValor.substr(newValor.length - 4); //fica só com os últimos 4 digitos 
+      }
+      return newValor;
+  }
+
+  onChangePreco(event){
+      let newstr2 = this.addZerosEsquerda(event.target.value);
+
+      let strend = newstr2.substr(newstr2.length - 2); // pega os dois ultimos campos da string
+      let strbeging = newstr2.substr(0, newstr2.length - 2); // pega o inicio
+      let valor = strbeging + "," + strend;
+
+      console.log("valor: "+valor);
+
+      this.produto.preco = valor;
+      //this.onCampoValor.emit(this.campoValor);
+  }
+
+  abrirMapa(){
+    console.log("TODO: Chamar o app do map para fazer a navegação passando as coordenada do supermercado");
   }
 }

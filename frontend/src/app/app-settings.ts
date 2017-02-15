@@ -2,7 +2,7 @@ import { Produto } from '../models/produto';
 
 export class AppSettings {
    public static get API_ENDPOINT(): string {
-       return 'http://localhost:9000/api/';
+       return 'http://tabarato.ddns.net:9000/api/'; //'http://localhost:9000/api/';
    }
 
    //API marca
@@ -26,13 +26,17 @@ export class AppSettings {
    public static GET_ICONE = 'icone';
 
 
-   public static get convertToProduto(data): Produto {
+   public static convertToProduto(data): Produto {
      var produto = new Produto();
      produto.codigo = data.codigo;
      produto.preco = data.preco;
      produto.dtpublicacao = data.dtpublicacao;
      produto.loja.cdloja = data.cdloja;
-     produto.loja.nome = data.loja;
+     produto.loja.nome = data.loja; 
+     produto.loja.icon = data.iconloja;
+     produto.loja.vicinity = data.vicinity;
+     produto.loja.lat = data.lat;
+     produto.loja.lng = data.lng;
      produto.marca.cdmarca = data.cdmarca;
      produto.marca.descricao = data.marca;
      produto.tipo.cdtipo = data.cdtipo;
@@ -42,5 +46,4 @@ export class AppSettings {
      produto.icon = data.icon;
      return produto;
    }
-
 }
