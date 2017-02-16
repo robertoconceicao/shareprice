@@ -6,9 +6,7 @@ import { Loja } from '../../models/loja';
     selector: 'loja-page',
     template: `
         <ion-content>
-            <ion-navbar>    
-                <ion-title>Escolha o supermecado</ion-title>
-
+            <ion-navbar>
                 <ion-searchbar 
                     [(ngModel)]="searchTerm" 
                     [showCancelButton]=true

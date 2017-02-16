@@ -14,7 +14,7 @@ contentHeaders.append('Content-Type','application/json');
 export class SharingService {
   
   public produtos: Array<Produto>;
-  
+
   constructor(public http: Http) {
     console.log('Hello SharingService Provider');
     this.produtos = new Array<Produto>();
@@ -31,11 +31,21 @@ export class SharingService {
     };
     console.log("Dados enviados: "+JSON.stringify(jsonProduto));
 
-    return this.http
-                .post(AppSettings.API_ENDPOINT + AppSettings.POST_PRODUTO, 
-                      JSON.stringify(jsonProduto), 
-                      {headers: contentHeaders}
-                ).toPromise();
+    if(!!produto.codigo){
+      //UPDATE
+      return this.http
+                  .put(AppSettings.API_ENDPOINT + AppSettings.POST_PRODUTO + "/" +produto.codigo, 
+                        JSON.stringify(jsonProduto), 
+                        {headers: contentHeaders}
+                  ).toPromise();
+    } else {
+      //INSERT
+      return this.http
+                  .post(AppSettings.API_ENDPOINT + AppSettings.POST_PRODUTO, 
+                        JSON.stringify(jsonProduto), 
+                        {headers: contentHeaders}
+                  ).toPromise();
+    }
   }
 
   /* 
@@ -51,8 +61,8 @@ export class SharingService {
     return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_PRODUTO + params);            
   }
 
-  getMarcas() {
-    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MARCAS);
+  getMarcas() {    
+    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MARCAS);            
   }
 
   getTipos() {

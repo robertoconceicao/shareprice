@@ -6,6 +6,7 @@ import { ConfigPage } from '../config/config';
 import { Produto } from '../../models/produto';
 import { SharingService } from '../../providers/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
+import { MeuEstorage } from '../../app/meu-estorage';
 
 @Component({
    selector: 'page-home',
@@ -15,11 +16,15 @@ export class Home {
 
    public searchTerm: string = "";
    public produtos: Array<Produto>;
+   public noFilter: Array<Produto> = [];
    public loading: any;
+   public meuEstorage: MeuEstorage;
 
    constructor(public navCtrl: NavController,
                public sharingService: SharingService,
                public loadingCtrl: LoadingController) {
+     this.meuEstorage = new MeuEstorage(sharingService);
+
    }
 
    ionViewDidLoad() {
@@ -38,7 +43,6 @@ export class Home {
         });
 
         this.loading.present();
-
         this.findProdutos();
    }
 
@@ -50,23 +54,10 @@ export class Home {
             for(let data of dados){
 
                 var produto = AppSettings.convertToProduto(data);
-                /*
-                produto.codigo = data.codigo;
-                produto.preco = data.preco;
-                produto.dtpublicacao = data.dtpublicacao;
-                produto.loja.cdloja = data.cdloja;
-                produto.loja.nome = data.loja;
-                produto.marca.cdmarca = data.cdmarca;
-                produto.marca.descricao = data.marca;
-                produto.tipo.cdtipo = data.cdtipo;
-                produto.tipo.descricao = data.tipo;
-                produto.medida.cdmedida = data.cdmedida;
-                produto.medida.descricao = data.medida;
-                produto.icon = data.icon;
-                */
                 this.produtos.push(produto);
             }
-            console.log(this.produtos);
+            
+            this.noFilter = this.produtos;
             this.loading.dismiss();
         })
         .catch(error => {
@@ -80,8 +71,18 @@ export class Home {
        this.navCtrl.push(CadProdutoPage, {codigo: codigoParam});
    }
 
+   /**
+    * loja: Loja; vicinity
+    tipo: Tipo;
+    marca: Marca;
+    medida: Medida;
+    preco: string;
+    */
    filterItems(){
-
+      this.produtos = this.noFilter.filter((item) => {
+          let searchComposto = item.loja.nome + " " +item.marca.descricao + " " +item.medida.descricao + " " +item.medida.ml;
+          return searchComposto.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1;
+      });
    }
 
    showFilters(){
@@ -101,5 +102,9 @@ export class Home {
           return this.produtos.length == 0;
        }
        return true;
+   }
+
+   hasFilter(){
+       return !!this.meuEstorage.getFiltro();
    }
 }

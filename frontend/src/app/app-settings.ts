@@ -1,6 +1,7 @@
-import { Produto } from '../models/produto';
+import { Produto }  from '../models/produto';
 
 export class AppSettings {
+
    public static get API_ENDPOINT(): string {
        return 'http://tabarato.ddns.net:9000/api/'; //'http://localhost:9000/api/';
    }
@@ -43,7 +44,8 @@ export class AppSettings {
      produto.tipo.descricao = data.tipo;
      produto.medida.cdmedida = data.cdmedida;
      produto.medida.descricao = data.medida;
+     produto.medida.ml = data.ml;
      produto.icon = data.icon;
      return produto;
-   }
+   }   
 }

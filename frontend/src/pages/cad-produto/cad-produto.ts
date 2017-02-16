@@ -9,6 +9,8 @@ import { Loja } from '../../models/loja';
 import { AppSettings }  from '../../app/app-settings';
 import { LojaPage } from '../loja/loja-page';
 import { SharingService } from '../../providers/sharing-service';
+import { NumberUtil } from '../../util/number-util';
+import { MeuEstorage } from '../../app/meu-estorage';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -31,6 +33,8 @@ export class CadProdutoPage {
   //por enquanto estou usando só a primeira loja q vem no array mas pode ser q eu precise mostrar uma lista de lojas por isso coloquei esse array
   public lojas: Array<Loja> = [];
 
+  public meuEstorage: MeuEstorage;
+
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               public toastCtrl: ToastController,
@@ -39,6 +43,7 @@ export class CadProdutoPage {
               public modalCtrl: ModalController) {
       this.produto = new Produto();
       this.codigo = this.navParams.get('codigo');
+      this.meuEstorage = new MeuEstorage(sharingService);
   }
 
   ionViewDidLoad() {
@@ -54,6 +59,12 @@ export class CadProdutoPage {
     } else {
       // chama em cascata o getTipos, getMedidas e as lojas pela localizacao do usuario.
       this.getMarcas();
+      this.getTipos();      
+      this.getMedidas();
+
+      this.buscarIconeCerveja();
+      // get localizacao do usuario
+      this.getLojasByLocation();
     }
   }
 
@@ -61,8 +72,7 @@ export class CadProdutoPage {
     this.sharingService.findProdutoById(this.codigo)
       .then(produto => {
           this.produto = AppSettings.convertToProduto(produto[0]);
-          this.medidas[
-            0] = this.produto.medida;
+          this.medidas[0] = this.produto.medida;
           this.tipos[0] = this.produto.tipo;
           this.marcas[0] = this.produto.marca;
           this.loading.dismiss();
@@ -74,11 +84,15 @@ export class CadProdutoPage {
       });
   }
 
-  postar(): void{
+  postar(): void {
     this.produto.preco = this.produto.preco.replace(/,/, '.'); //replace , por .
     this.sharingService.postar(this.produto)
       .then(success => {
-            this.presentToast("Obrigado por cadastrar o produto");
+            let msg = "Obrigado por cadastrar o produto";
+            if(!!this.produto.codigo){
+              msg = "Obrigado por atualizar o produto";
+            }
+            this.presentToast(msg);
             this.goBack();
         })
         .catch(error => {
@@ -98,58 +112,25 @@ export class CadProdutoPage {
     this.navCtrl.pop();
   }
 
-  getMarcas(){
-    //get marcas
-    this.sharingService.getMarcas()
-        .then(marcas => {
-            this.marcas = marcas;
-            if(this.marcas.length > 0){
-              this.produto.marca = this.marcas[0];
-            }
-            // get tipos
-            this.getTipos();
-        })
-        .catch(error => {
-            this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
-            this.loading.dismiss();
-            this.goBack();
-        });
-  }
+  getMarcas(){    
+    this.marcas = this.meuEstorage.getMarcas();
+    if(this.marcas.length > 0){
+      this.produto.marca = this.marcas[0];
+    }
+  } 
 
   getTipos(){
-    //get tipos
-    this.sharingService.getTipos()
-        .then(tipos => {
-            this.tipos = tipos;
-            if(this.tipos.length > 0){
-              this.produto.tipo = this.tipos[0];
-            }
-            // get medidas
-            this.getMedidas();
-        })
-        .catch(error => {
-            this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
-            this.loading.dismiss();
-            this.goBack();
-        });
+      this.tipos = this.meuEstorage.getTipos();
+      if(this.tipos.length > 0){
+        this.produto.tipo = this.tipos[0];
+      }
   }
 
   getMedidas(){
-    //get medidas
-    this.sharingService.getMedidas()
-        .then(medidas => {
-            this.medidas = medidas;
-            if(this.medidas.length > 0){
-              this.produto.medida = this.medidas[0];
-            }
-            // get localizacao do usuario
-            this.getLojasByLocation();
-        })
-        .catch(error => {
-            this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
-            this.loading.dismiss();
-            this.goBack();
-        });
+    this.medidas = this.meuEstorage.getMedidas();
+    if(this.medidas.length > 0){
+      this.produto.medida = this.medidas[0];
+    }
   }
 
   getLojasByLocation(){
@@ -217,63 +198,9 @@ export class CadProdutoPage {
     this.produto.medida.cdmedida = event;
     this.buscarIconeCerveja();
   }
-  
-  /*
-  ^\d{1,3}(?:\.\d{3})*,\d{2}$
-  ^\s*\d{1,3}(?:\.\d{3})*,\d{2}$
-  ^\s*(?:[1-9]\d{0,2}(?:\.\d{3})*|0),\d{2}$
-  ^\s*(?:[1-9]\d{0,2}(?:\.\d{3})*|0)(?:,\d{1,2})?$
-
-  get preco(){
-    console.log("GET preco: "+this.produto.preco);
-    return this.produto.preco;
-  }
-
-  set preco(valor){
-    console.log("SET preco: "+this.produto.preco);
-    this.onChangePreco(valor);  
-  }
-  */
-  
-  addZerosEsquerda(valor){
-      var re = /\D/g; 
-      var newValor = valor.replace(re, ''); //limpa a formatacao
-      console.log("Antes: "+valor+" Depois: "+newValor);
-      
-      //add zeros a esquerda
-      if(newValor.length == 0){
-        newValor = "000";
-      }
-      if(newValor.length == 1){
-        newValor = "00"+newValor;
-      }
-      if(newValor.length == 2){
-        newValor = "0"+newValor;
-      }
-
-      if(newValor.length == 4){
-        if(newValor.indexOf(0) == 0){
-          newValor = newValor.substr(1);
-        }
-      }
-
-      if(newValor.length > 4){
-        newValor = newValor.substr(newValor.length - 4); //fica só com os últimos 4 digitos 
-      }
-      return newValor;
-  }
 
   onChangePreco(event){
-      let newstr2 = this.addZerosEsquerda(event.target.value);
-
-      let strend = newstr2.substr(newstr2.length - 2); // pega os dois ultimos campos da string
-      let strbeging = newstr2.substr(0, newstr2.length - 2); // pega o inicio
-      let valor = strbeging + "," + strend;
-
-      console.log("valor: "+valor);
-
-      this.produto.preco = valor;
-      //this.onCampoValor.emit(this.campoValor);
+      this.produto.preco = NumberUtil.formataMoeda(event.target.value);
   }
 
   abrirMapa(){

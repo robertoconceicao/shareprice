@@ -1,29 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { Home } from '../pages/home/home';
-
+import { MeuEstorage } from './meu-estorage';
+import { SharingService } from '../providers/sharing-service';
 
 @Component({
   templateUrl: 'app.html'
 })
-export class MyApp {
+export class MyApp implements OnInit {
 
   rootPage: any = Home;
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform) {
+  meuEstorage: MeuEstorage;
+
+  constructor(public platform: Platform, sharingService: SharingService) {
+    this.meuEstorage = new MeuEstorage(sharingService);
     this.initializeApp();   
   }
 
-  initializeApp() {
+  ngOnInit(): void {
+    console.log("ngOnInit...");
+    this.meuEstorage.loadStorage();
+  }
+
+  initializeApp() {    
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
       Splashscreen.hide();
+      console.log("initializeApp ...");
     });
   }
 }

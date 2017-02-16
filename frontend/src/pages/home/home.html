@@ -6,12 +6,12 @@
         [(ngModel)]="searchTerm" 
         [showCancelButton]=true
         (ionInput)="filterItems()" 
-        placeholder="Cerveja 300 ml, Fralda, Carne ..." >
+        placeholder="busca..." >
     </ion-searchbar>
 
     <ion-buttons end>
-        <button ion-button icon-only (click)="showFilters()">
-            <ion-icon name="funnel"></ion-icon>
+        <button ion-button icon-only (click)="showFilters()">            
+            <ion-icon name="funnel" [style.color]="hasFilter() ? 'orange' : 'inherit'"></ion-icon>
         </button>
         <button ion-button icon-only (click)="showConfig()">
             <ion-icon name="settings"></ion-icon>
@@ -31,7 +31,7 @@
             <ion-thumbnail item-left>
                 <img [src]="produto.icon">
             </ion-thumbnail>
-            <h2>{{ produto.marca.descricao + ' ' +  produto.tipo.descricao  + ' ' + produto.medida.descricao }}</h2>
+            <h2>{{ produto.marca.descricao + ' ' + produto.medida.descricaoML }}</h2>
             <p>{{ produto.loja.nome }}</p>
             <p>{{ produto.dtpublicacao | date: 'dd/MM/yyyy' }}</p>
             <ion-note item-right>

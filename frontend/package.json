@@ -1,7 +1,7 @@
 {
   "name": "ionic-hello-world",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "author": "Roberto da Conceição",
+  "homepage": "",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",
@@ -39,5 +39,5 @@
     "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [],
-  "description": "Share Price: An Ionic project"
+  "description": "Viva Cerveja: Encontrar os preços das cerveja nos supermercados mais próximos de você."
 }

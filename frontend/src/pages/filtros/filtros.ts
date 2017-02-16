@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { Marca } from '../../models/marca';
+import { Medida } from '../../models/medida';
+import { Tipo } from '../../models/tipo';
+import { Filtro } from '../../models/filtro';
+import { MeuEstorage, FILTRO } from '../../app/meu-estorage';
+import { NumberUtil } from '../../util/number-util';
+import { SharingService } from '../../providers/sharing-service';
 
 @Component({
   selector: 'page-filtros',
@@ -7,9 +14,53 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class FiltrosPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  public marcas: Array<Marca> = [];
+  public medidas: Array<Medida> = [];
+  public tipos: Array<Tipo> = [];
+
+  public filtro: Filtro;
+  public meuEstorage: MeuEstorage;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, sharingService: SharingService) {
+    this.filtro = new Filtro();
+    this.meuEstorage = new MeuEstorage(sharingService);
+  }
+
+  getMarcas(){    
+    this.marcas = this.meuEstorage.getMarcas();   
+  } 
+
+  getTipos(){
+    this.tipos = this.meuEstorage.getTipos();      
+  }
+
+  getMedidas(){
+    this.medidas = this.meuEstorage.getMedidas();    
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad FiltrosPage');
+    this.getMarcas();
+    this.getTipos();
+    this.getMedidas();
+
+    if(!!this.meuEstorage.getFiltro()){
+      this.filtro = this.meuEstorage.getFiltro();
+    }
+  }
+
+  onChangePreco(event){
+      this.filtro.maxvalor = NumberUtil.formataMoeda(event.target.value);
+  }
+
+  ionViewWillLeave(){
+    if(this.filtro.hasFiltro()){
+      this.meuEstorage.setFiltro(this.filtro);
+    }
+  }
+
+  limparFiltros(){
+    this.filtro = new Filtro();
+    this.meuEstorage.removeItem(FILTRO);
   }
 }

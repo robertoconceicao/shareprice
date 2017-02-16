@@ -33,6 +33,7 @@ router.get('/api/produto/:codigo', function(req, res) {
             l.lng as lng,
             t.descricao AS tipo, 
             md.descricao AS medida, 
+            md.ml as ml,
             i.icon as icon
         FROM produto p
         JOIN loja l ON l.cdloja = p.cdloja
@@ -51,11 +52,26 @@ router.get('/api/produto/:codigo', function(req, res) {
     }); 
 });
 
+router.put('/api/produto/:codigo', function(req, res) {
+    var produtoData = req.body;
+    var codigo = req.params.codigo;
+
+    pool.getConnection(function(err, connection) {        
+        connection.query('UPDATE produto SET ? WHERE codigo = ? ', [produtoData, codigo],
+            function(err,result){
+                if(err) {
+                    return res.status(400).json(err);
+                }
+                return res.status(200).json(result);            
+            });
+        connection.release();       
+    });    
+});
 
 router.get('/api/produtos', function(req, res) {	
     pool.getConnection(function(err, connection) {
         connection.query(`
-        SELECT p . * , m.descricao AS marca, l.nome AS loja, t.descricao AS tipo, md.descricao AS medida, i.icon as icon
+        SELECT p . * , m.descricao AS marca, l.nome AS loja, t.descricao AS tipo, md.descricao AS medida, md.ml as ml, i.icon as icon
         FROM produto p
         JOIN loja l ON l.cdloja = p.cdloja
         JOIN marca m ON m.cdmarca = p.cdmarca
@@ -63,6 +79,7 @@ router.get('/api/produtos', function(req, res) {
         JOIN medida md ON md.cdmedida = p.cdmedida
         join iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
         WHERE 1 
+        order by p.preco asc
         LIMIT 0 , 30
         `,[],function(err,result){
             if(err) {

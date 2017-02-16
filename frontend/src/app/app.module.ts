@@ -7,7 +7,6 @@ import { FiltrosPage }            from '../pages/filtros/filtros';
 import { ConfigPage }             from '../pages/config/config';
 import { LojaPage }               from '../pages/loja/loja-page';
 import { SharingService }         from '../providers/sharing-service';
-import { CampoMoeda }             from '../componentes/moeda/campo-moeda';
 import { MoedaRealPipe }          from '../pipes/moeda-real';
 
 @NgModule({
@@ -18,7 +17,6 @@ import { MoedaRealPipe }          from '../pipes/moeda-real';
     FiltrosPage,
     ConfigPage,
     LojaPage,
-    CampoMoeda,
     MoedaRealPipe
   ],
   imports: [
@@ -31,8 +29,7 @@ import { MoedaRealPipe }          from '../pipes/moeda-real';
     CadProdutoPage,
     FiltrosPage,
     ConfigPage,
-    LojaPage,
-    CampoMoeda
+    LojaPage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
     SharingService]

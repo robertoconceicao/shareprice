@@ -7,12 +7,53 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>filtros</ion-title>
+    <ion-title>Filtros</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
+        <ion-list>
+            <ion-item>            
+                <ion-label>Marca</ion-label>            
+                    <ion-select [(ngModel)]="filtro.marca">
+                        <ion-option [value]="marca.cdmarca" *ngFor="let marca of marcas">
+                            {{ marca.descricao }}
+                        </ion-option>
+                    </ion-select>
+            </ion-item>
+            
+            <ion-item>            
+                <ion-label>Tipo</ion-label>                        
+                <ion-select [(ngModel)]="filtro.tipo">
+                    <ion-option [value]="tipo.cdtipo" *ngFor="let tipo of tipos">
+                        {{ tipo.descricao }}
+                    </ion-option>
+                </ion-select>            
+            </ion-item>
 
+            <ion-item>            
+                <ion-label>Medida</ion-label>
+                <ion-select [(ngModel)]="filtro.medida">
+                    <ion-option [value]="medida.cdmedida" *ngFor="let medida of medidas" >
+                        {{ medida.descricao }}
+                    </ion-option>
+                </ion-select>
+            </ion-item>
+
+            <ion-item>            
+                <ion-label>Maior valor R$</ion-label>
+                <ion-input [ngModel]="filtro.maxvalor" 
+                    type="text" 
+                    name="maxvalor"
+                    (keyup)="onChangePreco($event)"
+                    ></ion-input>
+            </ion-item>
+            
+            <ion-item>
+                <button ion-button outline item-right (click)="limparFiltros()">Limpar Filtros</button>
+            </ion-item>
+
+        </ion-list>
 </ion-content>
