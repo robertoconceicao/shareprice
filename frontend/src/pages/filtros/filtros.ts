@@ -54,7 +54,7 @@ export class FiltrosPage {
   }
 
   ionViewWillLeave(){
-    if(this.filtro.hasFiltro()){
+    if(!!this.filtro && this.filtro.hasFiltro()){
       this.meuEstorage.setFiltro(this.filtro);
     }
   }

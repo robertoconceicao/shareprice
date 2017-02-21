@@ -26,6 +26,15 @@
         <img src="/assets/img/sharing.png"/>
     </div>
 
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+        pullingIcon="arrow-dropdown"
+        pullingText="Pull to refresh"
+        refreshingSpinner="circles"
+        refreshingText="Refreshing...">
+        </ion-refresher-content>
+    </ion-refresher> 
+
     <ion-list>
         <button ion-item *ngFor="let produto of produtos" (click)="itemSelected(produto.codigo)">
             <ion-thumbnail item-left>
@@ -40,6 +49,12 @@
         </button>
 
     </ion-list>
+
+    <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+        <ion-infinite-scroll-content
+            loadingText="Carregando mais dados ...">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll> 
 
     <ion-fab right bottom>
         <button ion-fab>

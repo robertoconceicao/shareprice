@@ -77,7 +77,15 @@ export class MeuEstorage {
     getFiltro(){
         let filtroLS = localStorage.getItem(FILTRO);
         if(!!filtroLS){
-            return JSON.parse(filtroLS);
+            let obj = JSON.parse(filtroLS);
+            let filtro = new Filtro();
+            filtro.marca = obj.marca;
+            filtro.tipo = obj.tipo;
+            filtro.medida = obj.medida;
+            filtro.maxvalor = obj.maxvalor;
+            filtro.distancia = obj.distancia;
+            filtro.posicao = obj.posicao;
+            return filtro;
         }
         return null;
     }

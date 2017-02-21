@@ -19,6 +19,7 @@ const API_GOOGLE_PLACE = 'https://maps.googleapis.com/maps/api/place/nearbysearc
 const API_KEY='key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc';
 const TYPES='types=grocery_or_supermarket'; //https://developers.google.com/places/supported_types?hl=pt-br
 const RADIUS='radius=5000'; // 1km
+const LIMIT_RESULTADO = 5;
 
 //  PRODUTOS ============================================
 router.get('/api/produto/:codigo', function(req, res) {	    
@@ -68,7 +69,8 @@ router.put('/api/produto/:codigo', function(req, res) {
     });    
 });
 
-router.get('/api/produtos', function(req, res) {	
+router.get('/api/produtos', function(req, res) {
+    var filtros = getFiltrosUrl(req);
     pool.getConnection(function(err, connection) {
         connection.query(`
         SELECT p . * , m.descricao AS marca, l.nome AS loja, t.descricao AS tipo, md.descricao AS medida, md.ml as ml, i.icon as icon
@@ -78,10 +80,11 @@ router.get('/api/produtos', function(req, res) {
         JOIN tipo t ON t.cdtipo = p.cdtipo
         JOIN medida md ON md.cdmedida = p.cdmedida
         join iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
-        WHERE 1 
+        WHERE 1 = 1
+        ` + filtros + `
         order by p.preco asc
-        LIMIT 0 , 30
-        `,[],function(err,result){
+        LIMIT 0 , ?
+        `,[LIMIT_RESULTADO],function(err,result){
             if(err) {
                 return res.status(400).json(err);
             }
@@ -90,6 +93,78 @@ router.get('/api/produtos', function(req, res) {
         connection.release();
     }); 
 });
+
+router.get('/api/before_produtos', function(req, res) {
+   var filtros = getFiltrosUrl(req);
+   pool.getConnection(function(err, connection) {
+        connection.query(`
+        SELECT p . * , m.descricao AS marca, l.nome AS loja, t.descricao AS tipo, md.descricao AS medida, md.ml as ml, i.icon as icon
+        FROM produto p
+        JOIN loja l ON l.cdloja = p.cdloja
+        JOIN marca m ON m.cdmarca = p.cdmarca
+        JOIN tipo t ON t.cdtipo = p.cdtipo
+        JOIN medida md ON md.cdmedida = p.cdmedida
+        join iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
+        WHERE 1 = 1
+        ` + filtros + `
+        order by p.preco asc
+        LIMIT 0 , ?
+        `,[LIMIT_RESULTADO],function(err,result){
+            if(err) {
+                return res.status(400).json(err);
+            }
+            return res.json(result);           
+        });
+        connection.release();
+    }); 
+});
+
+router.get('/api/after_produtos', function(req, res) {
+    var posicao = Number.parseInt(req.query.posicao);
+    var limiteResultado = Number.parseInt(LIMIT_RESULTADO) + posicao;
+    var filtros = getFiltrosUrl(req);
+    pool.getConnection(function(err, connection) {
+        connection.query(`
+        SELECT p . * , m.descricao AS marca, l.nome AS loja, t.descricao AS tipo, md.descricao AS medida, md.ml as ml, i.icon as icon
+        FROM produto p
+        JOIN loja l ON l.cdloja = p.cdloja
+        JOIN marca m ON m.cdmarca = p.cdmarca
+        JOIN tipo t ON t.cdtipo = p.cdtipo
+        JOIN medida md ON md.cdmedida = p.cdmedida
+        join iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
+        WHERE 1 = 1
+        ` + filtros + `
+        order by p.preco asc
+        LIMIT ? , ?
+        `,[posicao, limiteResultado],function(err,result){
+            if(err) {
+                return res.status(400).json(err);
+            }
+            return res.json(result);           
+        });
+        connection.release();
+    }); 
+});
+/**
+ * pega os filtros enviados via GET na url e converte em filtros SQL
+ */
+function getFiltrosUrl(req){
+    var filtros = "";
+    if(!!req.query.marca){
+        filtros += " AND p.cdmarca="+req.query.marca;
+    }
+    if(!!req.query.medida){
+        filtros += " AND p.cdmedida="+req.query.medida;
+    }
+    if(!!req.query.tipo){
+        filtros += " AND p.cdtipo="+req.query.tipo;
+    }
+    if(!!req.query.maxvalor){
+        filtros += " AND p.preco <= '"+req.query.maxvalor+"'";
+    }
+    console.log("filtros SQL: "+filtros);
+    return filtros;
+}
 
 /* NOVO PRODUTO =============================================
     codigo: number;    

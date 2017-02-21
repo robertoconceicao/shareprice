@@ -17,6 +17,8 @@ export class AppSettings {
 
    //API produto
    public static GET_PRODUTOS = 'produtos';
+   public static BEFORE_PRODUTOS = 'before_produtos';
+   public static AFTER_PRODUTOS = 'after_produtos';
    public static GET_PRODUTO = 'produto';
    public static POST_PRODUTO = 'produto';
 

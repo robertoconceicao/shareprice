@@ -4,8 +4,9 @@ export class Filtro {
     tipo: number;
     maxvalor: number;
     distancia: number;
+    posicao: number;
 
-    hasFiltro(){
+    public hasFiltro(){
         return (!!this.marca || !!this.medida || !!this.tipo || !!this.maxvalor || !!this.distancia);
     }
 }

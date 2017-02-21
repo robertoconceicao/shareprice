@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Http, Headers, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 //import { Observable } from 'rxjs/Rx';
 import { Produto }      from '../models/produto';
+import { Filtro }      from '../models/filtro';
 import { AppSettings }  from '../app/app-settings';
 
 
@@ -52,8 +53,41 @@ export class SharingService {
   result do sql
   codigo	preco	dtpublicacao	cdloja	cdmarca	cdtipo	cdmedida	marca	loja	tipo	medida
    */
-  findProdutos(paramsUrl: string) {
-    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_PRODUTOS);    
+  findProdutos(filtro: Filtro) {
+    let params = this.getParametrosUrl(filtro);
+    return this.getHttpParamns(AppSettings.API_ENDPOINT + AppSettings.GET_PRODUTOS, params);    
+  }
+
+  afterProdutos(filtro: Filtro) {
+    let params = this.getParametrosUrl(filtro);
+    return this.getHttpParamns(AppSettings.API_ENDPOINT + AppSettings.AFTER_PRODUTOS, params);    
+  }
+
+  beforeProdutos(filtro: Filtro) {
+    let params = this.getParametrosUrl(filtro);
+    return this.getHttpParamns(AppSettings.API_ENDPOINT + AppSettings.BEFORE_PRODUTOS, params);    
+  }
+  getParametrosUrl(filtro: Filtro){
+    let params: URLSearchParams = new URLSearchParams();
+    if(!!filtro.posicao){
+      params.set('posicao', filtro.posicao +"");
+    }
+    if(!!filtro.marca){
+      params.set('marca', filtro.marca +"");
+    }
+    if(!!filtro.medida){
+      params.set('medida', filtro.medida +"");
+    }
+    if(!!filtro.tipo){
+      params.set('tipo',filtro.tipo +"");
+    }
+    if(!!filtro.maxvalor){
+      params.set('maxvalor', filtro.maxvalor +"");
+    }
+    if(!!filtro.distancia){
+      params.set('distancia', filtro.distancia +"");
+    }
+    return params;
   }
 
   findProdutoById(codigo: any){
@@ -81,6 +115,15 @@ export class SharingService {
   findIconeCerveja(cdmarca: any, cdtipo: any, cdmedida: any) {
     let params: string = "/"+cdmarca+"/"+cdtipo+"/"+cdmedida;
     return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_ICONE + params);            
+  }
+
+  private getHttpParamns(url: string, params: URLSearchParams){
+    return this.http.get(url, {search: params})
+          .toPromise()
+          .then(res => res.json())
+          .catch((error) => {
+            this.handleError(error);
+          });
   }
 
   private getHttp(url: string){
