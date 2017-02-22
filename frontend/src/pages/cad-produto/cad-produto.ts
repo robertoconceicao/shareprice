@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController, ModalController  } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 import { Produto } from '../../models/produto';
@@ -14,11 +14,17 @@ import { MeuEstorage } from '../../app/meu-estorage';
 
 import 'rxjs/add/operator/toPromise';
 
+
+declare var google;
+
 @Component({
   selector: 'page-cad-produto',
   templateUrl: 'cad-produto.html'
 })
 export class CadProdutoPage {
+
+  @ViewChild('map') mapElement: ElementRef;
+  map: any;
 
   public produto: Produto;
 
@@ -204,6 +210,14 @@ export class CadProdutoPage {
   }
 
   abrirMapa(){
-    console.log("TODO: Chamar o app do map para fazer a navegação passando as coordenada do supermercado");
+      let latLng = new google.maps.LatLng(this.produto.loja.lat, this.produto.loja.lng);
+ 
+      let mapOptions = {
+        center: latLng,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      }
+ 
+      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
   }
 }
