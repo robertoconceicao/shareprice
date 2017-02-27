@@ -1,4 +1,4 @@
-import { SharingService } from '../providers/sharing-service';
+import { SharingService } from '../services/sharing-service';
 import { Filtro } from '../models/filtro';
 
 export const FILTRO = "br.com.rdc.filtro_cerveja";

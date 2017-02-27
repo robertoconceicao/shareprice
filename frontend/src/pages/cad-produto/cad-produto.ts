@@ -8,7 +8,7 @@ import { Tipo } from '../../models/tipo';
 import { Loja } from '../../models/loja';
 import { AppSettings }  from '../../app/app-settings';
 import { LojaPage } from '../loja/loja-page';
-import { SharingService } from '../../providers/sharing-service';
+import { SharingService } from '../../services/sharing-service';
 import { NumberUtil } from '../../util/number-util';
 import { MeuEstorage } from '../../app/meu-estorage';
 

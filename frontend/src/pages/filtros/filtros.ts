@@ -6,7 +6,7 @@ import { Tipo } from '../../models/tipo';
 import { Filtro } from '../../models/filtro';
 import { MeuEstorage, FILTRO } from '../../app/meu-estorage';
 import { NumberUtil } from '../../util/number-util';
-import { SharingService } from '../../providers/sharing-service';
+import { SharingService } from '../../services/sharing-service';
 
 @Component({
   selector: 'page-filtros',

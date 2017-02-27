@@ -5,7 +5,7 @@ import { CadProdutoPage } from '../cad-produto/cad-produto';
 import { ConfigPage } from '../config/config';
 import { Produto } from '../../models/produto';
 import { Filtro } from '../../models/filtro';
-import { SharingService } from '../../providers/sharing-service';
+import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
 import { MeuEstorage } from '../../app/meu-estorage';
 
