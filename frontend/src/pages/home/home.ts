@@ -85,11 +85,6 @@ export class Home {
         });
    }
 
-   itemSelected(codigoParam){
-       console.log("codigo: "+codigoParam);
-       this.navCtrl.push(CadProdutoPage, {codigo: codigoParam});
-   }
-
    /**
     * loja: Loja; vicinity
     tipo: Tipo;

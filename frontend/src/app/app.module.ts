@@ -16,6 +16,8 @@ import { AuthService }            from '../services/auth/auth.service';
 import { Http }                   from '@angular/http';
 import { Storage }                from '@ionic/storage';
 
+import { ProdutoItem }            from '../componentes/produto-item.component';
+
 let storage: Storage = new Storage(['sqlite', 'websql', 'indexeddb'], { name: '__mydb' });
 
 export function getAuthHttp(http) {
@@ -37,7 +39,8 @@ export function getAuthHttp(http) {
     FiltrosPage,
     ConfigPage,
     LojaPage,
-    MoedaRealPipe
+    MoedaRealPipe,
+    ProdutoItem
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -51,7 +54,8 @@ export function getAuthHttp(http) {
     CadProdutoPage,
     FiltrosPage,
     ConfigPage,
-    LojaPage
+    LojaPage,
+    ProdutoItem
   ],
   providers: [
       {provide: ErrorHandler, useClass: IonicErrorHandler},
