@@ -27,6 +27,9 @@ app.use(bodyParser.json());
 // parse application/vnd.api+json as json
 app.use(bodyParser.json({ type: 'application/json' }));
 
+//http://expressjs.com/pt-br/starter/static-files.html
+app.use('/static', express.static('public'));
+
 // Add headers
 app.use(function (req, res, next) {
 

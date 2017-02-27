@@ -21,6 +21,8 @@ const TYPES='types=grocery_or_supermarket'; //https://developers.google.com/plac
 const RADIUS='radius=5000'; // 1km
 const LIMIT_RESULTADO = 5;
 
+
+
 //  PRODUTOS ============================================
 router.get('/api/produto/:codigo', function(req, res) {	    
     pool.getConnection(function(err, connection) {
