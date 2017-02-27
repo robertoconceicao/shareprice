@@ -1,29 +1,34 @@
-import { Storage } from '@ionic/storage';
+//import { Storage } from '@ionic/storage';
 import { AuthHttp, JwtHelper, tokenNotExpired } from 'angular2-jwt';
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Auth0Vars } from './auth0-variables';
+//import { NavController }  from 'ionic-angular';
+//import { Home } from '../../pages/home/home';
 
 // Avoid name not found warnings
 declare var Auth0: any;
 declare var Auth0Lock: any;
 
+var options = {
+  theme: {
+    logo: 'https://image.freepik.com/free-vector/fresh-beer-pub_23-2147504791.jpg',
+    primaryColor: 'green'
+  },
+  languageDictionary: {   
+    title: "Viva Cerveja"
+  },
+  language: "pt-BR"
+};
+
 @Injectable()
 export class AuthService {
 
+
   jwtHelper: JwtHelper = new JwtHelper();
   auth0 = new Auth0({clientID: Auth0Vars.AUTH0_CLIENT_ID, domain: Auth0Vars.AUTH0_DOMAIN });
-  lock = new Auth0Lock(Auth0Vars.AUTH0_CLIENT_ID, Auth0Vars.AUTH0_DOMAIN, {
-    auth: {
-      redirect: false,
-      params: {
-        scope: 'openid profile offline_access',
-        device: 'my-device'
-      },
-      sso: false
-    }
-  });
-  storage: Storage = new Storage();
+  lock = new Auth0Lock(Auth0Vars.AUTH0_CLIENT_ID, Auth0Vars.AUTH0_DOMAIN, options);
+  
   refreshSubscription: any;
   user: Object;
   zoneImpl: NgZone;
@@ -33,21 +38,19 @@ export class AuthService {
   constructor(private authHttp: AuthHttp, zone: NgZone) {
     this.zoneImpl = zone;
     // Check if there is a profile saved in local storage
-    this.storage.get('profile').then(profile => {
-      this.user = JSON.parse(profile);
-    }).catch(error => {
-      console.log(error);
-    });
-
-    this.storage.get('access_token').then(token => {
-      this.accessToken = token;
-    });
+    let prof = localStorage.getItem('profile');
+    if(!!prof){
+      this.user = JSON.parse(prof);
+    }
+     
+    this.accessToken = localStorage.getItem('access_token');
 
     this.lock.on('authenticated', authResult => {
+      console.log("authenticated: "+JSON.stringify(authResult));
       if (authResult && authResult.accessToken && authResult.idToken) {
-        this.storage.set('access_token', authResult.accessToken);
-        this.storage.set('id_token', authResult.idToken);
-        this.storage.set('refresh_token', authResult.refreshToken);
+        localStorage.setItem('access_token', authResult.accessToken);
+        localStorage.setItem('id_token', authResult.idToken);
+        localStorage.setItem('refresh_token', authResult.refreshToken);
         this.accessToken = authResult.accessToken;
         this.idToken = authResult.idToken;
 
@@ -60,7 +63,7 @@ export class AuthService {
           }
 
           profile.user_metadata = profile.user_metadata || {};
-          this.storage.set('profile', JSON.stringify(profile));
+          localStorage.setItem('profile', JSON.stringify(profile));
           this.user = profile;
         });
 
@@ -69,6 +72,8 @@ export class AuthService {
         this.zoneImpl.run(() => this.user = authResult.profile);
         // // Schedule a token refresh
         this.scheduleRefresh();
+        //chuncho
+       // this.navCtrl.setRoot(Home);
       }
 
     });    
@@ -84,11 +89,11 @@ export class AuthService {
   }
   
   public logout() {
-    this.storage.remove('profile');
-    this.storage.remove('access_token');
-    this.storage.remove('id_token');
+    localStorage.removeItem('profile');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('id_token');
     this.idToken = null;
-    this.storage.remove('refresh_token');
+    localStorage.removeItem('refresh_token');
     this.zoneImpl.run(() => this.user = null);
     // Unschedule the token refresh
     this.unscheduleRefresh();
@@ -157,17 +162,15 @@ export class AuthService {
   public getNewJwt() {
     // Get a new JWT from Auth0 using the refresh token saved
     // in local storage
-    this.storage.get('refresh_token').then(token => {
+    let token = localStorage.getItem('refresh_token');
+    if(!!token){
       this.auth0.refreshToken(token, (err, delegationRequest) => {
         if (err) {
           alert(err);
         }
-        this.storage.set('id_token', delegationRequest.id_token);
+        localStorage.setItem('id_token', delegationRequest.id_token);
         this.idToken = delegationRequest.id_token;
       });
-    }).catch(error => {
-      console.log(error);
-    });
-    
+    }
   }
 }

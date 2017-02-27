@@ -58,6 +58,11 @@ export class SharingService {
     return this.getHttpParamns(AppSettings.API_ENDPOINT + AppSettings.GET_PRODUTOS, params);    
   }
 
+  filterItems(filtro: Filtro) {
+    let params = this.getParametrosUrl(filtro);
+    return this.getHttpParamns(AppSettings.API_ENDPOINT + AppSettings.GET_FILTER, params);    
+  }
+
   afterProdutos(filtro: Filtro) {
     let params = this.getParametrosUrl(filtro);
     return this.getHttpParamns(AppSettings.API_ENDPOINT + AppSettings.AFTER_PRODUTOS, params);    
@@ -67,6 +72,7 @@ export class SharingService {
     let params = this.getParametrosUrl(filtro);
     return this.getHttpParamns(AppSettings.API_ENDPOINT + AppSettings.BEFORE_PRODUTOS, params);    
   }
+  
   getParametrosUrl(filtro: Filtro){
     let params: URLSearchParams = new URLSearchParams();
     if(!!filtro.posicao){
@@ -87,6 +93,9 @@ export class SharingService {
     if(!!filtro.distancia){
       params.set('distancia', filtro.distancia +"");
     }
+    if(!!filtro.searchTerm){
+      params.set('searchTerm', filtro.searchTerm +"");
+    }    
     return params;
   }
 

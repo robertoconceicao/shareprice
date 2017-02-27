@@ -3,7 +3,7 @@ import { Produto }  from '../models/produto';
 export class AppSettings {
 
    public static get API_ENDPOINT(): string {
-       return 'http://tabarato.ddns.net:9000/api/'; //'http://localhost:9000/api/';
+       return 'http://localhost:9000/api/';//'http://tabarato.ddns.net:9000/api/'; //'http://localhost:9000/api/';
    }
 
    //API marca
@@ -17,6 +17,7 @@ export class AppSettings {
 
    //API produto
    public static GET_PRODUTOS = 'produtos';
+   public static GET_FILTER = 'filter';
    public static BEFORE_PRODUTOS = 'before_produtos';
    public static AFTER_PRODUTOS = 'after_produtos';
    public static GET_PRODUTO = 'produto';

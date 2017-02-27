@@ -1,4 +1,5 @@
 import { Component     }  from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { NavController, LoadingController }  from 'ionic-angular';
 import { FiltrosPage }         from '../filtros/filtros';
 import { CadProdutoPage } from '../cad-produto/cad-produto';
@@ -20,11 +21,25 @@ export class Home {
    public noFilter: Array<Produto> = [];
    public loading: any;
    public meuEstorage: MeuEstorage;
+   public searchTermControl;
+
 
    constructor(public navCtrl: NavController,
                public sharingService: SharingService,
                public loadingCtrl: LoadingController) {
      this.meuEstorage = new MeuEstorage(sharingService);
+     this.searchTermControl = new FormControl();
+     
+     this.searchTermControl.valueChanges
+         .debounceTime(1000)
+         .distinctUntilChanged()
+         .subscribe(search => {
+            //if (search !== '' && search) {
+            //if (search) {
+                this.searchTerm = search;
+                this.filterItems();
+            //}
+        });
 
    }
 
@@ -82,11 +97,29 @@ export class Home {
     medida: Medida;
     preco: string;
     */
-   filterItems(){
-      this.produtos = this.noFilter.filter((item) => {
-          let searchComposto = item.loja.nome + " " +item.marca.descricao + " " +item.medida.descricao + " " +item.medida.ml;
-          return searchComposto.toLowerCase().indexOf(this.searchTerm.toLowerCase()) !== -1;
-      });
+   filterItems(){    
+      console.log("filterItems ...");
+      let filtro = this.meuEstorage.getFiltro();
+      if(filtro === null){
+         filtro = new Filtro();
+      }
+      filtro.searchTerm = this.searchTerm;
+      
+      this.sharingService.filterItems(filtro)
+        .then(dados => {
+            let arrayDados = new Array();
+
+            for(let data of dados){
+                var produto = AppSettings.convertToProduto(data);
+                arrayDados.push(produto);
+            }
+
+            this.noFilter = arrayDados;                
+            this.produtos = this.noFilter;
+        })
+        .catch(error => {
+            console.log("Erro ao buscar filterItems");        
+        });
    }
 
    showFilters(){

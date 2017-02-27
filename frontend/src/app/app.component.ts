@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
-import { Home } from '../pages/home/home';
-//import { LoginPage } from '../pages/login/login';
-import { ProfilePage } from '../pages/profile/profile';
+//import { Home } from '../pages/home/home';
+import { LoginPage } from '../pages/login/login';
 import { MeuEstorage } from './meu-estorage';
 import { SharingService } from '../services/sharing-service';
 import { AuthService } from '../services/auth/auth.service';
@@ -14,7 +13,7 @@ import { AuthService } from '../services/auth/auth.service';
 })
 export class MyApp implements OnInit {
 
-  rootPage: any = ProfilePage;
+  rootPage: any;
 
   pages: Array<{title: string, component: any}>;
 
@@ -29,7 +28,7 @@ export class MyApp implements OnInit {
 
   ngOnInit(): void {
     console.log("ngOnInit...");
-    this.meuEstorage.loadStorage();
+    //this.meuEstorage.loadStorage();
   }
 
   initializeApp() {    
@@ -38,14 +37,8 @@ export class MyApp implements OnInit {
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
       Splashscreen.hide();
-      
-      // Schedule a token refresh on app start up
-      this.auth.startupTokenRefresh();
-
-      if(this.auth.authenticated()){
-        this.rootPage = Home;
-      }
       console.log("initializeApp ...");
+      this.rootPage = LoginPage;
     });
   }
 }

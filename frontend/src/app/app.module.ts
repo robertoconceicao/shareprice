@@ -16,7 +16,7 @@ import { AuthService }            from '../services/auth/auth.service';
 import { Http }                   from '@angular/http';
 import { Storage }                from '@ionic/storage';
 
-let storage: Storage = new Storage();
+let storage: Storage = new Storage(['sqlite', 'websql', 'indexeddb'], { name: '__mydb' });
 
 export function getAuthHttp(http) {
   return new AuthHttp(new AuthConfig({
@@ -24,6 +24,7 @@ export function getAuthHttp(http) {
     tokenGetter: (() => storage.get('id_token'))
   }), http);
 }
+
 
 
 @NgModule({
@@ -55,7 +56,7 @@ export function getAuthHttp(http) {
   providers: [
       {provide: ErrorHandler, useClass: IonicErrorHandler},
       SharingService,
-      AuthService,
+      AuthService,      
       {provide: AuthHttp, useFactory: getAuthHttp, deps: [Http]}
     ]
 })

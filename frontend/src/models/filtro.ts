@@ -5,7 +5,8 @@ export class Filtro {
     maxvalor: number;
     distancia: number;
     posicao: number;
-
+    searchTerm: string;
+    
     public hasFiltro(){
         return (!!this.marca || !!this.medida || !!this.tipo || !!this.maxvalor || !!this.distancia);
     }

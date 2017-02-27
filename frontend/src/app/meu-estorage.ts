@@ -16,7 +16,10 @@ export class MeuEstorage {
 
     loadStorage(){
         console.log("clear localStorage ...");
-        localStorage.clear();
+        
+        this.removeItem(MARCAS);
+        this.removeItem(TIPOS);
+        this.removeItem(MEDIDAS);
 
         this.getMarcas();
         this.getTipos();

@@ -94,6 +94,31 @@ router.get('/api/produtos', function(req, res) {
     }); 
 });
 
+router.get('/api/filter', function(req, res) {
+    var filtros = getFiltrosUrl(req);
+    pool.getConnection(function(err, connection) {
+        connection.query(`
+        SELECT p . * , m.descricao AS marca, l.nome AS loja, t.descricao AS tipo, md.descricao AS medida, md.ml as ml, i.icon as icon
+        FROM produto p
+        JOIN loja l ON l.cdloja = p.cdloja
+        JOIN marca m ON m.cdmarca = p.cdmarca
+        JOIN tipo t ON t.cdtipo = p.cdtipo
+        JOIN medida md ON md.cdmedida = p.cdmedida
+        join iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
+        WHERE 1 = 1
+        ` + filtros + `
+        order by p.preco asc
+        LIMIT 0 , ?
+        `,[LIMIT_RESULTADO],function(err,result){
+            if(err) {
+                return res.status(400).json(err);
+            }
+            return res.json(result);           
+        });
+        connection.release();
+    }); 
+});
+
 router.get('/api/before_produtos', function(req, res) {
    var filtros = getFiltrosUrl(req);
    pool.getConnection(function(err, connection) {
@@ -161,6 +186,9 @@ function getFiltrosUrl(req){
     }
     if(!!req.query.maxvalor){
         filtros += " AND p.preco <= '"+req.query.maxvalor+"'";
+    }
+    if(!!req.query.searchTerm){        
+        filtros += " AND CONCAT_WS( ' ', l.nome, m.descricao, md.descricao, md.ml) like '%"+req.query.searchTerm+"%'";        
     }
     console.log("filtros SQL: "+filtros);
     return filtros;
