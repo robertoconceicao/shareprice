@@ -23,6 +23,9 @@ export class AppSettings {
    public static GET_PRODUTO = 'produto';
    public static POST_PRODUTO = 'produto';
 
+   //API usuario
+   public static POST_USUARIO = 'usuario';
+
    //API loja
    public static GET_LOJAS = 'lojas';
 

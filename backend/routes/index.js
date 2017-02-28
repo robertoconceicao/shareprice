@@ -221,6 +221,35 @@ router.post('/api/produto', function(req, res) {
     });    
 });
 
+/* NOVO USUARIO =============================================
+    cdusuario: string 
+    nome: string;
+    avatar: string;
+*/
+router.post('/api/usuario', function(req, res) {
+    console.log("Dados recebidos: "+JSON.stringify(req.body));
+    
+    pool.getConnection(function(err, connection) {
+        connection.query('SELECT * FROM usuario where cdusuario = ? ', [req.body.cdusuario], function(err, result){
+             if(result.length > 0) {
+                 console.log("Usuario ja existe na base, ;-)");
+                 connection.release();
+                 return res.status(200); 
+             }
+             console.log("Cadastrando novo usuario, ;-P");
+             connection.query('INSERT INTO usuario SET ? ', req.body,
+                function(err,result){
+                    if(err) {
+                        connection.release();
+                        return res.status(400).json(err);
+                    }
+                    connection.release();
+                    return res.status(200);
+                });
+        });
+    });    
+});
+
 // MARCAS ============================================
 router.get('/api/marcas', function(req, res) {	
     pool.getConnection(function(err, connection) {

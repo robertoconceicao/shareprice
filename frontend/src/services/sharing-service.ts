@@ -6,7 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import { Produto }      from '../models/produto';
 import { Filtro }      from '../models/filtro';
 import { AppSettings }  from '../app/app-settings';
-
+import { Usuario }      from '../models/usuario';
 
 export const contentHeaders = new Headers();
 contentHeaders.append('Content-Type','application/json');
@@ -47,6 +47,19 @@ export class SharingService {
                         {headers: contentHeaders}
                   ).toPromise();
     }
+  }
+
+  insereUsuario(usuario: Usuario){
+    let jsonUsuario = {
+      cdusuario: usuario.cdusuario,
+      nome: usuario.nome,
+      avatar: usuario.avatar
+    };
+    return  this.http
+                .post(AppSettings.API_ENDPOINT + AppSettings.POST_USUARIO, 
+                    JSON.stringify(jsonUsuario), 
+                    {headers: contentHeaders}
+                ).toPromise();
   }
 
   /* 

@@ -39,18 +39,18 @@ CREATE TABLE IF NOT EXISTS `iconproduto` (
 --
 
 INSERT INTO `iconproduto` (`cdtipo`, `cdmarca`, `cdmedida`, `icon`) VALUES
-(1, 1, 1, 'http://localhost:9000/static/images/skol/skollitrao.png'),
-(1, 1, 2, 'http://localhost:9000/static/images/skol/skol-600.png'),
-(1, 1, 3, 'http://localhost:9000/static/images/skol/skol-latao.png'),
-(1, 1, 4, 'http://localhost:9000/static/images/skol/skol-long-neck.png'),
-(1, 1, 5, 'http://localhost:9000/static/images/skol/skol-lata.png'),
-(1, 1, 6, 'http://localhost:9000/static/images/skol/skol-garrafinha.png'),
-(1, 2, 1, 'http://localhost:9000/static/images/brahma/brahma-litrao.png'),
-(1, 2, 2, 'http://localhost:9000/static/images/brahma/brahma-600.jpg'),
-(1, 2, 3, 'http://localhost:9000/static/images/brahma/brahma-latao.png'),
-(1, 2, 4, 'http://localhost:9000/static/images/brahma/brahma-longneck.png'),
-(1, 2, 5, 'http://localhost:9000/static/images/brahma/brahma-lata.png'),
-(1, 2, 6, 'http://localhost:9000/static/images/brahma/brahma-garrafinha.png');
+(1, 1, 1, 'http://tabarato.ddns.net:9000/static/images/skol/skollitrao.png'),
+(1, 1, 2, 'http://tabarato.ddns.net:9000/static/images/skol/skol-600.png'),
+(1, 1, 3, 'http://tabarato.ddns.net:9000/static/images/skol/skol-latao.png'),
+(1, 1, 4, 'http://tabarato.ddns.net:9000/static/images/skol/skol-long-neck.png'),
+(1, 1, 5, 'http://tabarato.ddns.net:9000/static/images/skol/skol-lata.png'),
+(1, 1, 6, 'http://tabarato.ddns.net:9000/static/images/skol/skol-garrafinha.png'),
+(1, 2, 1, 'http://tabarato.ddns.net:9000/static/images/brahma/brahma-litrao.png'),
+(1, 2, 2, 'http://tabarato.ddns.net:9000/static/images/brahma/brahma-600.jpg'),
+(1, 2, 3, 'http://tabarato.ddns.net:9000/static/images/brahma/brahma-latao.png'),
+(1, 2, 4, 'http://tabarato.ddns.net:9000/static/images/brahma/brahma-longneck.png'),
+(1, 2, 5, 'http://tabarato.ddns.net:9000/static/images/brahma/brahma-lata.png'),
+(1, 2, 6, 'http://tabarato.ddns.net:9000/static/images/brahma/brahma-garrafinha.png');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -9,7 +9,7 @@ import { ConfigPage }             from '../pages/config/config';
 import { LojaPage }               from '../pages/loja/loja-page';
 import { SharingService }         from '../services/sharing-service';
 import { MoedaRealPipe }          from '../pipes/moeda-real';
-import { LoginPage }            from '../pages/login/login';
+import { LoginPage }              from '../pages/login/login';
 
 import { AuthConfig, AuthHttp }   from 'angular2-jwt';
 import { AuthService }            from '../services/auth/auth.service';
@@ -17,6 +17,7 @@ import { Http }                   from '@angular/http';
 import { Storage }                from '@ionic/storage';
 
 import { ProdutoItem }            from '../componentes/produto-item.component';
+import { ViewProdutoPage }        from '../pages/produto/view-produto';
 
 let storage: Storage = new Storage(['sqlite', 'websql', 'indexeddb'], { name: '__mydb' });
 
@@ -40,7 +41,8 @@ export function getAuthHttp(http) {
     ConfigPage,
     LojaPage,
     MoedaRealPipe,
-    ProdutoItem
+    ProdutoItem,
+    ViewProdutoPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -55,7 +57,8 @@ export function getAuthHttp(http) {
     FiltrosPage,
     ConfigPage,
     LojaPage,
-    ProdutoItem
+    ProdutoItem,
+    ViewProdutoPage
   ],
   providers: [
       {provide: ErrorHandler, useClass: IonicErrorHandler},

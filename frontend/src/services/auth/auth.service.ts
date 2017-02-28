@@ -3,8 +3,8 @@ import { AuthHttp, JwtHelper, tokenNotExpired } from 'angular2-jwt';
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Auth0Vars } from './auth0-variables';
-//import { NavController }  from 'ionic-angular';
-//import { Home } from '../../pages/home/home';
+import { SharingService} from '../sharing-service';
+import { Usuario } from '../../models/usuario';
 
 // Avoid name not found warnings
 declare var Auth0: any;
@@ -35,7 +35,9 @@ export class AuthService {
   accessToken: string;
   idToken: string;
   
-  constructor(private authHttp: AuthHttp, zone: NgZone) {
+  constructor(private authHttp: AuthHttp, 
+              zone: NgZone,
+              public sharingService: SharingService) {
     this.zoneImpl = zone;
     // Check if there is a profile saved in local storage
     let prof = localStorage.getItem('profile');
@@ -65,6 +67,7 @@ export class AuthService {
           profile.user_metadata = profile.user_metadata || {};
           localStorage.setItem('profile', JSON.stringify(profile));
           this.user = profile;
+          this.inserirUsuario(profile);
         });
 
         this.lock.hide();
@@ -72,11 +75,17 @@ export class AuthService {
         this.zoneImpl.run(() => this.user = authResult.profile);
         // // Schedule a token refresh
         this.scheduleRefresh();
-        //chuncho
-       // this.navCtrl.setRoot(Home);
       }
 
     });    
+  }
+
+  public inserirUsuario(profile){
+    let usuario: Usuario = new Usuario();
+    usuario.cdusuario = profile.userId;
+    usuario.nome = profile.name;
+    usuario.avatar = profile.picture;
+    this.sharingService.insereUsuario(usuario);
   }
 
   public authenticated() { 
