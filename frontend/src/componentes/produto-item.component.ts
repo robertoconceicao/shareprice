@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Produto } from '../models/produto';
 import { NavController }  from 'ionic-angular';
-import { CadProdutoPage } from '../pages/cad-produto/cad-produto';
+//import { CadProdutoPage } from '../pages/cad-produto/cad-produto';
+import { ViewProdutoPage } from '../pages/produto/view-produto';
 
 @Component({
     selector: 'produto-item',
@@ -10,7 +11,7 @@ import { CadProdutoPage } from '../pages/cad-produto/cad-produto';
             <ion-thumbnail item-left>
                 <img [src]="produto.icon">
             </ion-thumbnail>
-            <h2>{{ produto.marca.descricao + ' ' + produto.medida.descricaoML }}</h2>
+            <h3>{{ produto.marca.descricao + ' ' + produto.medida.descricaoML }}</h3>
             <p>{{ produto.loja.nome }}</p>
             <p>{{ produto.dtpublicacao | date: 'dd/MM/yyyy' }}</p>
             <ion-note item-right>
@@ -32,6 +33,7 @@ export class ProdutoItem {
    constructor(public navCtrl: NavController) { }
     
    itemSelected(){
-       this.navCtrl.push(CadProdutoPage, {codigo: this.produto.codigo});
+       //this.navCtrl.push(CadProdutoPage, {codigo: this.produto.codigo});
+       this.navCtrl.push(ViewProdutoPage, {codigo: this.produto.codigo});
    }
 }

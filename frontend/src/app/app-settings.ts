@@ -52,6 +52,10 @@ export class AppSettings {
      produto.medida.descricao = data.medida;
      produto.medida.ml = data.ml;
      produto.icon = data.icon;
+     produto.usuario.cdusuario = data.cdusuario;
+     produto.usuario.nome = data.nomeusuario;
+     produto.usuario.avatar = data.avatar;
+
      return produto;
    }   
 }

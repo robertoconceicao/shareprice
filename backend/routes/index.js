@@ -21,30 +21,26 @@ const TYPES='types=grocery_or_supermarket'; //https://developers.google.com/plac
 const RADIUS='radius=5000'; // 1km
 const LIMIT_RESULTADO = 5;
 
-
-
-//  PRODUTOS ============================================
-router.get('/api/produto/:codigo', function(req, res) {	    
-    pool.getConnection(function(err, connection) {
-        connection.query(`
-        SELECT p.* , 
-            m.descricao AS marca, 
-            l.nome AS loja, 
-            l.icon as iconloja,
-            l.vicinity as vicinity,
-            l.lat as lat,
-            l.lng as lng,
-            t.descricao AS tipo, 
-            md.descricao AS medida, 
-            md.ml as ml,
-            i.icon as icon
+const PROJECAO_PRODUTO = `
+    SELECT p.* , m.descricao AS marca, l.nome AS loja, l.vicinity as vicinity, t.descricao AS tipo, md.descricao AS medida, 
+        md.ml as ml, i.icon as icon,
+        u.nome as nomeusuario, u.avatar as avatar
         FROM produto p
         JOIN loja l ON l.cdloja = p.cdloja
         JOIN marca m ON m.cdmarca = p.cdmarca
         JOIN tipo t ON t.cdtipo = p.cdtipo
         JOIN medida md ON md.cdmedida = p.cdmedida
         JOIN iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
-        WHERE p.codigo = ?        
+        JOIN usuario u on u.cdusuario = p.cdusuario
+`;
+
+//  PRODUTOS ============================================
+router.get('/api/produto/:codigo', function(req, res) {	    
+    pool.getConnection(function(err, connection) {
+        connection.query(
+            PROJECAO_PRODUTO +
+            `     
+             WHERE p.codigo = ?        
         `,[req.params.codigo],function(err,result){
             if(err) {
                 return res.status(400).json(err);
@@ -74,16 +70,8 @@ router.put('/api/produto/:codigo', function(req, res) {
 router.get('/api/produtos', function(req, res) {
     var filtros = getFiltrosUrl(req);
     pool.getConnection(function(err, connection) {
-        connection.query(`
-        SELECT p . * , m.descricao AS marca, l.nome AS loja, t.descricao AS tipo, md.descricao AS medida, md.ml as ml, i.icon as icon
-        FROM produto p
-        JOIN loja l ON l.cdloja = p.cdloja
-        JOIN marca m ON m.cdmarca = p.cdmarca
-        JOIN tipo t ON t.cdtipo = p.cdtipo
-        JOIN medida md ON md.cdmedida = p.cdmedida
-        join iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
-        WHERE 1 = 1
-        ` + filtros + `
+        connection.query(
+            PROJECAO_PRODUTO +`WHERE 1 = 1` + filtros + `
         order by p.preco asc
         LIMIT 0 , ?
         `,[LIMIT_RESULTADO],function(err,result){
@@ -99,16 +87,8 @@ router.get('/api/produtos', function(req, res) {
 router.get('/api/filter', function(req, res) {
     var filtros = getFiltrosUrl(req);
     pool.getConnection(function(err, connection) {
-        connection.query(`
-        SELECT p . * , m.descricao AS marca, l.nome AS loja, t.descricao AS tipo, md.descricao AS medida, md.ml as ml, i.icon as icon
-        FROM produto p
-        JOIN loja l ON l.cdloja = p.cdloja
-        JOIN marca m ON m.cdmarca = p.cdmarca
-        JOIN tipo t ON t.cdtipo = p.cdtipo
-        JOIN medida md ON md.cdmedida = p.cdmedida
-        join iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
-        WHERE 1 = 1
-        ` + filtros + `
+        connection.query(
+         PROJECAO_PRODUTO +`WHERE 1 = 1` + filtros + `
         order by p.preco asc
         LIMIT 0 , ?
         `,[LIMIT_RESULTADO],function(err,result){
@@ -124,18 +104,10 @@ router.get('/api/filter', function(req, res) {
 router.get('/api/before_produtos', function(req, res) {
    var filtros = getFiltrosUrl(req);
    pool.getConnection(function(err, connection) {
-        connection.query(`
-        SELECT p . * , m.descricao AS marca, l.nome AS loja, t.descricao AS tipo, md.descricao AS medida, md.ml as ml, i.icon as icon
-        FROM produto p
-        JOIN loja l ON l.cdloja = p.cdloja
-        JOIN marca m ON m.cdmarca = p.cdmarca
-        JOIN tipo t ON t.cdtipo = p.cdtipo
-        JOIN medida md ON md.cdmedida = p.cdmedida
-        join iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
-        WHERE 1 = 1
-        ` + filtros + `
-        order by p.preco asc
-        LIMIT 0 , ?
+        connection.query(
+            PROJECAO_PRODUTO +`WHERE 1 = 1` + filtros + `
+            order by p.preco asc
+            LIMIT 0 , ?
         `,[LIMIT_RESULTADO],function(err,result){
             if(err) {
                 return res.status(400).json(err);
@@ -151,18 +123,10 @@ router.get('/api/after_produtos', function(req, res) {
     var limiteResultado = Number.parseInt(LIMIT_RESULTADO) + posicao;
     var filtros = getFiltrosUrl(req);
     pool.getConnection(function(err, connection) {
-        connection.query(`
-        SELECT p . * , m.descricao AS marca, l.nome AS loja, t.descricao AS tipo, md.descricao AS medida, md.ml as ml, i.icon as icon
-        FROM produto p
-        JOIN loja l ON l.cdloja = p.cdloja
-        JOIN marca m ON m.cdmarca = p.cdmarca
-        JOIN tipo t ON t.cdtipo = p.cdtipo
-        JOIN medida md ON md.cdmedida = p.cdmedida
-        join iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
-        WHERE 1 = 1
-        ` + filtros + `
-        order by p.preco asc
-        LIMIT ? , ?
+        connection.query(
+            PROJECAO_PRODUTO +`WHERE 1 = 1` + filtros + `
+            order by p.preco asc
+            LIMIT ? , ?
         `,[posicao, limiteResultado],function(err,result){
             if(err) {
                 return res.status(400).json(err);

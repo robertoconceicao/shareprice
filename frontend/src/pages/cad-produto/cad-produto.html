@@ -6,11 +6,8 @@
 
 <ion-content>
     <form #cervejaForm="ngForm" (ngSubmit)="postar()">
+
         <ion-list>
-            <ion-list-header>
-                <h2>Cerveja</h2>
-            </ion-list-header>
-            
             <div class="center">                
                 <img  width="200" height="200" [src]="produto.icon">
             </div>
@@ -49,24 +46,7 @@
                     name="xxx"
                     (keyup)="onChangePreco($event)"
                     ></ion-input>
-            </ion-item>
-
-            
-
-            <!--                     
-                <ion-item [hidden]="preco.valid || preco.pristine" class="alert alert-danger">
-                <p class="help-block">O campo preço deve ser preenchido.</p>                
-            </ion-item>
-                    (ngModelChange)="onChangePreco($event)" 
-            <campo-moeda
-                [ngModel]="produto.preco" 
-                name="preco"
-                (onCampoValor)="onChangePreco($event)">
-            </campo-moeda>
-            !-->
-                <!--
-                !-->
-           
+            </ion-item>           
 
             <ion-list-header>
                 <h2>Estabelicimento</h2>
