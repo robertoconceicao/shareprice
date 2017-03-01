@@ -32,7 +32,9 @@ export class AppSettings {
    //API Icone
    public static GET_ICONE = 'icone';
 
-
+   //API Valida preco
+   public static POST_VALIDA_PRECO = "validapreco";
+   
    public static convertToProduto(data): Produto {
      var produto = new Produto();
      produto.codigo = data.codigo;

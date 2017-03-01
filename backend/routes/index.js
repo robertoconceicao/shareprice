@@ -131,7 +131,7 @@ router.get('/api/after_produtos', function(req, res) {
             if(err) {
                 return res.status(400).json(err);
             }
-            return res.json(result);           
+            return res.json(result);
         });
         connection.release();
     }); 
@@ -213,6 +213,47 @@ router.post('/api/usuario', function(req, res) {
         });
     });    
 });
+
+//validapreco
+router.post('/api/validapreco', function(req, res) {
+    console.log("Dados recebidos: "+JSON.stringify(req.body));
+    
+    pool.getConnection(function(err, connection) {
+        connection.query('SELECT * FROM validapreco where cdproduto = ? and cdusuario = ? ', [req.body.cdproduto, req.body.cdusuario], function(err, result){
+             if(result.length > 0) {
+                 console.log("Usuario ja fez o voto para esse produto");
+                 connection.release();
+                 return res.status(200);
+             }
+             console.log("Votando ...");
+             connection.query('INSERT INTO validapreco SET ? ', req.body,
+                function(err,result){
+                    if(err) {
+                        connection.release();
+                        return res.status(400).json(err);
+                    }
+                    connection.release();
+                    return res.status(200);
+                });
+        });
+    });    
+});
+
+//verifica se o usuario ja votou nesse produto
+router.get('/api/validapreco', function(req, res) {
+    let cdproduto = req.query.cdproduto;
+    let cdusuario = req.query.cdusuario;
+    pool.getConnection(function(err, connection) {
+        connection.query('SELECT * FROM validapreco where cdproduto = ? and cdusuario = ? ', [cdproduto, cdusuario], function(err, result){
+           if(err) {
+                return res.status(400).json(err);
+            }
+            return res.json(result);
+        });
+        connection.release();
+    });    
+});
+
 
 // MARCAS ============================================
 router.get('/api/marcas', function(req, res) {	

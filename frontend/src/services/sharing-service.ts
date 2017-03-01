@@ -139,6 +139,26 @@ export class SharingService {
     return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_ICONE + params);            
   }
 
+  validarPreco(cdproduto, cdusuario, opcao){    
+    let jsonValidaPreco = {
+      cdproduto: cdproduto,
+      cdusuario: cdusuario,
+      flcerto: opcao
+    };
+    return  this.http
+                .post(AppSettings.API_ENDPOINT + AppSettings.POST_VALIDA_PRECO, 
+                    JSON.stringify(jsonValidaPreco), 
+                    {headers: contentHeaders}
+                ).toPromise();
+  }
+
+  getUserJaValidouPreco(cdproduto, cdusuario){    
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('cdproduto',cdproduto);
+    params.set('cdusuario',cdusuario);
+    return  this.getHttpParamns(AppSettings.API_ENDPOINT + AppSettings.POST_VALIDA_PRECO, params);
+  }
+
   private getHttpParamns(url: string, params: URLSearchParams){
     return this.http.get(url, {search: params})
           .toPromise()

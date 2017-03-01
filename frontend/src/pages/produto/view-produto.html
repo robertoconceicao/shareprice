@@ -5,37 +5,63 @@
 </ion-header>
 
 <ion-content>
-    <ion-list no-lines>
-        <div class="center">
-            <img width="200" height="200" [src]="produto.icon">
-        </div>
+    <ion-card>        
+        <img [src]="produto.icon">        
+        <ion-fab right top>
+            <button ion-fab>
+            <ion-icon name="pin"></ion-icon>
+            </button>
+        </ion-fab>
 
         <ion-item>
             <ion-icon name="beer" item-left large></ion-icon>
-            <h3>{{produto.marca.descricao + ' ' + produto.medida.descricao + ' ' + produto.medida.ml +' ml'}}</h3>
-            <ion-note class="precoClass" item-right>
+            <h2>{{produto.marca.descricao + ' ' + produto.medida.descricao + ' ' + produto.medida.ml +' ml'}}</h2>
+            <p>Se beber não dirija!</p>
+            <span class="precoClass" item-right>
                 R$ {{produto.preco | moedaReal }}
-            </ion-note>
+            </span>
         </ion-item>
-        
+
+
         <ion-item>
             <ion-icon name="basket" item-left large></ion-icon>
-            <h3>{{produto.loja.nome}}</h3>
-            <p>{{produto.loja.vicinity}}</p>                
-            <ion-icon name="navigate" item-right large></ion-icon>                
+            <h2>{{produto.loja.nome}}</h2>
+            <p>{{produto.loja.vicinity}}</p>
+            <button ion-button icon-left clear item-right>
+                <ion-icon name="navigate"></ion-icon>
+                Partiu
+            </button>
         </ion-item>
-        
-        <ion-item>
-            <ion-avatar item-left>
+
+        <ion-item>        
+            <ion-avatar item-left large>
                 <img [src]="produto.usuario.avatar">
             </ion-avatar>
-            <h3>{{produto.usuario.nome}}</h3>
+            <h2>{{produto.usuario.nome}}</h2>
             <p>publicado em: {{produto.dtpublicacao | date: 'dd/MM/yyyy' }}
         </ion-item>
-    </ion-list>
 
-    <button ion-button block icon-left>
-        <ion-icon name="ios-thumbs-up-outline"></ion-icon>
-        Avaliar preço
-    </button>
+        <ion-item>
+            <p item-left>
+               O preço está correto?
+            </p>
+            <div *ngIf="!flValidou" item-right>
+                <button ion-button icon-left clear (click)="validarPreco(1)">
+                    <ion-icon name="thumbs-up"></ion-icon>
+                    <span>12</span>
+                </button>
+                <button ion-button icon-left clear (click)="validarPreco(0)">
+                    <ion-icon name="thumbs-down"></ion-icon>
+                    <span>12</span>
+                </button>
+            </div>
+            <div *ngIf="flValidou" item-right>
+                <ion-icon name="thumbs-up"></ion-icon>
+                <span>12</span>
+                
+                <ion-icon name="thumbs-down"></ion-icon>
+                <span>12</span>                
+            </div>
+        </ion-item>
+    </ion-card>
 </ion-content>    
