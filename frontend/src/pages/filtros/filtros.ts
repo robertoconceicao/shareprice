@@ -23,6 +23,7 @@ export class FiltrosPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, sharingService: SharingService) {
     this.filtro = new Filtro();
+    this.filtro.distancia = 1;
     this.meuEstorage = new MeuEstorage(sharingService);
   }
 
@@ -54,13 +55,14 @@ export class FiltrosPage {
   }
 
   ionViewWillLeave(){
-    if(!!this.filtro && this.filtro.hasFiltro()){
+    if(!!this.filtro && (!!this.filtro.marca || !!this.filtro.medida || !!this.filtro.tipo || !!this.filtro.maxvalor || !!this.filtro.distancia)){
       this.meuEstorage.setFiltro(this.filtro);
     }
   }
 
   limparFiltros(){
     this.filtro = new Filtro();
+    this.filtro.distancia = 1;
     this.meuEstorage.removeItem(FILTRO);
   }
 }

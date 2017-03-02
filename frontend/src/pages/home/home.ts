@@ -9,6 +9,7 @@ import { Filtro } from '../../models/filtro';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
 import { MeuEstorage } from '../../app/meu-estorage';
+import { Geolocation } from 'ionic-native';
 
 @Component({
    selector: 'page-home',
@@ -22,7 +23,8 @@ export class Home {
    public loading: any;
    public meuEstorage: MeuEstorage;
    public searchTermControl;
-
+   public lat: any;
+   public lng: any;
 
    constructor(public navCtrl: NavController,
                public sharingService: SharingService,
@@ -43,31 +45,44 @@ export class Home {
 
    }
 
-/*
-   ionViewDidLoad() {
-        console.log('ionViewDidLoad HomePage');
-        this.carregandoPage();
-   }
-*/
-
    ionViewWillEnter() {
        console.log("ionViewWillEnter HomePage");
        this.carregandoPage();
    }
+
    carregandoPage(){
        this.loading = this.loadingCtrl.create({
             content: 'Carregando informações...'
         });
 
         this.loading.present();
-        this.findProdutos();
+        //pega as lojas pela localizacao do usuario
+        Geolocation.getCurrentPosition()
+            .then((resp) => {
+                this.lat = resp.coords.latitude;
+                this.lng = resp.coords.longitude;
+
+                this.findProdutos();            
+            }).catch((error) => {
+                console.log('Error getting location', error);
+                this.loading.dismiss();            
+            });
+   }
+
+   getFiltroOrAtualiza(){
+        let filtro = this.meuEstorage.getFiltro();
+        if(filtro === null){
+            filtro = new Filtro();
+            filtro.distancia = 1;
+        }
+        filtro.lat = this.lat;
+        filtro.lng = this.lng;
+        this.meuEstorage.setFiltro(filtro);
+        return filtro;
    }
 
    findProdutos(){
-       let filtro = this.meuEstorage.getFiltro();
-        if(filtro === null){
-            filtro = new Filtro();
-        }
+       let filtro = this.getFiltroOrAtualiza();
        this.sharingService.findProdutos(filtro)
        .then(dados => {
            this.produtos = new Array();
@@ -85,19 +100,8 @@ export class Home {
         });
    }
 
-   /**
-    * loja: Loja; vicinity
-    tipo: Tipo;
-    marca: Marca;
-    medida: Medida;
-    preco: string;
-    */
-   filterItems(){    
-      console.log("filterItems ...");
-      let filtro = this.meuEstorage.getFiltro();
-      if(filtro === null){
-         filtro = new Filtro();
-      }
+   filterItems(){
+      let filtro = this.getFiltroOrAtualiza();      
       filtro.searchTerm = this.searchTerm;
       
       this.sharingService.filterItems(filtro)
@@ -137,14 +141,12 @@ export class Home {
    }
 
    hasFilter(){
-       return !!this.meuEstorage.getFiltro();
+       let filtro = this.meuEstorage.getFiltro();
+       return (!!filtro.marca || !!filtro.medida || !!filtro.tipo || !!filtro.maxvalor || filtro.distancia > 1);
    }
 
    doRefresh(refresher) { 
-        let filtro = this.meuEstorage.getFiltro();
-        if(filtro === null){
-            filtro = new Filtro();
-        }
+        let filtro = this.getFiltroOrAtualiza();
         filtro.posicao = 0;
         this.sharingService.beforeProdutos(filtro)
         .then(dados => {
@@ -164,10 +166,7 @@ export class Home {
    } 
 
    doInfinite(infiniteScroll) { 
-        let filtro = this.meuEstorage.getFiltro();
-        if(filtro === null){
-            filtro = new Filtro();
-        }
+        let filtro = this.getFiltroOrAtualiza();
         filtro.posicao = this.produtos.length; 
         this.sharingService.afterProdutos(filtro)
        .then(dados => {

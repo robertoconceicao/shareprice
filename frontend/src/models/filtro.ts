@@ -4,10 +4,8 @@ export class Filtro {
     tipo: number;
     maxvalor: number;
     distancia: number;
+    lat: number;
+    lng: number;
     posicao: number;
-    searchTerm: string;
-    
-    public hasFiltro(){
-        return (!!this.marca || !!this.medida || !!this.tipo || !!this.maxvalor || !!this.distancia);
-    }
+    searchTerm: string;    
 }

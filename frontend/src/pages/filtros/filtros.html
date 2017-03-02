@@ -52,6 +52,14 @@
             </ion-item>
             
             <ion-item>
+                <ion-label>Raio de distância {{filtro.distancia}} Km</ion-label>
+                <ion-range min="1" max="30" pin="true" [(ngModel)]="filtro.distancia" color="primary">
+                    <ion-icon range-left small name="disc"></ion-icon>
+                    <ion-icon range-right name="disc"></ion-icon>
+                </ion-range>
+            </ion-item>
+
+            <ion-item>
                 <button ion-button outline item-right (click)="limparFiltros()">Limpar Filtros</button>
             </ion-item>
 

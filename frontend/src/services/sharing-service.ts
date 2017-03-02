@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, URLSearchParams } from '@angular/http';
+
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 //import { Observable } from 'rxjs/Rx';
@@ -116,12 +117,13 @@ export class SharingService {
     if(!!filtro.maxvalor){
       params.set('maxvalor', filtro.maxvalor +"");
     }
-    if(!!filtro.distancia){
-      params.set('distancia', filtro.distancia +"");
-    }
     if(!!filtro.searchTerm){
       params.set('searchTerm', filtro.searchTerm +"");
-    }    
+    }
+
+    params.set('distancia', filtro.distancia +"");    
+    params.set('lat', filtro.lat +"");
+    params.set('lng', filtro.lng +"");
     return params;
   }
 
