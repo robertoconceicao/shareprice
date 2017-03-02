@@ -223,7 +223,7 @@ router.post('/api/validapreco', function(req, res) {
              if(result.length > 0) {
                  console.log("Usuario ja fez o voto para esse produto");
                  connection.release();
-                 return res.status(200);
+                 return res.status(200).json();
              }
              console.log("Votando ...");
              connection.query('INSERT INTO validapreco SET ? ', req.body,
@@ -233,7 +233,7 @@ router.post('/api/validapreco', function(req, res) {
                         return res.status(400).json(err);
                     }
                     connection.release();
-                    return res.status(200);
+                    return res.status(200).json();
                 });
         });
     });    
@@ -248,7 +248,32 @@ router.get('/api/validapreco', function(req, res) {
            if(err) {
                 return res.status(400).json(err);
             }
-            return res.json(result);
+            return res.status(200).json(result);
+        });
+        connection.release();
+    });    
+});
+
+//verifica se o usuario ja votou nesse produto
+router.get('/api/validapreco/qtde', function(req, res) {
+    let cdproduto = req.query.cdproduto;
+    pool.getConnection(function(err, connection) {
+        connection.query(`
+                SELECT coalesce(SUM(CASE 
+                    WHEN t.flcerto = 1 THEN 1
+                    ELSE 0
+                END), 0 ) AS qtdeok,
+                        coalesce(SUM(CASE 
+                                WHEN t.flcerto = 0 THEN 1
+                                ELSE 0
+                            END), 0) AS qtdenok
+                FROM validapreco t
+                where t.cdproduto = ?
+            `, [cdproduto], function(err, result){
+            if(err) {
+                return res.status(400).json(err);
+            }
+            return res.status(200).json(result);
         });
         connection.release();
     });    

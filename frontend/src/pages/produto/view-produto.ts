@@ -20,6 +20,8 @@ export class ViewProdutoPage {
     public codigo: any;
     public loading: any;
     public flValidou: boolean;
+    public qtdeok: any = 0;
+    public qtdenok: any = 0;
 
     constructor(public navParams: NavParams,
                 public sharingService: SharingService,
@@ -36,6 +38,7 @@ export class ViewProdutoPage {
         });
         this.loading.present();
         this.flValidou = false;
+        this.getQtdeValidarPreco();
         this.editarProduto();
     }
 
@@ -50,13 +53,13 @@ export class ViewProdutoPage {
                         this.flValidou = dados.length > 0;
                         this.loading.dismiss();
                     }).catch(error => {
-                        this.presentToast("Erro ao conectart com o servidor, verifique sua conexão com a internet.");
                         this.loading.dismiss();            
+                        this.presentToast("Erro ao conectart com o servidor, verifique sua conexão com a internet.");
                     });
             })
             .catch(error => {
-                this.presentToast("Erro ao conectart com o servidor, verifique sua conexão com a internet.");
                 this.loading.dismiss();            
+                this.presentToast("Erro ao conectart com o servidor, verifique sua conexão com a internet.");
             });
     }
 
@@ -69,12 +72,23 @@ export class ViewProdutoPage {
         let profile = JSON.parse(localStorage.getItem("profile"));       
         this.sharingService.validarPreco(this.produto.codigo, profile.userId, opcao)
             .then(dados => {
-                this.presentToast('Obrigado por validar');
-                this.flValidou = true;
                 this.loading.dismiss();
+                this.getQtdeValidarPreco();
+                this.flValidou = true;
+                this.presentToast('Obrigado por validar');
             }).catch(error => {
-                this.presentToast("Erro ao conectart com o servidor, verifique sua conexão com a internet.");
                 this.loading.dismiss();            
+                this.presentToast("Erro ao conectart com o servidor, verifique sua conexão com a internet.");
+            });
+    }
+
+    getQtdeValidarPreco(){
+        this.sharingService.getQtdeValidarPreco(this.codigo)
+            .then(dados => {
+                this.qtdeok = dados[0].qtdeok;
+                this.qtdenok = dados[0].qtdenok;
+            }).catch(error => {
+                console.log("Error ao buscar a quantidade da validacao de preco");
             });
     }
 
