@@ -1,11 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Quero Cerveja ;-)</ion-title>    
-    <ion-buttons end>
-        <button ion-button color="primary" icon-only>
-            <ion-icon name="send"></ion-icon>
-        </button>
-    </ion-buttons>
+    <ion-title>Publicar Preço</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -57,12 +52,10 @@
                 <h2>Estabelicimento</h2>
             </ion-list-header>
 
-            <ion-item>
-                <ion-icon name="basket" item-left large (click)="changeLoja()"></ion-icon>
-                <h2 (click)="changeLoja()">{{produto.loja.nome}}</h2>
+            <ion-item (click)="changeLoja()">
+                <ion-icon name="basket" item-left large></ion-icon>
+                <h2>{{produto.loja.nome}}</h2>
                 <p>{{produto.loja.vicinity}}</p>
-                
-                <ion-icon name="pin" item-right (click)="abrirMapa()"></ion-icon>                
             </ion-item>
         </ion-list>
 
