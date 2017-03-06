@@ -3,6 +3,7 @@ import { Produto }          from '../../models/produto';
 import { NavParams, ToastController, LoadingController } from 'ionic-angular';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
+import { SocialSharing } from 'ionic-native';
 
 @Component({
     selector: 'view-produto',
@@ -98,5 +99,35 @@ export class ViewProdutoPage {
             duration: 3000
         });
         toast.present();
+    }
+
+    /*
+    <ion-thumbnail item-left>
+                <img [src]="produto.icon">
+            </ion-thumbnail>
+            <h3>{{ produto.marca.descricao + ' ' + produto.medida.descricaoML }}</h3>
+            <p>{{ produto.loja.nome }}</p>
+            <p>{{ produto.dtpublicacao | date: 'dd/MM/yyyy' }}</p>
+            <ion-note item-right>
+              <span> R$ {{produto.preco | moedaReal }} </span>
+              <br>
+              <span class="preco_litro">preço p/ litro: {{precoPorlitro()}}</span>
+            </ion-note>            
+    */
+    shareWhatsapp() {
+        let message = this.produto.marca.descricao 
+        + ' ' + this.produto.medida.descricaoML 
+        + ' R$ ' + this.produto.preco
+        + ' ' + this.produto.loja.nome;
+            
+        let image = this.produto.icon;
+        
+        SocialSharing.shareViaWhatsApp(message, image, null)
+            .then(resp => {
+                console.log("Funcionou o compartilhamento... "+ resp);
+            })
+            .catch(error => {
+                console.log("Error ao tentar compartilhar informação");
+            })
     }
 }
