@@ -16,25 +16,10 @@ import { NumberUtil } from '../util/number-util';
             <p>{{ produto.loja.nome }}</p>
             <p>{{ produto.dtpublicacao | date: 'dd/MM/yyyy' }}</p>
             <ion-note item-right>
-              <span> R$ {{produto.preco | moedaReal }} </span>
-              <br>
-              <span class="preco_litro">preço p/ litro: {{precoPorlitro()}}</span>
+              <preco-comp [preco]="produto.preco" [ml]="produto.medida.ml"></preco-comp>
             </ion-note>            
         </button>
-    `,
-    styles: [`
-        ion-note {  
-            font-size: 0.9em;  
-            color: dodgerblue !important; 
-            margin-top: 14px;
-            text-align: right;
-        }
-
-        .preco_litro {
-            font-size: 0.6em;
-            color: #666666 !important; 
-        }
-    `]
+    `
 })
 export class ProdutoItem {
    @Input() produto: Produto;

@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Produto }          from '../../models/produto';
 import { NavParams, ToastController, LoadingController } from 'ionic-angular';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
+
+declare var google;
 
 @Component({
     selector: 'view-produto',
@@ -15,6 +17,9 @@ import { AppSettings }  from '../../app/app-settings';
     `]
 })
 export class ViewProdutoPage {
+
+    @ViewChild('map') mapElement: ElementRef;
+    map: any;
 
     public produto: Produto;
     public codigo: any;
@@ -98,5 +103,17 @@ export class ViewProdutoPage {
             duration: 3000
         });
         toast.present();
+    }
+
+    abrirMapa(){
+        let latLng = new google.maps.LatLng(this.produto.loja.lat, this.produto.loja.lng);
+    
+        let mapOptions = {
+            center: latLng,
+            zoom: 15,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+    
+        this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
     }
 }

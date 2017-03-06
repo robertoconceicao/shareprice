@@ -439,7 +439,9 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
                     sin(radians( ? )) *
                     sin(radians(lat))
                 )) AS distance
-                FROM loja HAVING distance <= 5.0`,[req.params.lat, req.params.lng, req.params.lat],function(err,result){
+                FROM loja HAVING distance <= 5.0 
+                ORDER BY distance ASC 
+                `,[req.params.lat, req.params.lng, req.params.lat],function(err,result){
 
                 if(result.length > 0) {
                     return res.json(result);

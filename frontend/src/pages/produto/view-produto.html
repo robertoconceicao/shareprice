@@ -21,8 +21,8 @@
             <ion-icon name="beer" item-left large></ion-icon>
             <h2>{{produto.marca.descricao + ' ' + produto.medida.descricao + ' ' + produto.medida.ml +' ml'}}</h2>
             <p>Se beber não dirija!</p>
-            <span class="precoClass" item-right>
-                R$ {{produto.preco | moedaReal }}
+            <span item-right>
+                <preco-comp [preco]="produto.preco" [ml]="produto.medida.ml"></preco-comp>                
             </span>
         </ion-item>
 

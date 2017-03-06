@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController, ModalController  } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 import { Produto } from '../../models/produto';
@@ -6,7 +6,6 @@ import { Marca } from '../../models/marca';
 import { Medida } from '../../models/medida';
 import { Tipo } from '../../models/tipo';
 import { Loja } from '../../models/loja';
-import { AppSettings }  from '../../app/app-settings';
 import { LojaPage } from '../loja/loja-page';
 import { SharingService } from '../../services/sharing-service';
 import { NumberUtil } from '../../util/number-util';
@@ -14,17 +13,11 @@ import { MeuEstorage } from '../../app/meu-estorage';
 
 import 'rxjs/add/operator/toPromise';
 
-
-declare var google;
-
 @Component({
   selector: 'page-cad-produto',
   templateUrl: 'cad-produto.html'
 })
 export class CadProdutoPage {
-
-  @ViewChild('map') mapElement: ElementRef;
-  map: any;
 
   public produto: Produto;
 
@@ -60,44 +53,21 @@ export class CadProdutoPage {
 
     this.loading.present();
 
-    if(!!this.codigo){
-        this.editarProduto();
-    } else {
-      // chama em cascata o getTipos, getMedidas e as lojas pela localizacao do usuario.
-      this.getMarcas();
-      this.getTipos();      
-      this.getMedidas();
+    // chama em cascata o getTipos, getMedidas e as lojas pela localizacao do usuario.
+    this.getMarcas();
+    this.getTipos();      
+    this.getMedidas();
 
-      this.buscarIconeCerveja();
-      // get localizacao do usuario
-      this.getLojasByLocation();
-    }
-  }
-
-  editarProduto(){
-    this.sharingService.findProdutoById(this.codigo)
-      .then(produto => {
-          this.produto = AppSettings.convertToProduto(produto[0]);
-          this.medidas[0] = this.produto.medida;
-          this.tipos[0] = this.produto.tipo;
-          this.marcas[0] = this.produto.marca;
-          this.loading.dismiss();
-      })
-      .catch(error => {
-          this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
-          this.loading.dismiss();
-          this.goBack();
-      });
+    this.buscarIconeCerveja();
+    // get localizacao do usuario
+    this.getLojasByLocation();   
   }
 
   postar(): void {
     this.produto.preco = this.produto.preco.replace(/,/, '.'); //replace , por .
     this.sharingService.postar(this.produto)
       .then(success => {
-            let msg = "Obrigado por cadastrar o produto";
-            if(!!this.produto.codigo){
-              msg = "Obrigado por atualizar o produto";
-            }
+            let msg = "Obrigado por cadastrar o produto";            
             this.presentToast(msg);
             this.goBack();
         })
@@ -207,17 +177,5 @@ export class CadProdutoPage {
 
   onChangePreco(event){
       this.produto.preco = NumberUtil.formataMoeda(event.target.value);
-  }
-
-  abrirMapa(){
-      let latLng = new google.maps.LatLng(this.produto.loja.lat, this.produto.loja.lng);
- 
-      let mapOptions = {
-        center: latLng,
-        zoom: 15,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      }
- 
-      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
   }
 }
