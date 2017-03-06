@@ -3,6 +3,7 @@ import { Produto }          from '../../models/produto';
 import { NavParams, ToastController, LoadingController } from 'ionic-angular';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
+import { SocialSharing } from 'ionic-native';
 
 declare var google;
 
@@ -115,5 +116,22 @@ export class ViewProdutoPage {
         }
     
         this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
+
+    shareWhatsapp() {
+        let message = this.produto.marca.descricao 
+        + ' ' + this.produto.medida.descricaoML 
+        + ' R$ ' + this.produto.preco
+        + ' ' + this.produto.loja.nome;
+            
+        let image = this.produto.icon;
+        
+        SocialSharing.shareViaWhatsApp(message, image, null)
+            .then(resp => {
+                console.log("Funcionou o compartilhamento... "+ resp);
+            })
+            .catch(error => {
+                console.log("Error ao tentar compartilhar informação");
+            })
     }
 }
