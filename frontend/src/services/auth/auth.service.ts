@@ -1,10 +1,12 @@
 //import { Storage } from '@ionic/storage';
 import { AuthHttp, JwtHelper, tokenNotExpired } from 'angular2-jwt';
 import { Injectable, NgZone } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import { Auth0Vars } from './auth0-variables';
 import { SharingService} from '../sharing-service';
 import { Usuario } from '../../models/usuario';
+//import { BehaviorSubject } from 'rxjs/subject/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 // Avoid name not found warnings
 declare var Auth0: any;
@@ -24,7 +26,6 @@ var options = {
 @Injectable()
 export class AuthService {
 
-
   jwtHelper: JwtHelper = new JwtHelper();
   auth0 = new Auth0({clientID: Auth0Vars.AUTH0_CLIENT_ID, domain: Auth0Vars.AUTH0_DOMAIN });
   lock = new Auth0Lock(Auth0Vars.AUTH0_CLIENT_ID, Auth0Vars.AUTH0_DOMAIN, options);
@@ -34,7 +35,10 @@ export class AuthService {
   zoneImpl: NgZone;
   accessToken: string;
   idToken: string;
-  
+
+  //utilizado para receber a callback de quando ocorreu o login
+  public onlogin: Subject<boolean> = new BehaviorSubject<boolean>(false);
+
   constructor(private authHttp: AuthHttp, 
               zone: NgZone,
               public sharingService: SharingService) {
@@ -75,8 +79,11 @@ export class AuthService {
         this.zoneImpl.run(() => this.user = authResult.profile);
         // // Schedule a token refresh
         this.scheduleRefresh();
-      }
-
+        
+        this.onlogin.next(true);
+      } else {
+        this.onlogin.next(false);
+      }      
     });    
   }
 
@@ -90,10 +97,9 @@ export class AuthService {
 
   public authenticated() { 
     return tokenNotExpired('id_token', this.idToken);
-  }
-  
+  }  
+
   public login() {
-    // Show the Auth0 Lock widget
     this.lock.show();
   }
   

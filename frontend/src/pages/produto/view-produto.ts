@@ -116,7 +116,7 @@ export class ViewProdutoPage {
         }
     
         this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-
+    }
 
     shareWhatsapp() {
         let message = this.produto.marca.descricao 
