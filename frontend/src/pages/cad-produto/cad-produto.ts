@@ -12,6 +12,7 @@ import { NumberUtil } from '../../util/number-util';
 import { MeuEstorage } from '../../app/meu-estorage';
 
 import 'rxjs/add/operator/toPromise';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'page-cad-produto',
@@ -21,9 +22,9 @@ export class CadProdutoPage {
 
   public produto: Produto;
 
-  public marcas: Array<Marca> = [];
-  public medidas: Array<Medida> = [];
-  public tipos: Array<Tipo> = [];
+  public marcas: Observable<Marca>[];
+  public medidas: Observable<Medida>[];
+  public tipos: Observable<Tipo>[];
 
   public lat: any;
   public lng: any;
@@ -52,12 +53,7 @@ export class CadProdutoPage {
     });
 
     this.loading.present();
-
-    // chama em cascata o getTipos, getMedidas e as lojas pela localizacao do usuario.
-    this.getMarcas();
-    this.getTipos();      
-    this.getMedidas();
-
+ 
     this.buscarIconeCerveja();
     // get localizacao do usuario
     this.getLojasByLocation();   
@@ -86,27 +82,6 @@ export class CadProdutoPage {
 
   goBack(){
     this.navCtrl.pop();
-  }
-
-  getMarcas(){    
-    this.marcas = this.meuEstorage.getMarcas();
-    if(this.marcas.length > 0){
-      this.produto.marca = this.marcas[0];
-    }
-  } 
-
-  getTipos(){
-      this.tipos = this.meuEstorage.getTipos();
-      if(this.tipos.length > 0){
-        this.produto.tipo = this.tipos[0];
-      }
-  }
-
-  getMedidas(){
-    this.medidas = this.meuEstorage.getMedidas();
-    if(this.medidas.length > 0){
-      this.produto.medida = this.medidas[0];
-    }
   }
 
   getLojasByLocation(){

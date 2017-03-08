@@ -14,37 +14,17 @@ import { SharingService } from '../../services/sharing-service';
 })
 export class FiltrosPage {
 
-  public marcas: Array<Marca> = [];
-  public medidas: Array<Medida> = [];
-  public tipos: Array<Tipo> = [];
-
   public filtro: Filtro;
   public meuEstorage: MeuEstorage;
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, sharingService: SharingService) {
+  
+  constructor(public navCtrl: NavController, public navParams: NavParams, public sharingService: SharingService) {
     this.filtro = new Filtro();
     this.filtro.distancia = 1;
-    this.meuEstorage = new MeuEstorage(sharingService);
-  }
-
-  getMarcas(){    
-    this.marcas = this.meuEstorage.getMarcas();   
-  } 
-
-  getTipos(){
-    this.tipos = this.meuEstorage.getTipos();      
-  }
-
-  getMedidas(){
-    this.medidas = this.meuEstorage.getMedidas();    
+    this.meuEstorage = new MeuEstorage(sharingService);    
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad FiltrosPage');
-    this.getMarcas();
-    this.getTipos();
-    this.getMedidas();
-
+    console.log('ionViewDidLoad FiltrosPage');   
     if(!!this.meuEstorage.getFiltro()){
       this.filtro = this.meuEstorage.getFiltro();
     }
@@ -62,7 +42,7 @@ export class FiltrosPage {
 
   limparFiltros(){
     this.filtro = new Filtro();
-    this.filtro.distancia = 1;
+    this.filtro.distancia = 1;    
     this.meuEstorage.removeItem(FILTRO);
   }
 }

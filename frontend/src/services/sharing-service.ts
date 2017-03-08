@@ -3,11 +3,17 @@ import { Http, Headers, URLSearchParams } from '@angular/http';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-//import { Observable } from 'rxjs/Rx';
+
+import { Observable } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
 import { Produto }      from '../models/produto';
-import { Filtro }      from '../models/filtro';
+import { Filtro }       from '../models/filtro';
 import { AppSettings }  from '../app/app-settings';
 import { Usuario }      from '../models/usuario';
+import { Marca }        from '../models/marca';
+import { Tipo }         from '../models/tipo';
+import { Medida }       from '../models/medida';
 
 export const contentHeaders = new Headers();
 contentHeaders.append('Content-Type','application/json');
@@ -16,12 +22,50 @@ contentHeaders.append('Content-Type','application/json');
 export class SharingService {
   
   public produtos: Array<Produto>;
+ 
+  private _marcas: BehaviorSubject<Marca[]>;
+  private _tipos: BehaviorSubject<Tipo[]>;
+  private _medidas: BehaviorSubject<Medida[]>;
+  private _filtro: BehaviorSubject<Filtro>;
+
 
   constructor(public http: Http) {
     console.log('Hello SharingService Provider');
     this.produtos = new Array<Produto>();
+    this._marcas = <BehaviorSubject<Marca[]>>new BehaviorSubject([]);
+    this._tipos = <BehaviorSubject<Tipo[]>>new BehaviorSubject([]);
+    this._medidas = <BehaviorSubject<Medida[]>>new BehaviorSubject([]);    
+
+    this.loadListas();
   }
   
+  loadListas(){
+    console.log("Carrega as listas ");    
+    this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MARCAS)
+      .then(marcas => {
+          this._marcas.next(marcas);
+      })
+      .catch(error => { 
+          console.log("Erro ao buscar as Marcas");
+      });
+
+    this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_TIPOS)
+      .then(tipos => {
+          this._tipos.next(tipos);
+      })
+      .catch(error => { 
+          console.log("Erro ao buscar as Marcas");
+      });
+
+    this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MEDIDAS)
+      .then(medidas => {
+          this._medidas.next(medidas);
+      })
+      .catch(error => { 
+          console.log("Erro ao buscar as Marcas");
+      });
+  }
+
   postar(produto: Produto) :Promise<any> {
     let jsonProduto = {
       cdtipo: produto.tipo.cdtipo,
@@ -132,16 +176,16 @@ export class SharingService {
     return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_PRODUTO + params);            
   }
 
-  getMarcas() {    
-    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MARCAS);            
+  get marcas() {
+     return this._marcas.asObservable();
   }
 
-  getTipos() {
-    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_TIPOS);
+  get tipos() {
+    return this._tipos.asObservable();
   }
 
-  getMedidas() {
-    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MEDIDAS);
+  get medidas() {
+    return this._medidas.asObservable();
   }
 
   findLojasByLocation(lat: any, lng: any) {

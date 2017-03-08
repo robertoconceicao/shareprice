@@ -15,7 +15,7 @@
             <ion-item>            
                 <ion-label>Marca</ion-label>            
                     <ion-select [ngModel]="produto.marca.cdmarca" (ngModelChange)="onChangeMarca($event)" name="cdmarca">
-                        <ion-option [value]="marca.cdmarca" *ngFor="let marca of marcas">
+                        <ion-option [value]="marca.cdmarca" *ngFor="let marca of sharingService.marcas | async">
                             {{ marca.descricao }}
                         </ion-option>
                     </ion-select>
@@ -24,7 +24,7 @@
             <ion-item>            
                 <ion-label>Tipo</ion-label>                        
                 <ion-select [ngModel]="produto.tipo.cdtipo" (ngModelChange)="onChangeTipo($event)" name="cdtipo">                                
-                    <ion-option [value]="tipo.cdtipo" *ngFor="let tipo of tipos">
+                    <ion-option [value]="tipo.cdtipo" *ngFor="let tipo of sharingService.tipos | async">
                         {{ tipo.descricao }}
                     </ion-option>
                 </ion-select>            
@@ -33,7 +33,7 @@
             <ion-item>            
                 <ion-label>Medida</ion-label>
                 <ion-select [ngModel]="produto.medida.cdmedida" (ngModelChange)="onChangeMedida($event)" name="cdmedida">                                
-                    <ion-option [value]="medida.cdmedida" *ngFor="let medida of medidas" >
+                    <ion-option [value]="medida.cdmedida" *ngFor="let medida of sharingService.medidas | async" >
                         {{ medida.descricao + ' ' + medida.ml + ' ml' }}
                     </ion-option>
                 </ion-select>
