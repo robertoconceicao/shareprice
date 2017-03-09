@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController }  from 'ionic-angular';
 import { AuthService } from '../../services/auth/auth.service';
 import { Home } from '../home/home';
@@ -6,29 +6,20 @@ import { Home } from '../home/home';
 @Component({
   templateUrl: './login.html',
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   
   // We need to inject AuthService so that we can
   // use it in the view
   constructor(public navCtrl: NavController, public auth: AuthService) {
-    auth.onlogin.subscribe((val) => {
-      //console.log("Recebendo o resultado: "+val);
+    //Estou me inscrevendo para receber as alterações na variavel onlogin
+    auth.onlogin.subscribe((val) => {      
       if(this.auth.authenticated()) {
         this.navCtrl.setRoot(Home);
       }
     });
   }
 
-  ionViewWillEnter() {
-    //console.log("ionViewWillEnter Login....");
-  } 
-
-  retornoLogin = function(){
-    //console.log("Retorno do login...");
-    //this.navCtrl.setRoot(Home);
-  };
-
-  entrar(){
-    this.auth.login();    
-  }
+  ngOnInit(){
+    this.auth.login();
+  }   
 }

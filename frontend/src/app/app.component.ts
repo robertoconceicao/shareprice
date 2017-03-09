@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
-//import { Home } from '../pages/home/home';
+import { Home } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { MeuEstorage } from './meu-estorage';
 import { SharingService } from '../services/sharing-service';
@@ -38,7 +38,7 @@ export class MyApp implements OnInit {
       StatusBar.styleDefault();
       Splashscreen.hide();
       console.log("initializeApp ...");
-      this.rootPage = LoginPage;
+      this.rootPage = LoginPage; //Home; // LoginPage
     });
   }
 }

@@ -2,14 +2,11 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController, ModalController  } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 import { Produto } from '../../models/produto';
-import { Marca } from '../../models/marca';
-import { Medida } from '../../models/medida';
-import { Tipo } from '../../models/tipo';
+
 import { Loja } from '../../models/loja';
 import { LojaPage } from '../loja/loja-page';
 import { SharingService } from '../../services/sharing-service';
 import { NumberUtil } from '../../util/number-util';
-//import { MeuEstorage } from '../../app/meu-estorage';
 
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Rx';
@@ -22,18 +19,12 @@ export class CadProdutoPage {
 
   public produto: Produto;
 
-  public marcas: Observable<Marca>[];
-  public medidas: Observable<Medida>[];
-  public tipos: Observable<Tipo>[];
-
   public lat: any;
-  public lng: any;
-  public codigo: any;
+  public lng: any;  
   public loading: any;
   //por enquanto estou usando só a primeira loja q vem no array mas pode ser q eu precise mostrar uma lista de lojas por isso coloquei esse array
   public lojas: Array<Loja> = [];
-
-  //public meuEstorage: MeuEstorage;
+  
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -42,8 +33,16 @@ export class CadProdutoPage {
               public loadingCtrl: LoadingController,
               public modalCtrl: ModalController) {
       this.produto = new Produto();
-      this.codigo = this.navParams.get('codigo');
-    //  this.meuEstorage = new MeuEstorage(sharingService);
+
+      this.sharingService.marcas.subscribe(marcas => {
+        this.produto.marca = marcas[0];
+      });
+      this.sharingService.tipos.subscribe(tipos => {
+        this.produto.tipo = tipos[0];
+      });
+      this.sharingService.medidas.subscribe(medidas => {
+        this.produto.medida = medidas[0];
+      });
   }
 
   ionViewDidLoad() {

@@ -10,9 +10,6 @@ import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
 import { Geolocation } from 'ionic-native';
 
-import { Observable } from 'rxjs/Rx';
-import {Subject} from 'rxjs/Subject';
-
 @Component({
    selector: 'page-home',
    templateUrl: 'home.html'
@@ -31,11 +28,6 @@ export class Home implements OnInit {
    constructor(public navCtrl: NavController,
                public sharingService: SharingService,
                public loadingCtrl: LoadingController) {
-     
-     sharingService.filtro.subscribe(filtrosDados => {
-         this.filtro = filtrosDados;
-     });
-
      this.searchTermControl = new FormControl();
      this.searchTermControl.valueChanges
          .debounceTime(1000)
@@ -51,7 +43,10 @@ export class Home implements OnInit {
 
    ngOnInit(){
        console.log("OnInit HomePage");
-       
+       this.sharingService.filtro.subscribe(filtrosDados => {
+           console.log("Evento filtro HOME");
+           this.filtro = filtrosDados;
+       });       
    }
 
    ionViewWillEnter() {
@@ -71,7 +66,11 @@ export class Home implements OnInit {
                 this.lat = resp.coords.latitude;
                 this.lng = resp.coords.longitude;
 
+                this.filtro.lat = this.lat;
+                this.filtro.lng = this.lng;
                 console.log("lat: "+this.lat+" lng: " +this.lng);
+
+                this.sharingService.setFiltro(this.filtro);
                 this.findProdutos();            
             }).catch((error) => {
                 console.log('Error getting location', error);
@@ -79,20 +78,8 @@ export class Home implements OnInit {
             });
    }
 
-   getFiltroOrAtualiza(){        
-        if(!!this.filtro){
-            this.filtro = new Filtro();
-            this.filtro.distancia = 1;
-        }
-        this.filtro.lat = this.lat;
-        this.filtro.lng = this.lng;
-        this.sharingService.setFiltro(this.filtro);
-        return this.filtro;
-   }
-
-   findProdutos(){
-       let filtro = this.getFiltroOrAtualiza();
-       this.sharingService.findProdutos(filtro)
+   findProdutos(){       
+       this.sharingService.findProdutos(this.filtro)
        .then(dados => {
            this.produtos = new Array();
             for(let data of dados){
@@ -109,11 +96,9 @@ export class Home implements OnInit {
         });
    }
 
-   filterItems(){
-      let filtro = this.getFiltroOrAtualiza();      
-      filtro.searchTerm = this.searchTerm;
-      
-      this.sharingService.filterItems(filtro)
+   filterItems(){      
+      this.filtro.searchTerm = this.searchTerm;      
+      this.sharingService.filterItems(this.filtro)
         .then(dados => {
             let arrayDados = new Array();
 
@@ -153,10 +138,9 @@ export class Home implements OnInit {
        return (!!this.filtro.marca || !!this.filtro.medida || !!this.filtro.tipo || !!this.filtro.maxvalor || this.filtro.distancia > 1);
    }
 
-   doRefresh(refresher) { 
-        let filtro = this.getFiltroOrAtualiza();
-        filtro.posicao = 0;
-        this.sharingService.beforeProdutos(filtro)
+   doRefresh(refresher) {
+        this.filtro.posicao = 0;
+        this.sharingService.beforeProdutos(this.filtro)
         .then(dados => {
             let arrayDados = new Array();
                 for(let data of dados){
@@ -173,10 +157,9 @@ export class Home implements OnInit {
             });   
    } 
 
-   doInfinite(infiniteScroll) { 
-        let filtro = this.getFiltroOrAtualiza();
-        filtro.posicao = this.produtos.length; 
-        this.sharingService.afterProdutos(filtro)
+   doInfinite(infiniteScroll) {
+        this.filtro.posicao = this.produtos.length; 
+        this.sharingService.afterProdutos(this.filtro)
        .then(dados => {
             for(let data of dados){
                 var produto = AppSettings.convertToProduto(data);

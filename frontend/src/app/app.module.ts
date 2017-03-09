@@ -29,8 +29,6 @@ export function getAuthHttp(http) {
   }), http);
 }
 
-
-
 @NgModule({
   declarations: [
     MyApp,

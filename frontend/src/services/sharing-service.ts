@@ -65,6 +65,10 @@ export class SharingService {
       .catch(error => { 
           console.log("Erro ao buscar as Marcas");
       });
+    
+    let filtro = new Filtro();
+    filtro.distancia = 1;
+    this.setFiltro(filtro);
   }
 
   postar(produto: Produto) :Promise<any> {
