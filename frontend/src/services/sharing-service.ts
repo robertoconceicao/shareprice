@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 import { Observable } from 'rxjs/Rx';
+import { Subject} from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { Produto }      from '../models/produto';
@@ -26,7 +27,7 @@ export class SharingService {
   private _marcas: BehaviorSubject<Marca[]>;
   private _tipos: BehaviorSubject<Tipo[]>;
   private _medidas: BehaviorSubject<Medida[]>;
-  private _filtro: BehaviorSubject<Filtro>;
+  private _filtro: Subject<Filtro>;
 
 
   constructor(public http: Http) {
@@ -35,6 +36,7 @@ export class SharingService {
     this._marcas = <BehaviorSubject<Marca[]>>new BehaviorSubject([]);
     this._tipos = <BehaviorSubject<Tipo[]>>new BehaviorSubject([]);
     this._medidas = <BehaviorSubject<Medida[]>>new BehaviorSubject([]);    
+    this._filtro = <Subject<Filtro>>new Subject();
 
     this.loadListas();
   }
@@ -64,6 +66,8 @@ export class SharingService {
       .catch(error => { 
           console.log("Erro ao buscar as Marcas");
       });
+
+    this.setFiltro(new Filtro());
   }
 
   postar(produto: Produto) :Promise<any> {
@@ -186,6 +190,14 @@ export class SharingService {
 
   get medidas() {
     return this._medidas.asObservable();
+  }
+
+  get filtro() {
+    return this._filtro.asObservable();
+  }
+
+  setFiltro(filtro: Filtro){
+    this._filtro.next(filtro);
   }
 
   findLojasByLocation(lat: any, lng: any) {

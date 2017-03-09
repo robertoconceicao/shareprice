@@ -1,4 +1,4 @@
-import { Component     }  from '@angular/core';
+import { Component, OnInit     }  from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NavController, LoadingController }  from 'ionic-angular';
 import { FiltrosPage }         from '../filtros/filtros';
@@ -8,30 +8,36 @@ import { Produto } from '../../models/produto';
 import { Filtro } from '../../models/filtro';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
-import { MeuEstorage } from '../../app/meu-estorage';
 import { Geolocation } from 'ionic-native';
+
+import { Observable } from 'rxjs/Rx';
+import {Subject} from 'rxjs/Subject';
 
 @Component({
    selector: 'page-home',
    templateUrl: 'home.html'
 })
-export class Home {
+export class Home implements OnInit {
 
    public searchTerm: string = "";
    public produtos: Array<Produto>;
    public noFilter: Array<Produto> = [];
    public loading: any;
-   public meuEstorage: MeuEstorage;
    public searchTermControl;
    public lat: any;
    public lng: any;
+   public filtro: Filtro;
 
    constructor(public navCtrl: NavController,
                public sharingService: SharingService,
                public loadingCtrl: LoadingController) {
-     this.meuEstorage = new MeuEstorage(sharingService);
+     //this.meuEstorage = new MeuEstorage(sharingService);
      this.searchTermControl = new FormControl();
      
+     sharingService.filtro.subscribe(filtrosDados => {
+         this.filtro = filtrosDados;
+     });
+
      this.searchTermControl.valueChanges
          .debounceTime(1000)
          .distinctUntilChanged()
@@ -42,12 +48,15 @@ export class Home {
                 this.filterItems();
             //}
         });
+   }
 
+   ngOnInit(){
+       console.log("OnInit HomePage");
+       this.carregandoPage();
    }
 
    ionViewWillEnter() {
        console.log("ionViewWillEnter HomePage");
-       this.carregandoPage();
    }
 
    carregandoPage(){
@@ -62,6 +71,7 @@ export class Home {
                 this.lat = resp.coords.latitude;
                 this.lng = resp.coords.longitude;
 
+                console.log("lat: "+this.lat+" lng: " +this.lng);
                 this.findProdutos();            
             }).catch((error) => {
                 console.log('Error getting location', error);
@@ -69,16 +79,15 @@ export class Home {
             });
    }
 
-   getFiltroOrAtualiza(){
-        let filtro = this.meuEstorage.getFiltro();
-        if(filtro === null){
-            filtro = new Filtro();
-            filtro.distancia = 1;
+   getFiltroOrAtualiza(){        
+        if(!!this.filtro){
+            this.filtro = new Filtro();
+            this.filtro.distancia = 1;
         }
-        filtro.lat = this.lat;
-        filtro.lng = this.lng;
-        this.meuEstorage.setFiltro(filtro);
-        return filtro;
+        this.filtro.lat = this.lat;
+        this.filtro.lng = this.lng;
+        this.sharingService.setFiltro(this.filtro);
+        return this.filtro;
    }
 
    findProdutos(){
@@ -141,8 +150,7 @@ export class Home {
    }
 
    hasFilter(){
-       let filtro = this.meuEstorage.getFiltro();
-       return (!!filtro.marca || !!filtro.medida || !!filtro.tipo || !!filtro.maxvalor || filtro.distancia > 1);
+       return (!!this.filtro.marca || !!this.filtro.medida || !!this.filtro.tipo || !!this.filtro.maxvalor || this.filtro.distancia > 1);
    }
 
    doRefresh(refresher) { 
