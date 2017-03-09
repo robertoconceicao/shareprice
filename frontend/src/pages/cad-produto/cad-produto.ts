@@ -9,7 +9,7 @@ import { Loja } from '../../models/loja';
 import { LojaPage } from '../loja/loja-page';
 import { SharingService } from '../../services/sharing-service';
 import { NumberUtil } from '../../util/number-util';
-import { MeuEstorage } from '../../app/meu-estorage';
+//import { MeuEstorage } from '../../app/meu-estorage';
 
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Rx';
@@ -33,7 +33,7 @@ export class CadProdutoPage {
   //por enquanto estou usando só a primeira loja q vem no array mas pode ser q eu precise mostrar uma lista de lojas por isso coloquei esse array
   public lojas: Array<Loja> = [];
 
-  public meuEstorage: MeuEstorage;
+  //public meuEstorage: MeuEstorage;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -43,7 +43,7 @@ export class CadProdutoPage {
               public modalCtrl: ModalController) {
       this.produto = new Produto();
       this.codigo = this.navParams.get('codigo');
-      this.meuEstorage = new MeuEstorage(sharingService);
+    //  this.meuEstorage = new MeuEstorage(sharingService);
   }
 
   ionViewDidLoad() {

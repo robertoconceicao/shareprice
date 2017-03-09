@@ -20,7 +20,8 @@ var options = {
   languageDictionary: {   
     title: "Viva Cerveja"
   },
-  language: "pt-BR"
+  language: "pt-BR",
+  closable: false
 };
 
 @Injectable()

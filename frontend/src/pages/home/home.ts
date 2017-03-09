@@ -31,13 +31,12 @@ export class Home implements OnInit {
    constructor(public navCtrl: NavController,
                public sharingService: SharingService,
                public loadingCtrl: LoadingController) {
-     //this.meuEstorage = new MeuEstorage(sharingService);
-     this.searchTermControl = new FormControl();
      
      sharingService.filtro.subscribe(filtrosDados => {
          this.filtro = filtrosDados;
      });
 
+     this.searchTermControl = new FormControl();
      this.searchTermControl.valueChanges
          .debounceTime(1000)
          .distinctUntilChanged()
@@ -52,11 +51,12 @@ export class Home implements OnInit {
 
    ngOnInit(){
        console.log("OnInit HomePage");
-       this.carregandoPage();
+       
    }
 
    ionViewWillEnter() {
        console.log("ionViewWillEnter HomePage");
+       this.carregandoPage();
    }
 
    carregandoPage(){
