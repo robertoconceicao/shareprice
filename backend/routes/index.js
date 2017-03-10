@@ -19,7 +19,7 @@ const API_GOOGLE_PLACE = 'https://maps.googleapis.com/maps/api/place/nearbysearc
 const API_KEY='key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc';
 const TYPES='types=grocery_or_supermarket'; //https://developers.google.com/places/supported_types?hl=pt-br
 const RADIUS='radius=5000'; // 1km
-const LIMIT_RESULTADO = 5;
+const LIMIT_RESULTADO = 30;
 
 const PROJECAO_PRODUTO = `
     SELECT p.* , m.descricao AS marca, l.nome AS loja, l.vicinity as vicinity, t.descricao AS tipo, md.descricao AS medida, 
@@ -31,7 +31,7 @@ const PROJECAO_PRODUTO = `
         JOIN tipo t ON t.cdtipo = p.cdtipo
         JOIN medida md ON md.cdmedida = p.cdmedida
         JOIN iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
-        JOIN usuario u on u.cdusuario = p.cdusuario
+        LEFT JOIN usuario u on u.cdusuario = p.cdusuario
 `;
 
 
@@ -91,7 +91,7 @@ router.get('/api/produtos', function(req, res) {
             JOIN tipo t ON t.cdtipo = p.cdtipo
             JOIN medida md ON md.cdmedida = p.cdmedida
             JOIN iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
-            JOIN usuario u on u.cdusuario = p.cdusuario
+            LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE 1 = 1` + filtros + `
         order by p.preco asc
         LIMIT 0 , ?
@@ -128,7 +128,7 @@ router.get('/api/filter', function(req, res) {
                 JOIN tipo t ON t.cdtipo = p.cdtipo
                 JOIN medida md ON md.cdmedida = p.cdmedida
                 JOIN iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
-                JOIN usuario u on u.cdusuario = p.cdusuario
+                LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE 1 = 1` + filtros + `
         order by p.preco asc
         LIMIT 0 , ?
@@ -165,7 +165,7 @@ router.get('/api/before_produtos', function(req, res) {
                 JOIN tipo t ON t.cdtipo = p.cdtipo
                 JOIN medida md ON md.cdmedida = p.cdmedida
                 JOIN iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
-                JOIN usuario u on u.cdusuario = p.cdusuario
+                LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE 1 = 1` + filtros + `
         order by p.preco asc
         LIMIT 0 , ?
@@ -204,7 +204,7 @@ router.get('/api/after_produtos', function(req, res) {
                 JOIN tipo t ON t.cdtipo = p.cdtipo
                 JOIN medida md ON md.cdmedida = p.cdmedida
                 JOIN iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
-                JOIN usuario u on u.cdusuario = p.cdusuario
+                LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE 1 = 1` + filtros + `
         order by p.preco asc
         LIMIT ? , ?

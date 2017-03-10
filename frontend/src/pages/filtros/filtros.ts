@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { Marca } from '../../models/marca';
-import { Medida } from '../../models/medida';
-import { Tipo } from '../../models/tipo';
 import { Filtro } from '../../models/filtro';
 import { NumberUtil } from '../../util/number-util';
 import { SharingService } from '../../services/sharing-service';

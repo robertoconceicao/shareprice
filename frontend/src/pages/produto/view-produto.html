@@ -13,9 +13,12 @@
                 <button ion-fab (click)="shareWhatsapp()">
                     <ion-icon name="logo-whatsapp"></ion-icon>
                 </button>
-                <button ion-fab><ion-icon name="logo-facebook"></ion-icon></button>
-                <button ion-fab><ion-icon name="logo-googleplus"></ion-icon></button>
-                <button ion-fab><ion-icon name="logo-twitter"></ion-icon></button>
+                <button ion-fab (click)="shareFacebook()">
+                    <ion-icon name="logo-facebook"></ion-icon>
+                </button>                
+                <button ion-fab (click)="shareViaTwitter()">
+                    <ion-icon name="logo-twitter"></ion-icon>
+                </button>
             </ion-fab-list>
         </ion-fab>
 
@@ -34,7 +37,7 @@
             <h2>{{produto.loja.nome}}</h2>
             <p>{{produto.loja.vicinity}}</p>
             <button ion-button icon-left clear item-right>
-                <ion-icon name="navigate"></ion-icon>
+                <ion-icon name="navigate" large></ion-icon>
                 Partiu
             </button>
         </ion-item>
@@ -53,19 +56,19 @@
             </p>
             <div *ngIf="!flValidou" item-right>
                 <button ion-button icon-left clear (click)="validarPreco(1)">
-                    <ion-icon name="thumbs-up"></ion-icon>
+                    <ion-icon name="thumbs-up" large></ion-icon>
                     <span>{{qtdeok}}</span>
                 </button>
                 <button ion-button icon-left clear (click)="validarPreco(0)">
-                    <ion-icon name="thumbs-down"></ion-icon>
+                    <ion-icon name="thumbs-down" large></ion-icon>
                     <span>{{qtdenok}}</span>
                 </button>
             </div>
             <div *ngIf="flValidou" item-right>
-                <ion-icon name="thumbs-up"></ion-icon>
+                <ion-icon name="thumbs-up" large></ion-icon>
                 <span>{{qtdeok}}</span>
                 
-                <ion-icon name="thumbs-down"></ion-icon>
+                <ion-icon name="thumbs-down" large></ion-icon>
                 <span>{{qtdenok}}</span>                
             </div>
         </ion-item>

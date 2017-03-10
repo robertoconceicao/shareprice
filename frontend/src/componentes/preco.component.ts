@@ -12,6 +12,7 @@ import { NumberUtil } from '../util/number-util';
         .preco_litro {
             font-size: 0.6em;
             color: #666666 !important; 
+            text-align: right;
         }
         .preco {
             font-size: 0.9em;  
