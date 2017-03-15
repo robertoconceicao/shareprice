@@ -10,11 +10,12 @@ import { LojaPage }               from '../pages/loja/loja-page';
 import { SharingService }         from '../services/sharing-service';
 import { MoedaRealPipe }          from '../pipes/moeda-real';
 import { LoginPage }              from '../pages/login/login';
+import { MapaPage }               from '../pages/mapa/mapa';
 
 import { AuthConfig, AuthHttp }   from 'angular2-jwt';
 import { AuthService }            from '../services/auth/auth.service';
 import { Http }                   from '@angular/http';
-import { Storage }                from '@ionic/storage';
+import { Storage}  from '@ionic/storage';
 
 import { ProdutoItem, PrecoComponent } from '../componentes';
 
@@ -42,7 +43,8 @@ export function getAuthHttp(http) {
     MoedaRealPipe,
     ProdutoItem,
     PrecoComponent,
-    ViewProdutoPage
+    ViewProdutoPage,
+    MapaPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -59,7 +61,8 @@ export function getAuthHttp(http) {
     LojaPage,
     ProdutoItem,
     PrecoComponent,
-    ViewProdutoPage
+    ViewProdutoPage,
+    MapaPage
   ],
   providers: [
       {provide: ErrorHandler, useClass: IonicErrorHandler},

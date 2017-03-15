@@ -36,7 +36,7 @@
             <ion-icon name="basket" item-left large></ion-icon>
             <h2>{{produto.loja.nome}}</h2>
             <p>{{produto.loja.vicinity}}</p>
-            <button ion-button icon-left clear item-right>
+            <button ion-button icon-left clear item-right (click)="abrirMapa()">
                 <ion-icon name="navigate" large></ion-icon>
                 Partiu
             </button>

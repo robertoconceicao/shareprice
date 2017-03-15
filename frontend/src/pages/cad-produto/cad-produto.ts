@@ -9,7 +9,6 @@ import { SharingService } from '../../services/sharing-service';
 import { NumberUtil } from '../../util/number-util';
 
 import 'rxjs/add/operator/toPromise';
-import { Observable } from 'rxjs/Rx';
 
 @Component({
   selector: 'page-cad-produto',

@@ -38,7 +38,7 @@ export class MyApp implements OnInit {
       StatusBar.styleDefault();
       Splashscreen.hide();
       console.log("initializeApp ...");
-      this.rootPage = LoginPage; //Home; // LoginPage
+      this.rootPage = Home; // LoginPage
     });
   }
 }

@@ -22,8 +22,10 @@ const RADIUS='radius=5000'; // 1km
 const LIMIT_RESULTADO = 30;
 
 const PROJECAO_PRODUTO = `
-    SELECT p.* , m.descricao AS marca, l.nome AS loja, l.vicinity as vicinity, t.descricao AS tipo, md.descricao AS medida, 
-        md.ml as ml, i.icon as icon,
+    SELECT p.* , m.descricao AS marca, 
+        l.nome AS loja, l.vicinity as vicinity, l.lat as lat, l.lng as lng,
+        t.descricao AS tipo, 
+        md.descricao AS medida, md.ml as ml, i.icon as icon,
         u.nome as nomeusuario, u.avatar as avatar
         FROM produto p
         JOIN loja l ON l.cdloja = p.cdloja
@@ -72,7 +74,9 @@ router.get('/api/produtos', function(req, res) {
     var filtros = getFiltrosUrl(req);
     pool.getConnection(function(err, connection) {
         connection.query(`
-            SELECT p.* , m.descricao AS marca, l.nome AS loja, l.vicinity as vicinity, t.descricao AS tipo, md.descricao AS medida, 
+            SELECT p.* , m.descricao AS marca, 
+            l.nome AS loja, l.vicinity as vicinity, l.lat as lat, l.lng as lng,
+            t.descricao AS tipo, md.descricao AS medida, 
             md.ml as ml, i.icon as icon,
             u.nome as nomeusuario, u.avatar as avatar
             FROM produto p
@@ -109,7 +113,9 @@ router.get('/api/filter', function(req, res) {
     var filtros = getFiltrosUrl(req);
     pool.getConnection(function(err, connection) {
         connection.query(`
-            SELECT p.* , m.descricao AS marca, l.nome AS loja, l.vicinity as vicinity, t.descricao AS tipo, md.descricao AS medida, 
+            SELECT p.* , m.descricao AS marca, 
+                l.nome AS loja, l.vicinity as vicinity, l.lat as lat, l.lng as lng,
+                t.descricao AS tipo, md.descricao AS medida, 
                 md.ml as ml, i.icon as icon,
                 u.nome as nomeusuario, u.avatar as avatar
                 FROM produto p
@@ -146,7 +152,9 @@ router.get('/api/before_produtos', function(req, res) {
    var filtros = getFiltrosUrl(req);
    pool.getConnection(function(err, connection) {
         connection.query(`
-            SELECT p.* , m.descricao AS marca, l.nome AS loja, l.vicinity as vicinity, t.descricao AS tipo, md.descricao AS medida, 
+            SELECT p.* , m.descricao AS marca, 
+                l.nome AS loja, l.vicinity as vicinity, l.lat as lat, l.lng as lng,
+                t.descricao AS tipo, md.descricao AS medida, 
                 md.ml as ml, i.icon as icon,
                 u.nome as nomeusuario, u.avatar as avatar
                 FROM produto p
@@ -185,7 +193,9 @@ router.get('/api/after_produtos', function(req, res) {
     var filtros = getFiltrosUrl(req);
     pool.getConnection(function(err, connection) {
         connection.query(`
-            SELECT p.* , m.descricao AS marca, l.nome AS loja, l.vicinity as vicinity, t.descricao AS tipo, md.descricao AS medida, 
+            SELECT p.* , m.descricao AS marca, 
+                l.nome AS loja, l.vicinity as vicinity, l.lat as lat, l.lng as lng, 
+                t.descricao AS tipo, md.descricao AS medida, 
                 md.ml as ml, i.icon as icon,
                 u.nome as nomeusuario, u.avatar as avatar
                 FROM produto p

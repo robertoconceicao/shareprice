@@ -5,7 +5,6 @@ import { Observable, Subject } from 'rxjs/Rx';
 import { Auth0Vars } from './auth0-variables';
 import { SharingService} from '../sharing-service';
 import { Usuario } from '../../models/usuario';
-//import { BehaviorSubject } from 'rxjs/subject/BehaviorSubject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 // Avoid name not found warnings
@@ -37,7 +36,7 @@ export class AuthService {
   accessToken: string;
   idToken: string;
 
-  storage: Storage = new Storage();
+  storage: Storage = new Storage(['sqlite', 'websql', 'indexeddb'], { name: '__mydb' });
 
   //utilizado para receber a callback de quando ocorreu o login
   public onlogin: Subject<boolean> = new BehaviorSubject<boolean>(false);
@@ -91,7 +90,7 @@ export class AuthService {
       } else {
         this.onlogin.next(false);
       }      
-    });    
+    });
   }
 
   public inserirUsuario(profile){

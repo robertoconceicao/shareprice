@@ -1,11 +1,11 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Produto }          from '../../models/produto';
-import { NavParams, ToastController, LoadingController } from 'ionic-angular';
+import { NavParams, NavController, ToastController, LoadingController } from 'ionic-angular';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
 import { SocialSharing } from 'ionic-native';
+import { MapaPage } from '../mapa/mapa';
 
-declare var google;
 
 @Component({
     selector: 'view-produto',
@@ -19,9 +19,6 @@ declare var google;
 })
 export class ViewProdutoPage {
 
-    @ViewChild('map') mapElement: ElementRef;
-    map: any;
-
     public produto: Produto;
     public codigo: any;
     public loading: any;
@@ -32,7 +29,8 @@ export class ViewProdutoPage {
     constructor(public navParams: NavParams,
                 public sharingService: SharingService,
                 public loadingCtrl: LoadingController,
-                public toastCtrl: ToastController){
+                public toastCtrl: ToastController,
+                public navCtrl: NavController){
         this.produto = new Produto();            
         this.codigo = this.navParams.get('codigo');        
     }
@@ -107,15 +105,7 @@ export class ViewProdutoPage {
     }
 
     abrirMapa(){
-        let latLng = new google.maps.LatLng(this.produto.loja.lat, this.produto.loja.lng);
-    
-        let mapOptions = {
-            center: latLng,
-            zoom: 15,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        }
-    
-        this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+        this.navCtrl.push(MapaPage, {codigo: this.codigo});
     }
 
     shareWhatsapp() {

@@ -3,7 +3,7 @@ import { Produto }  from '../models/produto';
 export class AppSettings {
 
    public static get API_ENDPOINT(): string {
-       return 'http://localhost:9000/api/'; //'http://tabarato.ddns.net:9000/api/'; //'http://localhost:9000/api/';
+       return 'http://tabarato.ddns.net:9000/api/'; //'http://localhost:9000/api/';
    }
 
    //API marca
