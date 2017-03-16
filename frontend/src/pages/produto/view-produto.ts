@@ -108,6 +108,19 @@ export class ViewProdutoPage {
         this.navCtrl.push(MapaPage, {codigo: this.codigo});
     }
 
+    shareProduto() {
+        // this code is to use the social sharing plugin
+        // message, subject, file, url
+        let message = this.formataShareMessage();                    
+        SocialSharing.share(message + " vivacerveja://produto/" + this.produto.codigo, message, this.produto.icon)
+            .then(resp => {
+                console.log("Funcionou o compartilhamento... "+ resp);
+            })
+            .catch(() => {
+                console.log("Error ao tentar compartilhar informação");
+            });
+    }
+
     shareWhatsapp() {
         let message = this.formataShareMessage();            
         let image = this.produto.icon;

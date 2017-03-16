@@ -43,4 +43,9 @@
     <plugin name="cordova-sqlite-storage" spec="~2.0.2" />
     <plugin name="cordova-plugin-x-socialsharing" spec="~5.1.6" />
     <plugin name="cordova-plugin-geolocation" spec="~2.4.2" />
+    <plugin name="ionic-plugin-deeplinks" spec="~1.0.14">
+        <variable name="URL_SCHEME" value="vivacerveja" />
+        <variable name="DEEPLINK_SCHEME" value="https" />
+        <variable name="DEEPLINK_HOST" value="tabarato.ddns.net:9000/api" />
+    </plugin>
 </widget>
