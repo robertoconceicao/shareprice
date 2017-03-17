@@ -3,7 +3,7 @@ import { Produto }          from '../../models/produto';
 import { NavParams, NavController, ToastController, LoadingController } from 'ionic-angular';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
-import { SocialSharing } from 'ionic-native';
+import { Geolocation, SocialSharing } from 'ionic-native';
 import { MapaPage } from '../mapa/mapa';
 
 
@@ -25,6 +25,7 @@ export class ViewProdutoPage {
     public flValidou: boolean;
     public qtdeok: any = 0;
     public qtdenok: any = 0;
+    public urlMapa: string;
 
     constructor(public navParams: NavParams,
                 public sharingService: SharingService,
@@ -33,6 +34,8 @@ export class ViewProdutoPage {
                 public navCtrl: NavController){
         this.produto = new Produto();            
         this.codigo = this.navParams.get('codigo');        
+        this.urlMapa = "https://www.google.com.br/maps/dir/";
+       
     }
 
     ionViewDidLoad() {
@@ -50,6 +53,17 @@ export class ViewProdutoPage {
         this.sharingService.findProdutoById(this.codigo)
             .then(produto => {
                 this.produto = AppSettings.convertToProduto(produto[0]); 
+
+                Geolocation.getCurrentPosition()
+                .then((resp) => {
+                    let origem =  resp.coords.latitude + ","+ resp.coords.longitude;
+                    let destino = this.produto.loja.lat + ","+this.produto.loja.lng;
+                    
+                    this.urlMapa = this.urlMapa + origem + "/" +destino;
+                }).catch((error) => {
+                    console.log('Error getting location', error);
+                    this.loading.dismiss();            
+                });
 
                 let profile = JSON.parse(localStorage.getItem("profile"));       
                 this.sharingService.getUserJaValidouPreco(this.produto.codigo, profile.userId)
