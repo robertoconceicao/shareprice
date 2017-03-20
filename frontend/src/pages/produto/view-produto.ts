@@ -135,48 +135,6 @@ export class ViewProdutoPage {
             });
     }
 
-    shareWhatsapp() {
-        let message = this.formataShareMessage();            
-        let image = this.produto.icon;
-        let url = "http://www.google.com";
-
-        SocialSharing.shareViaWhatsApp(message, image, url)
-            .then(resp => {
-                console.log("Funcionou o compartilhamento... "+ resp);
-            })
-            .catch(error => {
-                console.log("Error ao tentar compartilhar informação");
-            })
-    }
-
-    shareFacebook() {
-        let message = this.formataShareMessage();            
-        let image = this.produto.icon;
-        let url = "http://www.google.com";
-
-        SocialSharing.shareViaFacebook(message, image, url)
-            .then(resp => {
-                console.log("Funcionou o compartilhamento... "+ resp);
-            })
-            .catch(error => {
-                console.log("Error ao tentar compartilhar informação");
-            })
-    }
-
-    shareViaTwitter() {
-        let message = this.formataShareMessage();            
-        let image = this.produto.icon;
-        let url = "http://www.google.com";
-
-        SocialSharing.shareViaTwitter(message, image, url)
-            .then(resp => {
-                console.log("Funcionou o compartilhamento... "+ resp);
-            })
-            .catch(error => {
-                console.log("Error ao tentar compartilhar informação");
-            })
-    }
-
     formataShareMessage(){
         return this.produto.marca.descricao 
         + ' ' + this.produto.medida.descricaoML 

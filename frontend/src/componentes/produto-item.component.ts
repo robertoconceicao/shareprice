@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Produto } from '../models/produto';
 import { NavController }  from 'ionic-angular';
-//import { CadProdutoPage } from '../pages/cad-produto/cad-produto';
 import { ViewProdutoPage } from '../pages/produto/view-produto';
 import { NumberUtil } from '../util/number-util';
 
@@ -14,12 +13,18 @@ import { NumberUtil } from '../util/number-util';
             </ion-thumbnail>
             <h3>{{ produto.marca.descricao + ' ' + produto.medida.descricaoML }}</h3>
             <p>{{ produto.loja.nome }}</p>
-            <p>{{ produto.dtpublicacao | date: 'dd/MM/yyyy' }}</p>
+            <span class="dtpublicacaoClass">publicado em: {{ produto.dtpublicacao | date: 'dd/MM/yyyy' }}</span>
             <ion-note item-right>
               <preco-comp [preco]="produto.preco" [ml]="produto.medida.ml"></preco-comp>
             </ion-note>            
         </button>
-    `
+    `,
+    styles: [`       
+        .dtpublicacaoClass {
+            font-size: 0.7em;
+            color: #666666 !important;             
+        }      
+    `]
 })
 export class ProdutoItem {
    @Input() produto: Produto;
@@ -27,7 +32,6 @@ export class ProdutoItem {
    constructor(public navCtrl: NavController) { }
     
    itemSelected(){
-       //this.navCtrl.push(CadProdutoPage, {codigo: this.produto.codigo});
        this.navCtrl.push(ViewProdutoPage, {codigo: this.produto.codigo});
    }
 

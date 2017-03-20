@@ -17,7 +17,6 @@ export class FiltrosPage implements OnInit {
 
   ngOnInit(){
     this.sharingService.filtro.subscribe(filtrosDados => {
-        console.log("Evento filtro FILTRO");
         this.filtro = filtrosDados;
     });
   }
@@ -40,5 +39,9 @@ export class FiltrosPage implements OnInit {
     this.filtro = new Filtro();
     this.filtro.distancia = 1;    
     this.sharingService.setFiltro(this.filtro);
+  }
+
+  goBack(){
+    this.navCtrl.pop();
   }
 }
