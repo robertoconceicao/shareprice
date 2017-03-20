@@ -25,14 +25,13 @@ const PROJECAO_PRODUTO = `
     SELECT p.* , m.descricao AS marca, 
         l.nome AS loja, l.vicinity as vicinity, l.lat as lat, l.lng as lng,
         t.descricao AS tipo, 
-        md.descricao AS medida, md.ml as ml, i.icon as icon,
+        md.descricao AS medida, md.ml as ml,
         u.nome as nomeusuario, u.avatar as avatar
         FROM produto p
         JOIN loja l ON l.cdloja = p.cdloja
         JOIN marca m ON m.cdmarca = p.cdmarca
         JOIN tipo t ON t.cdtipo = p.cdtipo
         JOIN medida md ON md.cdmedida = p.cdmedida
-        JOIN iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
         LEFT JOIN usuario u on u.cdusuario = p.cdusuario
 `;
 
@@ -77,7 +76,7 @@ router.get('/api/produtos', function(req, res) {
             SELECT p.* , m.descricao AS marca, 
             l.nome AS loja, l.vicinity as vicinity, l.lat as lat, l.lng as lng,
             t.descricao AS tipo, md.descricao AS medida, 
-            md.ml as ml, i.icon as icon,
+            md.ml as ml,
             u.nome as nomeusuario, u.avatar as avatar
             FROM produto p
             JOIN 
@@ -94,7 +93,6 @@ router.get('/api/produtos', function(req, res) {
             JOIN marca m ON m.cdmarca = p.cdmarca
             JOIN tipo t ON t.cdtipo = p.cdtipo
             JOIN medida md ON md.cdmedida = p.cdmedida
-            JOIN iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
             LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE 1 = 1` + filtros + `
         order by p.preco asc
@@ -116,7 +114,7 @@ router.get('/api/filter', function(req, res) {
             SELECT p.* , m.descricao AS marca, 
                 l.nome AS loja, l.vicinity as vicinity, l.lat as lat, l.lng as lng,
                 t.descricao AS tipo, md.descricao AS medida, 
-                md.ml as ml, i.icon as icon,
+                md.ml as ml,
                 u.nome as nomeusuario, u.avatar as avatar
                 FROM produto p
                 JOIN 
@@ -133,7 +131,6 @@ router.get('/api/filter', function(req, res) {
                 JOIN marca m ON m.cdmarca = p.cdmarca
                 JOIN tipo t ON t.cdtipo = p.cdtipo
                 JOIN medida md ON md.cdmedida = p.cdmedida
-                JOIN iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
                 LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE 1 = 1` + filtros + `
         order by p.preco asc
@@ -155,7 +152,7 @@ router.get('/api/before_produtos', function(req, res) {
             SELECT p.* , m.descricao AS marca, 
                 l.nome AS loja, l.vicinity as vicinity, l.lat as lat, l.lng as lng,
                 t.descricao AS tipo, md.descricao AS medida, 
-                md.ml as ml, i.icon as icon,
+                md.ml as ml,
                 u.nome as nomeusuario, u.avatar as avatar
                 FROM produto p
                 JOIN 
@@ -172,7 +169,6 @@ router.get('/api/before_produtos', function(req, res) {
                 JOIN marca m ON m.cdmarca = p.cdmarca
                 JOIN tipo t ON t.cdtipo = p.cdtipo
                 JOIN medida md ON md.cdmedida = p.cdmedida
-                JOIN iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
                 LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE 1 = 1` + filtros + `
         order by p.preco asc
@@ -196,7 +192,7 @@ router.get('/api/after_produtos', function(req, res) {
             SELECT p.* , m.descricao AS marca, 
                 l.nome AS loja, l.vicinity as vicinity, l.lat as lat, l.lng as lng, 
                 t.descricao AS tipo, md.descricao AS medida, 
-                md.ml as ml, i.icon as icon,
+                md.ml as ml,
                 u.nome as nomeusuario, u.avatar as avatar
                 FROM produto p
                 JOIN 
@@ -213,7 +209,6 @@ router.get('/api/after_produtos', function(req, res) {
                 JOIN marca m ON m.cdmarca = p.cdmarca
                 JOIN tipo t ON t.cdtipo = p.cdtipo
                 JOIN medida md ON md.cdmedida = p.cdmedida
-                JOIN iconproduto i on i.cdmarca = p.cdmarca and i.cdtipo = p.cdtipo and i.cdmedida = p.cdmedida
                 LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE 1 = 1` + filtros + `
         order by p.preco asc
@@ -411,7 +406,7 @@ router.get('/api/tipos', function(req, res) {
 });
 
 
-// BUSCA ICONE DO PRODUTO ============================
+/* BUSCA ICONE DO PRODUTO ============================
 router.get('/api/icone/:cdmarca/:cdtipo/:cdmedida', function(req, res, callback) {
     console.log("Buscar icone: cdmarca: "+req.params.cdmarca+", cdtipo: "+req.params.cdtipo+", cdmedida: "+req.params.cdmedida);
     //Primeiro Passo é buscar na base local
@@ -427,7 +422,7 @@ router.get('/api/icone/:cdmarca/:cdtipo/:cdmedida', function(req, res, callback)
         connection.release();
     });
 });
-
+*/
 
 // LOJAS ============================================
 // http://pt.stackoverflow.com/questions/55669/identificar-se-conjunto-de-coordenadas-est%C3%A1-dentro-de-um-raio-em-android
@@ -516,15 +511,6 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
         });
     }
 
-    /*
-    cdloja: string;
-    nome: string;    
-    lat: number;
-    lng: number;
-    vicinity: string; // endereço
-    icon?: string;
-    dtcadastro?: Date;
-    */
     function listaLojas(parsed){
         var results = parsed.results;
         var retorno = new Array();

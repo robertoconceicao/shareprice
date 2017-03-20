@@ -10,7 +10,7 @@ import { NumberUtil } from '../util/number-util';
     template: `
         <button ion-item (click)="itemSelected()">
             <ion-thumbnail item-left>
-                <img [src]="produto.icon">
+                <img [src]="pathImagem()">
             </ion-thumbnail>
             <h3>{{ produto.marca.descricao + ' ' + produto.medida.descricaoML }}</h3>
             <p>{{ produto.loja.nome }}</p>
@@ -33,5 +33,9 @@ export class ProdutoItem {
 
    precoPorlitro(){
        return NumberUtil.calculaPrecoPorlitro(this.produto.medida.ml, this.produto.preco);
+   }
+
+   pathImagem(){
+       return "assets/images/"+this.produto.tipo.cdtipo+""+this.produto.marca.cdmarca+""+this.produto.medida.cdmedida+".png";
    }
 }

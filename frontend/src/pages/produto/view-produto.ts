@@ -183,4 +183,8 @@ export class ViewProdutoPage {
         + ' R$ ' + this.produto.preco
         + ' ' + this.produto.loja.nome;
     }
+
+    pathImagem(){
+       return "assets/images/"+this.produto.tipo.cdtipo+""+this.produto.marca.cdmarca+""+this.produto.medida.cdmedida+".png";
+    }
 }

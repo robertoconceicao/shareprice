@@ -111,15 +111,7 @@ export class CadProdutoPage {
 
   buscarIconeCerveja(){
     if(this.produto.marca.cdmarca != 0 && this.produto.tipo.cdtipo != 0 && this.produto.medida.cdmedida != 0){
-       this.sharingService.findIconeCerveja(this.produto.marca.cdmarca, this.produto.tipo.cdtipo, this.produto.medida.cdmedida)
-        .then(icon => {
-           if(!!icon && icon.length > 0){
-              this.produto.icon = icon[0].icon;
-           }
-        })
-        .catch((error) => {
-            console.log('Error ao tentar buscar icone', error);
-        });
+       this.produto.icon = "assets/images/"+this.produto.tipo.cdtipo+""+this.produto.marca.cdmarca+""+this.produto.medida.cdmedida+".png";
     }
   }
 
