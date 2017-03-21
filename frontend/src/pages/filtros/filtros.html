@@ -8,7 +8,14 @@
 
   <ion-navbar>
     <ion-title>Filtros</ion-title>
+
+    <ion-buttons end>
+        <button ion-button icon-only (click)="limparFiltros()" small>
+            <ion-icon name="trash" color="danger"></ion-icon>
+        </button>        
+    </ion-buttons>
   </ion-navbar>
+
 
 </ion-header>
 
@@ -60,8 +67,10 @@
             </ion-item>
 
             <ion-item>
-                <button ion-button outline item-right (click)="limparFiltros()">Limpar Filtros</button>
+                <button ion-button block icon-left (click)="goBack()">
+                    <ion-icon name="search"></ion-icon>
+                    Buscar
+                </button>
             </ion-item>
-
         </ion-list>
 </ion-content>

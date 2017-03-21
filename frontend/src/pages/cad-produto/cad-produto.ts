@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController, ModalController  } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 import { Produto } from '../../models/produto';
@@ -14,10 +14,8 @@ import 'rxjs/add/operator/toPromise';
   selector: 'page-cad-produto',
   templateUrl: 'cad-produto.html'
 })
-export class CadProdutoPage {
-
+export class CadProdutoPage implements OnInit {
   public produto: Produto;
-
   public lat: any;
   public lng: any;  
   public loading: any;
@@ -31,21 +29,26 @@ export class CadProdutoPage {
               public sharingService: SharingService,
               public loadingCtrl: LoadingController,
               public modalCtrl: ModalController) {
-      this.produto = new Produto();
+  }
 
-      this.sharingService.marcas.subscribe(marcas => {
-        this.produto.marca = marcas[0];
-      });
-      this.sharingService.tipos.subscribe(tipos => {
-        this.produto.tipo = tipos[0];
-      });
-      this.sharingService.medidas.subscribe(medidas => {
-        this.produto.medida = medidas[0];
-      });
+  ngOnInit(): void {
+    console.log("ngOnInit ...");
+    this.produto = new Produto();
+
+    this.sharingService.marcas.subscribe(marcas => {
+      this.produto.marca = marcas[0];
+    });
+    this.sharingService.tipos.subscribe(tipos => {
+      this.produto.tipo = tipos[0];
+    });
+    this.sharingService.medidas.subscribe(medidas => {
+      this.produto.medida = medidas[0];
+    });    
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CadProdutoPage');
+    console.log("ionViewDidLoad ...");
+    
     this.loading = this.loadingCtrl.create({
       content: 'Carregando informações...'
     });
