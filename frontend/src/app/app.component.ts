@@ -40,7 +40,7 @@ export class MyApp {
       StatusBar.styleDefault();
       Splashscreen.hide();
       console.log("initializeApp ...");
-      this.rootPage = Home; // LoginPage
+      this.rootPage = LoginPage; //Home;
 
       //This is the code who responds to the app deeplinks
 			/*Deeplinks if from Ionic Native
