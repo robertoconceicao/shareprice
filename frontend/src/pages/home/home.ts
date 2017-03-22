@@ -148,7 +148,8 @@ export class Home implements OnInit {
                     arrayDados.push(produto);
                 }
 
-                this.noFilter = arrayDados.concat(this.noFilter);
+                //this.noFilter = arrayDados.concat(this.noFilter);
+                this.noFilter = arrayDados;
                 refresher.complete();
             })
             .catch(error => {

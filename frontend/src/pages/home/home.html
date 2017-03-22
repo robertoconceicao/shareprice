@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="teste-color">
     <ion-title></ion-title>
 
     <ion-searchbar 
@@ -23,7 +23,7 @@
         <img src="assets/images/sharing.png"/>
     </div>
 
-    <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher (ionRefresh)="doRefresh($event)" [pullMin]=90>
         <ion-refresher-content
         pullingIcon="arrow-dropdown"
         pullingText="Pull to refresh"

@@ -185,7 +185,6 @@ router.get('/api/before_produtos', function(req, res) {
 
 router.get('/api/after_produtos', function(req, res) {
     var posicao = Number.parseInt(req.query.posicao);
-    var _posicao = Number.parseInt(LIMIT_RESULTADO) + posicao;
     var filtros = getFiltrosUrl(req);
     pool.getConnection(function(err, connection) {
         connection.query(`
@@ -213,7 +212,7 @@ router.get('/api/after_produtos', function(req, res) {
         WHERE 1 = 1` + filtros + `
         order by p.preco asc
         LIMIT ? , ?
-        `,[req.query.lat, req.query.lng, req.query.lat, req.query.distancia, _posicao, LIMIT_RESULTADO], function(err,result){
+        `,[req.query.lat, req.query.lng, req.query.lat, req.query.distancia, posicao, LIMIT_RESULTADO], function(err,result){
             if(err) {
                 return res.status(400).json(err);
             }
@@ -369,7 +368,7 @@ router.get('/api/validapreco/qtde', function(req, res) {
 // MARCAS ============================================
 router.get('/api/marcas', function(req, res) {	
     pool.getConnection(function(err, connection) {
-        connection.query('SELECT * FROM marca',[],function(err,result){
+        connection.query('SELECT * FROM marca order by descricao',[],function(err,result){
             if(err) {
                 return res.status(400).json(err);
             }

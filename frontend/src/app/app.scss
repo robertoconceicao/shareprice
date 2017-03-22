@@ -14,3 +14,28 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+// iOS & Android only
+.item-md, .item-ios {
+    h2 {
+        color: rgba($color: #000, $alpha: .87);
+    }
+    p {
+        color: rgba($color: #000, $alpha: .54);
+    }
+
+   //quebra automatica de linha
+    //h2, p {
+    //    white-space: normal;
+    //}
+}
+
+//apenas para ios
+.toolbar-ios { 
+      ion-title {
+          padding: 0 90px 0 1px;  
+      } 
+      .searchbar-ios .searchbar-input {
+          background: rgba($color: #000, $alpha: 0.12);            
+      }
+  }
