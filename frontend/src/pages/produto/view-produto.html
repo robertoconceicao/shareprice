@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="twitter">
     <ion-title>{{produto.marca.descricao + ' ' + produto.medida.descricao + ' ' + produto.medida.ml+' ml'}}</ion-title>    
   </ion-navbar>
 </ion-header>
@@ -16,7 +16,7 @@
         <ion-item>
             <ion-icon name="beer" item-left large></ion-icon>
             <h2>{{produto.marca.descricao + ' ' + produto.medida.descricao + ' ' + produto.medida.ml +' ml'}}</h2>
-            <p>Se beber não dirija!</p>
+            <p>Se beber, não dirija!</p>
             <span item-right>
                 <preco-comp [preco]="produto.preco" [ml]="produto.medida.ml"></preco-comp>                
             </span>

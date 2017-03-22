@@ -1,6 +1,9 @@
 <ion-header>
-  <ion-navbar color="teste-color">
-    <ion-title></ion-title>
+  <ion-navbar color="twitter">
+    <ion-title class="center">
+        BobBeer
+        <ion-icon ios="ios-beer" md="md-beer"></ion-icon>
+    </ion-title>
 
     <ion-searchbar 
         [(ngModel)]="searchTerm" 
@@ -10,8 +13,8 @@
     </ion-searchbar>
 
     <ion-buttons end>
-        <button ion-button icon-only (click)="showFilters()">            
-            <ion-icon name="funnel" [style.color]="hasFilter() ? 'orange' : 'inherit'"></ion-icon>
+        <button ion-button icon-only (click)="showFilters()">
+            <ion-icon name="funnel" [style.color]="hasFilter() ? 'red' : 'inherit'" class="icon-filter"></ion-icon>
         </button>        
     </ion-buttons>
   </ion-navbar>
