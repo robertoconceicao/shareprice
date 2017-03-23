@@ -1,3 +1,4 @@
+import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp }                  from './app.component';
@@ -30,6 +31,21 @@ export function getAuthHttp(http) {
   }), http);
 }
 
+
+const cloudSettings: CloudSettings = {
+  'core': {
+    'app_id': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlZmJkYjAyOC05NGYxLTQ2MzgtYTc4NC1iNmU2ZWFhYjE1YzAifQ.zj5MMaKCY2CZ81O6sqjmiiMeA0dCGuFdUsCG7X2F3SE'
+  },
+  'auth': {
+    'facebook': {
+      'scope': ['public_profile']
+    },
+    'google': {
+      'webClientId': '874200786883-kk2gco0249nsaevabvv5htvpb3ftad3r.apps.googleusercontent.com'
+    }
+  }
+};
+
 @NgModule({
   declarations: [
     MyApp,
@@ -47,7 +63,8 @@ export function getAuthHttp(http) {
     MapaPage
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    CloudModule.forRoot(cloudSettings)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
