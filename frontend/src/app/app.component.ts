@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform, AlertController  } from 'ionic-angular';
-import { StatusBar, Splashscreen, Network } from 'ionic-native';
+import { Platform, Nav, AlertController  } from 'ionic-angular';
+import { StatusBar, Splashscreen, Network, Push } from 'ionic-native';
 
 import { Home } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
@@ -12,6 +12,8 @@ import { AuthService } from '../services/auth/auth.service';
   templateUrl: 'app.html'
 })
 export class MyApp {
+
+  @ViewChild(Nav) nav: Nav;
 
   rootPage: any;
 
@@ -34,13 +36,71 @@ export class MyApp {
     }); 
   }
 
-  initializeApp() {    
+ initializeApp() {    
     this.platform.ready().then(() => {      
       
       StatusBar.styleDefault();
       Splashscreen.hide();
       console.log("initializeApp ...");
-      this.rootPage = LoginPage; //Home;
+      this.rootPage = Home;//LoginPage; //Home;
+      this.initPushNotification();
+    });
+  }
+  
+  initPushNotification(){
+    if (!this.platform.is('cordova')) {
+      console.warn("Push notifications not initialized. Cordova is not available - Run in physical device");
+      return;
+    }
+
+    var push = Push.init({
+        android: {
+          senderID: "874200786883"
+        },
+        ios: {
+          alert: "true",
+          badge: true,
+          sound: 'false'
+        },
+        windows: {}
+      });
+
+      push.on('registration', (data) => {
+        console.log("device token -> ", data.registrationId);        
+      });
+
+      push.on('notification', (data) => {        
+        console.log('message', data.message);
+        let self = this;
+        //if user using app and push notification comes
+        if (data.additionalData.foreground) {
+          // if application open, show popup
+          let confirmAlert = this.alertCtrl.create({
+            title: 'New Notification',
+            message: data.message,
+            buttons: [{
+              text: 'Ignore',
+              role: 'cancel'
+            }, {
+              text: 'View',
+              handler: () => {
+                //TODO: Your logic here
+                //self.nav.push(DetailsPage, {message: data.message});
+              }
+            }]
+          });
+          confirmAlert.present();
+        } else {
+          //if user NOT using app and push notification comes
+          //TODO: Your logic on click of push notification directly
+          //self.nav.push(DetailsPage, {message: data.message});
+          console.log("Push notification clicked");
+        }
+      });
+
+      push.on('error', (e) => {
+        console.log(e.message);
+      });
 
       //This is the code who responds to the app deeplinks
 			/*Deeplinks if from Ionic Native
@@ -52,7 +112,6 @@ export class MyApp {
 	        console.log('Unmatched Route', nomatch);
 	      });
         */
-    });
   }
 
   openAlertNotInternet(){

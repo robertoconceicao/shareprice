@@ -46,7 +46,13 @@
     "cordova-plugin-statusbar",
     "cordova-plugin-device",
     "cordova-plugin-splashscreen",
-    "ionic-plugin-keyboard"
+    "ionic-plugin-keyboard",
+     {
+      "variables": {
+        "SENDER_ID": "874200786883"
+      },
+      "locator": "phonegap-plugin-push"
+    }
   ],
   "cordovaPlatforms": [],
   "description": "Viva Cerveja: Encontrar os preços das cerveja nos supermercados mais próximos de você."

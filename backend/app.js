@@ -11,6 +11,9 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 
 var https = require("https");
+
+//Push notification
+var gcm = require('node-gcm');
  
 // DEFININDO A APLICAÇÃO ==============================
 // definindo local de arquivos públicos

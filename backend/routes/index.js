@@ -6,6 +6,10 @@ var mysql   = require('mysql');
 var https   = require("https");
 var router  = express.Router();
 
+//https://developers.google.com/mobile/add?platform=android&cntapi=signin
+var gcm = require('node-gcm');
+var gcmApiKey = 'AIzaSyANN9rbE4VXHxIhS0_T5vnN2puc2tG0WLg'; // GCM API KEY OF YOUR GOOGLE CONSOLE PROJECT
+
 var pool  = mysql.createPool({  
   connectionLimit : 100,
   host     : 'localhost',
@@ -35,6 +39,34 @@ const PROJECAO_PRODUTO = `
         LEFT JOIN usuario u on u.cdusuario = p.cdusuario
 `;
 
+
+router.get('/push', function (req, res) {
+    var device_tokens = []; //create array for storing device tokens
+    
+    var retry_times = 4; //the number of times to retry sending the message if it fails
+    var sender = new gcm.Sender(gcmApiKey); //create a new sender
+    var message = new gcm.Message(); //create a new message
+    message.addData('title', 'PushTitle');
+    message.addData('message', "Push message");
+    message.addData('sound', 'default');
+    message.collapseKey = 'Testing Push'; //grouping messages
+    message.delayWhileIdle = true; //delay sending while receiving device is offline
+    message.timeToLive = 3; //number of seconds to keep the message on 
+    //server if the device is offline
+    
+    //Take the registration id(lengthy string) that you logged 
+    //in your ionic v2 app and update device_tokens[0] with it for testing.
+    //Later save device tokens to db and 
+    //get back all tokens and push to multiple devices
+    //fp38xY1E_aI:APA91bHkgGq5RVkh0kAdt9V8hDUXuuesWnjx6SgJblHWtnW_x_wwIIRm3NeqlDqhViS-RF2AJb3fA0FVN0X0sHfrJhbT0EElGN0l5Y3jQ2nBBR18Uv1U_uCJPbxbjesIFha6CN1gER9L
+    device_tokens[0] = "fp38xY1E_aI:APA91bHkgGq5RVkh0kAdt9V8hDUXuuesWnjx6SgJblHWtnW_x_wwIIRm3NeqlDqhViS-RF2AJb3fA0FVN0X0sHfrJhbT0EElGN0l5Y3jQ2nBBR18Uv1U_uCJPbxbjesIFha6CN1gER9L";
+    sender.send(message, device_tokens[0], retry_times, function (result) {
+        console.log('push sent to: ' + device_tokens);
+        res.status(200).send('Pushed notification ' + device_tokens);
+    }, function (err) {
+        res.status(500).send('failed to push notification ');
+    });
+});
 
 //  PRODUTOS ============================================
 router.get('/api/produto/:codigo', function(req, res) {	    
