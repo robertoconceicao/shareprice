@@ -75,6 +75,127 @@ router.get('/push', function (req, res) {
     });
 });
 
+// Configuracao Notificacao =============================
+router.get('/api/confignotificacao', function(req, res) {	    
+    let medidas = req.query.medidas;
+    let tipos = req.query.tipos;
+    let marcas = req.query.marcas;
+    let raio = req.query.raio;
+    let cdusuario = req.query.cdusuario;
+
+    pool.getConnection(function(err, connection) {
+
+        connection.beginTransaction(function(err) {
+            if (err) { throw err; }
+
+            connection.query(`
+            select * from confignotificacao    
+            WHERE 1 = 1
+            and cdusuario = ?
+            `,[cdusuario],function(err,result){
+                if(err) {
+                    return connection.rollback(function() {
+                        throw error;
+                    });
+                }
+                
+                if(result.length > 0) {
+                    console.log("Existe configuracao para esse usuario, detele td e insere tudo novamente");
+                    connection.query(`delete from configmarca where cdusuario = ?`,[cdusaurio],function(err){
+                        if(err) {
+                            console.log("Erro ao tentar deletar configmarca");
+                            return connection.rollback(function() {
+                                throw error;
+                            });
+                        }
+                    });
+                    connection.query(`delete from configtipo where cdusuario = ?`,[cdusaurio],function(err){
+                        if(err) {
+                            console.log("Erro ao tentar deletar configtipo");
+                            return connection.rollback(function() {
+                                throw error;
+                            });
+                        }
+                    });
+                    connection.query(`delete from configmedida where cdusuario = ?`,[cdusaurio],function(err){
+                        console.log("Erro ao tentar deletar configmedida");
+                        if(err) {
+                            return connection.rollback(function() {
+                                throw error;
+                            });
+                        }
+                    });
+                    connection.query(`delete from confignotificacao where cdusuario = ?`,[cdusaurio],function(err){
+                        console.log("Erro ao tentar deletar confignotificacao");
+                        if(err) {
+                            return connection.rollback(function() {
+                                throw error;
+                            });
+                        }
+                    });
+                }
+
+                var cdconfignotificacao = 0;
+
+                connection.query('INSERT INTO confignotificacao(cdusuario, raio) values(?, ?) ', [cdusuario, raio], function(err,result){                        
+                        if(err) {
+                            console.log("Erro ao tentar inserir confignotificacao");                        
+                            return connection.rollback(function() {
+                                throw error;
+                            });                        
+                        }
+                        cdconfignotificacao = result.insertId;
+
+                        for(medida of medidas){
+                            connection.query('INSERT INTO configmedida(cdmedida, cdconfignotificacao) values(?, ?) ', [medida, cdconfignotificacao], function(err,result){                        
+                                if(err) {
+                                    console.log("Erro ao tentar inserir configmarca");                        
+                                    return connection.rollback(function() {
+                                        throw error;
+                                    });                        
+                                }
+                            });
+                        }
+
+                        for(tipo of tipos){
+                            connection.query('INSERT INTO configtipo(cdtipo, cdconfignotificacao) values(?, ?) ', [tipo, cdconfignotificacao], function(err,result){                        
+                                if(err) {
+                                    console.log("Erro ao tentar inserir configtipo");                        
+                                    return connection.rollback(function() {
+                                        throw error;
+                                    });                        
+                                }
+                            });
+                         }
+
+                        for(marca of marcas){
+                            connection.query('INSERT INTO configmarca(cdmarca, cdconfignotificacao) values(?, ?) ', [marca, cdconfignotificacao], function(err,result){                        
+                                if(err) {
+                                    console.log("Erro ao tentar inserir configmarca");
+                                    return connection.rollback(function() {
+                                        throw error;
+                                    });                        
+                                }
+                            });
+                         }
+                        
+                        connection.commit(function(err) {
+                            if (err) {
+                                 return connection.rollback(function() {
+                                     throw err;
+                                });
+                            }
+                            console.log('success!');
+                        });
+                        return res.status(200);
+                    });
+                });
+            });
+        connection.release();
+    });
+});
+
+
 //  PRODUTOS ============================================
 router.get('/api/produto/:codigo', function(req, res) {	    
     pool.getConnection(function(err, connection) {

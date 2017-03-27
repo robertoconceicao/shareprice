@@ -36,6 +36,10 @@ export class AppSettings {
    public static POST_VALIDA_PRECO = "validapreco";
    public static GET_VALIDA_PRECO = "validapreco";
    public static GET_VALIDA_PRECO_QTDE = "validapreco/qtde";
+
+   //API Push Notification
+   public static POST_CONFIG_NOTIFICACAO = "confignotificacao";
+   public static GET_CONFIG_NOTIFICACAO = "confignotificacao";
    
    public static convertToProduto(data): Produto {
      var produto = new Produto();
