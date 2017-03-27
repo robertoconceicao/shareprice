@@ -57,10 +57,17 @@ router.get('/push', function (req, res) {
     //Take the registration id(lengthy string) that you logged 
     //in your ionic v2 app and update device_tokens[0] with it for testing.
     //Later save device tokens to db and 
-    //get back all tokens and push to multiple devices
-    //fp38xY1E_aI:APA91bHkgGq5RVkh0kAdt9V8hDUXuuesWnjx6SgJblHWtnW_x_wwIIRm3NeqlDqhViS-RF2AJb3fA0FVN0X0sHfrJhbT0EElGN0l5Y3jQ2nBBR18Uv1U_uCJPbxbjesIFha6CN1gER9L
-    device_tokens[0] = "fp38xY1E_aI:APA91bHkgGq5RVkh0kAdt9V8hDUXuuesWnjx6SgJblHWtnW_x_wwIIRm3NeqlDqhViS-RF2AJb3fA0FVN0X0sHfrJhbT0EElGN0l5Y3jQ2nBBR18Uv1U_uCJPbxbjesIFha6CN1gER9L";
-    sender.send(message, device_tokens[0], retry_times, function (result) {
+    //get back all tokens and push to multiple devices    
+    device_bob = "dunNZ5K9JLk:APA91bHlXnRfxzfTWmx55NwCHIcmPym7ZOvmIUm1bK74JMUuYSTdVhdl1SwoA0NyEETKDMh2bDYxkUUVdVlhx6ivW9zEMQ8zHKzmLYQslr2Sf9u6gemp5lJ8QmMfaKmILOJ8zK88-Jym";
+    device_osama = "cKIJWzUdN9U:APA91bGFqKpEY4jc8ad6YB07gwgRvwyVFf-6bqvvv48qq17K9Yg2Qxjmcgs1mQV-GhpeLKp547HJk-jsMCgIgOm3B7uNXJ6oBr7lKHm5WTldYfs5pMBeFcsiedslm-YBanKd747I3AEV";
+    device_jean = "d6bUJBLzx6c:APA91bHCiM-8kFN7xn3bCQAhImLZya1WkfYZP4zm-0GvQT7rfesOTerUj2e3f0vj2cs_RwpE33_Ofa71K-KJFuF7g43V5tlxaI6rNqIli0SqE7P_cetRaU5DUd6IJLfiy0Bn7is4Jwjt";
+    
+    
+    device_tokens.push(device_osama);
+    device_tokens.push(device_bob);
+    device_tokens.push(device_jean);
+
+    sender.send(message, device_tokens, retry_times, function (result) {
         console.log('push sent to: ' + device_tokens);
         res.status(200).send('Pushed notification ' + device_tokens);
     }, function (err) {
