@@ -13,6 +13,8 @@ import { Usuario }      from '../models/usuario';
 import { Marca }        from '../models/marca';
 import { Tipo }         from '../models/tipo';
 import { Medida }       from '../models/medida';
+import { Confignotificacao } from '../models/confignotificacao';
+
 
 export const contentHeaders = new Headers();
 contentHeaders.append('Content-Type','application/json');
@@ -25,8 +27,11 @@ export class SharingService {
   private _marcas: BehaviorSubject<Marca[]>;
   private _tipos: BehaviorSubject<Tipo[]>;
   private _medidas: BehaviorSubject<Medida[]>;
-  private _filtro: BehaviorSubject<Filtro>;
-  
+  private _filtro: BehaviorSubject<Filtro>;  
+  private _device_token: BehaviorSubject<string>;
+  private _lat: BehaviorSubject<number>;
+  private _lng: BehaviorSubject<number>;
+  private _cdusuario: BehaviorSubject<string>;
 
   constructor(public http: Http) {
     console.log('Hello SharingService Provider');
@@ -35,6 +40,10 @@ export class SharingService {
     this._tipos = <BehaviorSubject<Tipo[]>>new BehaviorSubject([]);
     this._medidas = <BehaviorSubject<Medida[]>>new BehaviorSubject([]);    
     this._filtro = <BehaviorSubject<Filtro>>new BehaviorSubject(new Filtro());    
+    this._device_token = <BehaviorSubject<string>> new BehaviorSubject("");
+    this._lat = <BehaviorSubject<number>> new BehaviorSubject(0);
+    this._lng = <BehaviorSubject<number>> new BehaviorSubject(0);
+    this._cdusuario = <BehaviorSubject<string>> new BehaviorSubject("");
 
     this.loadListas();
   }
@@ -72,6 +81,7 @@ export class SharingService {
 
   postar(produto: Produto) :Promise<any> {
     let jsonProduto = {
+      cdusuario: this._cdusuario.value,
       cdtipo: produto.tipo.cdtipo,
       cdmarca: produto.marca.cdmarca,
       cdloja: produto.loja.cdloja,
@@ -102,14 +112,44 @@ export class SharingService {
     let jsonUsuario = {
       cdusuario: usuario.cdusuario,
       nome: usuario.nome,
-      avatar: usuario.avatar
+      avatar: usuario.avatar,
+      devicetoken: usuario.devicetoken,
+      lat: usuario.lat,
+      lng: usuario.lng
     };
+
+    this.setCdusuario(usuario.cdusuario);
+    
     return  this.http
                 .post(AppSettings.API_ENDPOINT + AppSettings.POST_USUARIO, 
                     JSON.stringify(jsonUsuario), 
                     {headers: contentHeaders}
                 ).toPromise();
   }
+
+  configuraNotificacao(config: Confignotificacao){
+    let jsonUsuario = {
+      cdusuario: config.cdusuario,
+      raio: config.raio,
+      cdconfignotificacao: config.cdconfignotificacao,
+      tipos: config.tipos,
+      marcas: config.marcas,
+      medidas: config.medidas
+    };
+
+    return this.http
+                .post(AppSettings.API_ENDPOINT + AppSettings.POST_CONFIG_NOTIFICACAO, 
+                    JSON.stringify(jsonUsuario), 
+                    {headers: contentHeaders}
+                ).toPromise();
+  }
+
+  getConfiguraNotificacao(cdusuario: string){
+    let params: URLSearchParams = new URLSearchParams();
+    params.set("cdusuario", cdusuario);
+    return this.getHttpParamns(AppSettings.API_ENDPOINT + AppSettings.GET_CONFIG_NOTIFICACAO, params);
+  }
+
 
   validarPreco(cdproduto: any, cdusuario: any, opcao: any){    
     let jsonValidaPreco = {
@@ -194,6 +234,38 @@ export class SharingService {
 
   get filtro() {
     return this._filtro.asObservable();
+  }
+
+  get devicetoken(){
+    return this._device_token.asObservable();
+  }
+
+  get lat(){
+    return this._lat.asObservable();
+  }
+
+  get lng(){
+    return this._lng.asObservable();
+  }
+
+  get cdusuario(){
+    return this._cdusuario.asObservable();
+  }
+
+  setCdusuario(cdusuario: string){
+    this._cdusuario.next(cdusuario);
+  }
+
+  setLat(lat: number){
+    this._lat.next(lat);
+  }
+
+  setLng(lng: number){
+    this._lng.next(lng);
+  }
+
+  setDevicetoken(token: string){
+    this._device_token.next(token);
   }
 
   setFiltro(filtro: Filtro){

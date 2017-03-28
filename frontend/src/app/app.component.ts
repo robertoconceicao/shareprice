@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, AlertController  } from 'ionic-angular';
-import { StatusBar, Splashscreen, Network, Push } from 'ionic-native';
+import { StatusBar, Splashscreen, Network, Push, Geolocation } from 'ionic-native';
 
 import { Home } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
@@ -42,11 +42,23 @@ export class MyApp {
       StatusBar.styleDefault();
       Splashscreen.hide();
       console.log("initializeApp ...");
-      this.rootPage = Home;//LoginPage; //Home;
       this.initPushNotification();
+      this.initLocalizacaoUsuario();
+      this.rootPage = Home;//LoginPage; //Home;
     });
   }
   
+  initLocalizacaoUsuario(){
+     //pega os produtos pela localizacao do usuario
+      Geolocation.getCurrentPosition()
+        .then((resp) => {              
+            this.sharingService.setLat(resp.coords.latitude);
+            this.sharingService.setLat(resp.coords.longitude);
+        }).catch((error) => {
+            console.log('Error getting location', error);              
+        });
+  }
+
   initPushNotification(){
     if (!this.platform.is('cordova')) {
       console.warn("Push notifications not initialized. Cordova is not available - Run in physical device");
@@ -66,7 +78,8 @@ export class MyApp {
       });
 
       push.on('registration', (data) => {
-        console.log("device token -> ", data.registrationId);        
+        console.log("device token -> ", data.registrationId);  
+        this.sharingService.setDevicetoken(data.registrationId);
       });
 
       push.on('notification', (data) => {        

@@ -18,10 +18,8 @@ export class CadProdutoPage implements OnInit {
   public produto: Produto;
   public lat: any;
   public lng: any;  
-  public loading: any;
-  //por enquanto estou usando só a primeira loja q vem no array mas pode ser q eu precise mostrar uma lista de lojas por isso coloquei esse array
-  public lojas: Array<Loja> = [];
-  
+  public loading: any;  
+  public lojas: Array<Loja> = [];  
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,

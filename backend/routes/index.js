@@ -75,8 +75,48 @@ router.get('/push', function (req, res) {
     });
 });
 
+router.get('/api/confignotificacao', function(req, res){
+    let cdusuario = req.params.cdusuario;
+    pool.getConnection(function(err, connection){
+        connection.query('select cdconfignotificacao, raio from confignotificacao where cdusuario = ? ', [cdusuario], function(err, result){
+            let cdconfignotificacao = 0;
+            let raio = 0;
+            let tipos = [];
+            let marcas = [];
+            let medidas = [];
+
+            if(result.length > 0){
+                cdconfignotificacao = result[0].cdconfignotificacao;
+                raio = result[0].raio;
+
+                connection.query('select cdtipo from configtipo where cdconfignotificacao = ? ', [cdconfignotificacao], function(err, result){
+                    tipos = result;
+                });
+
+                connection.query('select cdmedida from configmedida where cdconfignotificacao = ? ', [cdconfignotificacao], function(err, result){
+                    medidas = result;
+                });
+
+                connection.query('select cdmarca from configmarca where cdconfignotificacao = ? ', [cdconfignotificacao], function(err, result){
+                    marcas = result;
+                });
+                let obj = [{
+                    'cdconfignotificacao': cdconfignotificacao,
+                    'raio': raio,
+                    'tipos': tipos,
+                    'marcas': marcas,
+                    'medidas': medidas
+                }];
+
+                return res.status(200).json(obj);
+            }
+        });
+        connection.release();
+    });
+});
+
 // Configuracao Notificacao =============================
-router.get('/api/confignotificacao', function(req, res) {	    
+router.post('/api/confignotificacao', function(req, res) {	    
     let medidas = req.query.medidas;
     let tipos = req.query.tipos;
     let marcas = req.query.marcas;
@@ -90,8 +130,8 @@ router.get('/api/confignotificacao', function(req, res) {
 
             connection.query(`
             select * from confignotificacao    
-            WHERE 1 = 1
-            and cdusuario = ?
+            WHERE 
+            cdusuario = ?
             `,[cdusuario],function(err,result){
                 if(err) {
                     return connection.rollback(function() {
@@ -146,8 +186,8 @@ router.get('/api/confignotificacao', function(req, res) {
                         }
                         cdconfignotificacao = result.insertId;
 
-                        for(medida of medidas){
-                            connection.query('INSERT INTO configmedida(cdmedida, cdconfignotificacao) values(?, ?) ', [medida, cdconfignotificacao], function(err,result){                        
+                        medidas.array.forEach(function(element) {
+                            connection.query('INSERT INTO configmedida(cdmedida, cdconfignotificacao) values(?, ?) ', [element, cdconfignotificacao], function(err,result){                        
                                 if(err) {
                                     console.log("Erro ao tentar inserir configmarca");                        
                                     return connection.rollback(function() {
@@ -155,10 +195,11 @@ router.get('/api/confignotificacao', function(req, res) {
                                     });                        
                                 }
                             });
-                        }
+                        }, this);
 
-                        for(tipo of tipos){
-                            connection.query('INSERT INTO configtipo(cdtipo, cdconfignotificacao) values(?, ?) ', [tipo, cdconfignotificacao], function(err,result){                        
+
+                        tipos.array.forEach(function(element){
+                            connection.query('INSERT INTO configtipo(cdtipo, cdconfignotificacao) values(?, ?) ', [element, cdconfignotificacao], function(err,result){                        
                                 if(err) {
                                     console.log("Erro ao tentar inserir configtipo");                        
                                     return connection.rollback(function() {
@@ -166,10 +207,11 @@ router.get('/api/confignotificacao', function(req, res) {
                                     });                        
                                 }
                             });
-                         }
+                        }, this);
+                        
 
-                        for(marca of marcas){
-                            connection.query('INSERT INTO configmarca(cdmarca, cdconfignotificacao) values(?, ?) ', [marca, cdconfignotificacao], function(err,result){                        
+                        marcas.array.forEach(function(element){
+                            connection.query('INSERT INTO configmarca(cdmarca, cdconfignotificacao) values(?, ?) ', [element, cdconfignotificacao], function(err,result){                        
                                 if(err) {
                                     console.log("Erro ao tentar inserir configmarca");
                                     return connection.rollback(function() {
@@ -177,7 +219,7 @@ router.get('/api/confignotificacao', function(req, res) {
                                     });                        
                                 }
                             });
-                         }
+                        }, this);                         
                         
                         connection.commit(function(err) {
                             if (err) {
@@ -442,19 +484,25 @@ router.post('/api/usuario', function(req, res) {
         connection.query('SELECT * FROM usuario where cdusuario = ? ', [req.body.cdusuario], function(err, result){
              if(result.length > 0) {
                  console.log("Usuario ja existe na base, ;-)");
-                 connection.release();
-                 return res.status(200); 
-             }
-             console.log("Cadastrando novo usuario, ;-P");
-             connection.query('INSERT INTO usuario SET ? ', req.body,
-                function(err,result){
-                    if(err) {
+
+                 connection.query('update usuario set lat = ?, lng = ?, devicetoken = ? where cdusuario = ? ',
+                    [req.body.lat, req.body.lng, req.body.devicetoken,req.body.cdusuario], function(err, result){
                         connection.release();
-                        return res.status(400).json(err);
-                    }
-                    connection.release();
-                    return res.status(200);
-                });
+                        return res.status(200); 
+                    })
+
+             } else {
+                console.log("Cadastrando novo usuario, ;-P");
+                connection.query('INSERT INTO usuario SET ? ', req.body,
+                    function(err,result){
+                        if(err) {
+                            connection.release();
+                            return res.status(400).json(err);
+                        }
+                        connection.release();
+                        return res.status(200);
+                    });
+             }
         });
     });    
 });

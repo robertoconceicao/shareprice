@@ -46,7 +46,15 @@ export class Home implements OnInit {
        this.sharingService.filtro.subscribe(filtrosDados => {
            console.log("Evento filtro HOME");
            this.filtro = filtrosDados;
-       });       
+       });
+
+       this.sharingService.lat.subscribe(lat=>{
+          this.lat = lat;
+       });
+
+       this.sharingService.lat.subscribe(lng=>{
+          this.lng = lng;
+       });
    }
 
    ionViewWillEnter() {
@@ -60,22 +68,12 @@ export class Home implements OnInit {
         });
 
         this.loading.present();
-        //pega as lojas pela localizacao do usuario
-        Geolocation.getCurrentPosition()
-            .then((resp) => {
-                this.lat = resp.coords.latitude;
-                this.lng = resp.coords.longitude;
+        this.filtro.lat = this.lat;
+        this.filtro.lng = this.lng;
+        console.log("lat: "+this.lat+" lng: " +this.lng);
 
-                this.filtro.lat = this.lat;
-                this.filtro.lng = this.lng;
-                console.log("lat: "+this.lat+" lng: " +this.lng);
-
-                this.sharingService.setFiltro(this.filtro);
-                this.findProdutos();            
-            }).catch((error) => {
-                console.log('Error getting location', error);
-                this.loading.dismiss();            
-            });
+        this.sharingService.setFiltro(this.filtro);
+        this.findProdutos();
    }
 
    findProdutos(){       
@@ -96,7 +94,7 @@ export class Home implements OnInit {
         });
    }
 
-   filterItems(){      
+   filterItems(){
       this.filtro.searchTerm = this.searchTerm;      
       this.sharingService.filterItems(this.filtro)
         .then(dados => {

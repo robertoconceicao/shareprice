@@ -1,5 +1,5 @@
 <!--
-  Generated template for the Config page.
+  Generated template for the Filtros page.
 
   See http://ionicframework.com/docs/v2/components/#navigation for more info on
   Ionic pages and navigation.
@@ -7,12 +7,70 @@
 <ion-header>
 
   <ion-navbar color="twitter">
-    <ion-title>config</ion-title>
+    <ion-title>Filtros</ion-title>
+
+    <ion-buttons end>
+        <button ion-button icon-only (click)="limparFiltros()" small>
+            <ion-icon name="trash" ></ion-icon>
+        </button>        
+    </ion-buttons>
   </ion-navbar>
+
 
 </ion-header>
 
 
-<ion-content padding>
-    Page de configuracao e notificacoes
+<ion-content>
+        <ion-list>
+            <ion-item>            
+                <ion-label>Marca</ion-label>            
+                    <ion-select [(ngModel)]="filtro.marca">
+                        <ion-option [value]="marca.cdmarca" *ngFor="let marca of sharingService.marcas | async ">
+                            {{ marca.descricao }}
+                        </ion-option>
+                    </ion-select>
+            </ion-item>
+            
+            <ion-item>            
+                <ion-label>Tipo</ion-label>                        
+                <ion-select [(ngModel)]="filtro.tipo">
+                    <ion-option [value]="tipo.cdtipo" *ngFor="let tipo of sharingService.tipos | async">
+                        {{ tipo.descricao }}
+                    </ion-option>
+                </ion-select>            
+            </ion-item>
+
+            <ion-item>            
+                <ion-label>Medida</ion-label>
+                <ion-select [(ngModel)]="filtro.medida">
+                    <ion-option [value]="medida.cdmedida" *ngFor="let medida of sharingService.medidas | async" >
+                        {{ medida.descricao }}
+                    </ion-option>
+                </ion-select>
+            </ion-item>
+
+            <ion-item>            
+                <ion-label>Maior valor R$</ion-label>
+                <ion-input [ngModel]="filtro.maxvalor" 
+                    type="text" 
+                    name="maxvalor"
+                    (keyup)="onChangePreco($event)"
+                    ></ion-input>
+            </ion-item>
+            
+            <ion-item>
+                <ion-label>Raio de distância {{filtro.distancia}} Km</ion-label>
+                <ion-range min="1" max="30" pin="true" [(ngModel)]="filtro.distancia" color="primary">
+                    <ion-icon range-left small name="disc"></ion-icon>
+                    <ion-icon range-right name="disc"></ion-icon>
+                </ion-range>
+            </ion-item>
+        </ion-list>
+
+        <p>
+            <button ion-button block icon-left (click)="goBack()">
+                <ion-icon name="search"></ion-icon>
+                Buscar
+            </button>
+        </p>
 </ion-content>

@@ -38,6 +38,11 @@ export class AuthService {
 
   storage: Storage = new Storage(['sqlite', 'websql', 'indexeddb'], { name: '__mydb' });
 
+  devicetoken: string;
+  lat: number;
+  lng: number;
+  cdusuario: string;
+
   //utilizado para receber a callback de quando ocorreu o login
   public onlogin: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -45,6 +50,23 @@ export class AuthService {
               zone: NgZone,
               public sharingService: SharingService) {
     this.zoneImpl = zone;
+
+
+    this.sharingService.devicetoken.subscribe(token=> {
+      this.devicetoken = token;
+    });
+
+    this.sharingService.lat.subscribe(lat => {
+      this.lat = lat;
+    });
+
+    this.sharingService.lng.subscribe(lng=> {
+      this.lng = lng;
+    });
+
+    this.sharingService.cdusuario.subscribe(cdusuario=>{
+      this.cdusuario = cdusuario;
+    });
 
     // Check if there is a profile saved in local storage
     this.storage.get('profile').then(profile => {
@@ -98,6 +120,10 @@ export class AuthService {
     usuario.cdusuario = profile.userId;
     usuario.nome = profile.name;
     usuario.avatar = profile.picture;
+    usuario.devicetoken = this.devicetoken;
+    usuario.lat = this.lat;
+    usuario.lng = this.lng;
+    
     this.sharingService.insereUsuario(usuario);
   }
 

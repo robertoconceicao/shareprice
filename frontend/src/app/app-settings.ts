@@ -1,4 +1,5 @@
 import { Produto }  from '../models/produto';
+import { Confignotificacao }  from '../models/confignotificacao';
 
 export class AppSettings {
 
@@ -65,5 +66,12 @@ export class AppSettings {
      produto.usuario.avatar = data.avatar;
 
      return produto;
+   }
+
+   public static convertToConfignotificacao(data): Confignotificacao {
+     var config = new Confignotificacao();
+     config.cdconfignotificacao = data.cdconfignotificacao;
+     
+     return config;
    }   
 }
