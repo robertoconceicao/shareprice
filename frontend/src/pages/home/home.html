@@ -15,6 +15,10 @@
     <ion-buttons end>
         <button ion-button icon-only (click)="showFilters()">
             <ion-icon name="funnel" [style.color]="hasFilter() ? 'red' : 'inherit'" class="icon-filter"></ion-icon>
+        </button>
+
+        <button ion-button icon-only (click)="showConfig()">
+            <ion-icon name="ios-notifications" class="icon-filter"></ion-icon>
         </button>        
     </ion-buttons>
   </ion-navbar>

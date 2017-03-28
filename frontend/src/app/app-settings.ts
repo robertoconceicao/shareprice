@@ -71,6 +71,11 @@ export class AppSettings {
    public static convertToConfignotificacao(data): Confignotificacao {
      var config = new Confignotificacao();
      config.cdconfignotificacao = data.cdconfignotificacao;
+     config.cdusuario = data.cdusuario;
+     config.raio = data.raio;
+     config.tipos = data.tipos;
+     config.marcas = data.marcas;
+     config.medidas = data.medidas;
      
      return config;
    }   

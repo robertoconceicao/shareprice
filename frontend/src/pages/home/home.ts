@@ -8,7 +8,6 @@ import { Produto } from '../../models/produto';
 import { Filtro } from '../../models/filtro';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
-import { Geolocation } from 'ionic-native';
 
 @Component({
    selector: 'page-home',

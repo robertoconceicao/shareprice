@@ -40,7 +40,7 @@ const PROJECAO_PRODUTO = `
 `;
 
 
-router.get('/push', function (req, res) {
+router.get('/api/push', function (req, res) {
     var device_tokens = []; //create array for storing device tokens
     
     var retry_times = 4; //the number of times to retry sending the message if it fails
@@ -76,7 +76,7 @@ router.get('/push', function (req, res) {
 });
 
 router.get('/api/confignotificacao', function(req, res){
-    let cdusuario = req.params.cdusuario;
+    let cdusuario = req.query.cdusuario;
     pool.getConnection(function(err, connection){
         connection.query('select cdconfignotificacao, raio from confignotificacao where cdusuario = ? ', [cdusuario], function(err, result){
             let cdconfignotificacao = 0;
@@ -110,6 +110,7 @@ router.get('/api/confignotificacao', function(req, res){
 
                 return res.status(200).json(obj);
             }
+            return res.status(200);
         });
         connection.release();
     });
