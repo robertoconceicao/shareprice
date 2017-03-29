@@ -4,7 +4,8 @@
   "description": "Web Service para fornecer informações dos produtos anunciados pelos usuários",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "author": "Roberto da Conceicao",
   "license": "ISC",
@@ -15,5 +16,9 @@
     "morgan": "^1.7.0",
     "mysql": "^2.12.0",
     "node-gcm": "^0.14.4"
+  },
+  "engines" : { 
+    "node" : "6.10.0",
+    "npm" : "3.10.10"
   }
 }
