@@ -44,7 +44,7 @@ export class MyApp {
       console.log("initializeApp ...");
       this.initPushNotification();
       this.initLocalizacaoUsuario();
-      this.rootPage = LoginPage; //Home;
+      this.rootPage = Home;
     });
   }
   
