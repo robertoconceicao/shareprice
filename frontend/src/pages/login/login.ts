@@ -13,13 +13,14 @@ export class LoginPage implements OnInit {
   
   // We need to inject AuthService so that we can
   // use it in the view
+  /*
   constructor(public navCtrl: NavController,
               public facebookAuth: FacebookAuth, 
               public googleAuth: GoogleAuth,
               public user: User) {
 
   }
-  /*
+  */  
   constructor(public navCtrl: NavController, public auth: AuthService) {
     //Estou me inscrevendo para receber as alterações na variavel onlogin
     auth.onlogin.subscribe((val) => {      
@@ -29,17 +30,15 @@ export class LoginPage implements OnInit {
     });
   }
 
-  */  
   ngOnInit(){
     console.log("Iniciando LoginPage");
-    // this.auth.login();
+    this.auth.login();
     
     /*
     this.facebookAuth.login().then(res => {
         console.log("resposta: "+res);
         this.navCtrl.setRoot(Home);
     });
-  */
   
     this.googleAuth.login().
       then(res => {
@@ -49,6 +48,7 @@ export class LoginPage implements OnInit {
       .catch(err =>{
         console.log("Error: "+err);
       });
+  */
 
   } 
 }

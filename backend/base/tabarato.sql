@@ -103,7 +103,7 @@ INSERT INTO `loja` (`cdloja`, `nome`, `icon`, `lat`, `lng`, `vicinity`, `dtcadas
 ('2c0bcab0b032587d3d0eb098261ead32a4874615', 'Bistek', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.6062261, -48.62492880000001, 'State of Santa Catarina', '2017-02-11 20:11:54'),
 ('2fa24b046dd0e729f7dfcc3b991757ac9f31354f', 'Supermercados Imperatriz', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.5946863, -48.6141827, 'Rua Delamar José da Silva, s/n - Kobrasol, São José', '2017-02-11 20:11:54'),
 ('39c5248d202a338f3995bb87d8f064650f5384a9', 'Mercado Palaoro', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.4375966, -48.4048554, 'Rodovia Armando Calil Bulos, 5689 - Ingleses Norte, Florianópolis', '2017-03-02 21:28:11'),
-('3b6ea34712d3fef2c9d00d54342fa038604ab79d', 'Hippo', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.6227852, -48.6774436, 'Rua da Universidade, 346 - Passeio Pedra Branca, Palhoça', '0000-00-00 00:00:00'),
+('3b6ea34712d3fef2c9d00d54342fa038604ab79d', 'Hippo', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.6227852, -48.6774436, 'Rua da Universidade, 346 - Passeio Pedra Branca, Palhoça', '2017-03-03 21:28:11'),
 ('3dbb833fee92e844a500aee000d51dce97b5ef37', 'Paulisul Comércio de Frutas Ltda', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.5807058, -48.61218889999999, 'Rua Francisco Pedro Machado, 186 - Barreiros, São José', '2017-02-11 20:11:54'),
 ('426b3fa719142b1330fa4032134112f6824282d2', 'Copal Supermercados', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.566701, -48.612002, 'Rua Leoberto Leal, 12812:00AM0 - Barreiros, São José', '2017-02-11 20:11:54'),
 ('49a93f472814a19d2afc01fbe734799b97c2202c', 'Fort Atacadista Loja 160', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.5910759, -48.616578, 'Rua Cassol, São José', '2017-02-11 20:11:54'),
@@ -128,7 +128,7 @@ INSERT INTO `loja` (`cdloja`, `nome`, `icon`, `lat`, `lng`, `vicinity`, `dtcadas
 ('ba56c2eb5eaaca498e6d41ac4bc198693212518a', 'Emporium do Chef', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.428406, -48.407545, '5247 - Ingleses Norte, Florianópolis', '2017-03-02 21:28:11'),
 ('bbd55f8c182741056639df29bd38ea6a156f279c', 'Ipe', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.4421237, -48.40983019999999, 'Rua Graciliano Manoel Gomes, 298 - Ingleses do Rio Vermelho, Florianópolis', '2017-03-02 21:28:11'),
 ('bc8305be9d390747940b65755f4cdef30d4a0794', 'Supermercados Rosa', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.5760585, -48.6227221, 'Rua José Antônio Tomás, s/n - Bela Vista, São José', '2017-02-11 20:11:54'),
-('c703fb5f1374405c6777e1b6b214bec390736353', 'Supermercados Xande', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.5956175, -48.5510944, 'Rua Deodoro, 281 - Centro, Florianópolis', '0000-00-00 00:00:00'),
+('c703fb5f1374405c6777e1b6b214bec390736353', 'Supermercados Xande', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.5956175, -48.5510944, 'Rua Deodoro, 281 - Centro, Florianópolis', '2017-03-12 21:28:11'),
 ('c84bc1fd659df7c7233c97d6a1a9f3993dc43c0f', 'Supermercado Zz', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.440521, -48.385677, 'Estrada Dom João Becker, 600 - Ingleses Norte, Florianópolis', '2017-03-02 21:28:11'),
 ('d5069f23efcb11d64d1dcfbfa7ac8b2148712d21', 'Mini Mercado Praia das Gaivotas', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.4324297, -48.3953687, 'Rua das Gaivotas, 999 - Ingleses Norte, Florianópolis', '2017-03-02 21:28:11'),
 ('d74d2557d63763bfb1d4423d310466b0193d84fe', 'Super Sol', 'https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png', -27.4459574, -48.4035234, 'Rodovia João Gualberto Soares, 700 - Ingleses do Rio Vermelho, Florianópolis', '2017-03-02 21:28:11'),
@@ -208,7 +208,7 @@ INSERT INTO `medida` (`cdmedida`, `descricao`, `ml`) VALUES
 CREATE TABLE IF NOT EXISTS `produto` (
   `codigo` int(11) NOT NULL AUTO_INCREMENT,
   `preco` double(4,2) NOT NULL,
-  `dtpublicacao` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `dtpublicacao` timestamp,
   `cdloja` varchar(80) NOT NULL,
   `cdmarca` int(11) NOT NULL,
   `cdtipo` int(11) NOT NULL,
@@ -238,9 +238,9 @@ INSERT INTO `produto` (`codigo`, `preco`, `dtpublicacao`, `cdloja`, `cdmarca`, `
 (16, 2.50, '2017-02-17 15:01:26', '14cc282e5dca6f017eb3c327451eaf72a9bb8b95', 1, 1, 1, 'google-oauth2|115862700861296845675'),
 (17, 2.55, '2017-02-17 15:01:59', '14cc282e5dca6f017eb3c327451eaf72a9bb8b95', 1, 1, 1, 'google-oauth2|115862700861296845675'),
 (18, 2.55, '2017-02-22 19:30:44', '3b6ea34712d3fef2c9d00d54342fa038604ab79d', 1, 1, 5, 'google-oauth2|115862700861296845675'),
-(19, 5.95, '2017-03-03 00:29:12', '4f5aaca2f0e15f7802e63c9fc678c884e985069b', 1, 1, 1, ''),
-(20, 4.99, '2017-03-03 19:43:08', '07dc43e94868572136ef36a83175ce43617ef3f2', 1, 1, 1, ''),
-(21, 0.00, '2017-03-09 19:25:28', '26f6e57d82211fb0d78e6364275676e855312c1a', 1, 1, 1, '');
+(19, 5.95, '2017-03-03 00:29:12', '4f5aaca2f0e15f7802e63c9fc678c884e985069b', 1, 1, 1, 'google-oauth2|115862700861296845675'),
+(20, 4.99, '2017-03-03 19:43:08', '07dc43e94868572136ef36a83175ce43617ef3f2', 1, 1, 1, 'google-oauth2|115862700861296845675'),
+(21, 0.00, '2017-03-09 19:25:28', '26f6e57d82211fb0d78e6364275676e855312c1a', 1, 1, 1, 'google-oauth2|115862700861296845675');
 
 -- --------------------------------------------------------
 
