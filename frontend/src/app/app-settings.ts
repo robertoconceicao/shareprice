@@ -4,7 +4,8 @@ import { Confignotificacao }  from '../models/confignotificacao';
 export class AppSettings {
 
    public static get API_ENDPOINT(): string {
-       return 'http://tabarato.ddns.net:9000/api/'; //'http://localhost:9000/api/';
+      //google cloud
+       return 'https://tahbarato-154614.appspot.com/api/';//http://tabarato.ddns.net:9000/api/'; //'http://localhost:9000/api/';
    }
 
    //API marca
