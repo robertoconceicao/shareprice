@@ -85,6 +85,15 @@ app.get('/api/post_produto', function(req, res, next) {
 
 // LISTEN (iniciando nossa aplicação em node) ==========
 // Define a porta 8080 onde será executada nossa aplicação
-app.listen(9000);
 // Imprime uma mensagem no console
-console.log("Aplicação executada na porta 9000");
+if (module === require.main) {
+  // [START server]
+  // Start the server
+  const server = app.listen(process.env.PORT || 8080, () => {
+    const port = server.address().port;
+    console.log(`App listening on port ${port}`);
+  });
+  // [END server]
+}
+
+module.exports = app;
