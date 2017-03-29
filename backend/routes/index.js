@@ -10,14 +10,17 @@ var router  = express.Router();
 var gcm = require('node-gcm');
 var gcmApiKey = 'AIzaSyANN9rbE4VXHxIhS0_T5vnN2puc2tG0WLg'; // GCM API KEY OF YOUR GOOGLE CONSOLE PROJECT
 
-var pool  = mysql.createPool({  
-  connectionLimit : 100,
-  host     : 'localhost',
-  port : 3306, 
-  database:'tabarato',
-  user     : 'tabarato',
-  password : 'security'
-});    
+var config = {
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE
+};
+
+if (process.env.INSTANCE_CONNECTION_NAME) {
+  config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
+}
+
+var pool  = mysql.createPool(config);    
 
 const API_GOOGLE_PLACE = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 const API_KEY='key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc';
