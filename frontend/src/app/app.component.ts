@@ -42,22 +42,12 @@ export class MyApp {
       StatusBar.styleDefault();
       Splashscreen.hide();
       console.log("initializeApp ...");
-      this.initPushNotification();
-      this.initLocalizacaoUsuario();
+      this.initPushNotification();      
       this.rootPage = Home;
     });
   }
   
-  initLocalizacaoUsuario(){
-     //pega os produtos pela localizacao do usuario
-      Geolocation.getCurrentPosition()
-        .then((resp) => {              
-            this.sharingService.setLat(resp.coords.latitude);
-            this.sharingService.setLat(resp.coords.longitude);
-        }).catch((error) => {
-            console.log('Error getting location', error);              
-        });
-  }
+  
 
   initPushNotification(){
     if (!this.platform.is('cordova')) {

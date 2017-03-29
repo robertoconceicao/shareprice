@@ -8,6 +8,7 @@ import { Produto } from '../../models/produto';
 import { Filtro } from '../../models/filtro';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
+import { Geolocation } from 'ionic-native';
 
 @Component({
    selector: 'page-home',
@@ -51,14 +52,24 @@ export class Home implements OnInit {
           this.lat = lat;
        });
 
-       this.sharingService.lat.subscribe(lng=>{
+       this.sharingService.lng.subscribe(lng=>{
           this.lng = lng;
        });
    }
 
    ionViewWillEnter() {
-       console.log("ionViewWillEnter HomePage");
-       this.carregandoPage();
+      console.log("ionViewWillEnter HomePage");
+        //pega os produtos pela localizacao do usuario
+      Geolocation.getCurrentPosition()
+        .then((resp) => {
+            console.log("resp location: lat: "+resp.coords.latitude+" lng: "+resp.coords.longitude);
+            this.sharingService.setLat(resp.coords.latitude);
+            this.sharingService.setLng(resp.coords.longitude);
+            
+            this.carregandoPage();
+        }).catch((error) => {
+            console.log('Error getting location', error);              
+        });
    }
 
    carregandoPage(){
