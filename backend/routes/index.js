@@ -257,6 +257,35 @@ router.post('/api/confignotificacao', function(req, res) {
 });
 
 
+function buscaUsuariosParaPushNotificacion(cdusuario, cdproduto){
+    pool.getConnection(function(err, connection){
+        connection.query(
+            `   SELECT u.cdusuario, u.devicetoken 
+                FROM usuario u
+                where exists (SELECT 1 from confignotificacao cn 
+                                JOIN configtipo t ON t.cdconfignotificacao = cn.cdconfignotificacao
+                                JOIN configmedida me ON me.cdconfignotificacao = cn.cdconfignotificacao
+                                JOIN configmarca ma ON ma.cdconfignotificacao = cn.cdconfignotificacao              
+                                join produto p on p.cdtipo = t.cdtipo and p.cdmedida = me.cdmedida and p.cdmarca = ma.cdmarca
+                                join loja l on  p.cdloja = l.cdloja             	
+                                where p.codigo = ?
+                                and u.cdusuario <> ?
+                                and cn.cdusuario = u.cdusuario                                              
+                                and  (6371 * acos(
+                                            cos(radians(u.lat)) *
+                                            cos(radians(l.lat)) *
+                                            cos(radians(u.lng) - radians(l.lng)) +
+                                            sin(radians(u.lat)) *
+                                            sin(radians(l.lat))
+                                        )) <= cn.raio
+                        )
+            `,[cdproduto, cdusuario], function(err, result){
+                //TODO devolve a lista de usuarios para o metodo que esta chamando....
+            });
+        connection.release();
+    });
+}
+
 //  PRODUTOS ============================================
 router.get('/api/produto/:codigo', function(req, res) {	    
     pool.getConnection(function(err, connection) {
