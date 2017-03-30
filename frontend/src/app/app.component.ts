@@ -43,7 +43,7 @@ export class MyApp {
       Splashscreen.hide();
       console.log("initializeApp ...");
       this.initPushNotification();      
-      this.rootPage = Home;
+      this.rootPage = LoginPage;//Home;
     });
   }
   

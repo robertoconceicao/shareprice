@@ -20,17 +20,16 @@ import { Medida } from '../../models/medida';
 })
 export class ConfigPage implements OnInit {
   
-  public config: Confignotificacao;
-  public cdusuario: string;
+  public config: Confignotificacao;  
 
   constructor(public navCtrl: NavController,
       public sharingService: SharingService,
       public toastCtrl: ToastController) {
 
-    this.sharingService.cdusuario.subscribe(cdusuario=>{
-      this.cdusuario = cdusuario;
-    });
     this.config = new Confignotificacao();
+    this.sharingService.cdusuario.subscribe(cdusuario=>{
+      this.config.cdusuario = cdusuario;
+    });
   }
 
   ionViewDidLoad() {
@@ -38,9 +37,10 @@ export class ConfigPage implements OnInit {
   }
 
   ngOnInit(){
-    this.sharingService.getConfiguraNotificacao(this.cdusuario).then(dados=>{
+    this.sharingService.getConfiguraNotificacao(this.config.cdusuario).then(dados=>{
       if(!!dados && dados.length > 0){
         this.config = AppSettings.convertToConfignotificacao(dados[0]);
+        console.log("Buscando config do usuario: "+JSON.stringify(this.config));
       }
     });
   }

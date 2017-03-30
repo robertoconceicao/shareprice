@@ -129,7 +129,7 @@ export class SharingService {
   }
 
   configuraNotificacao(config: Confignotificacao){
-    let jsonUsuario = {
+    let jsonConfig = {
       cdusuario: config.cdusuario,
       raio: config.raio,
       cdconfignotificacao: config.cdconfignotificacao,
@@ -138,9 +138,10 @@ export class SharingService {
       medidas: config.medidas
     };
 
+    console.log("post configurar notificacao: "+JSON.stringify(jsonConfig));
     return this.http
                 .post(AppSettings.API_ENDPOINT + AppSettings.POST_CONFIG_NOTIFICACAO, 
-                    JSON.stringify(jsonUsuario), 
+                    JSON.stringify(jsonConfig), 
                     {headers: contentHeaders}
                 ).toPromise();
   }

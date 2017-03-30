@@ -10,6 +10,18 @@ var router  = express.Router();
 var gcm = require('node-gcm');
 var gcmApiKey = 'AIzaSyANN9rbE4VXHxIhS0_T5vnN2puc2tG0WLg'; // GCM API KEY OF YOUR GOOGLE CONSOLE PROJECT
 
+// TESTES LOCAIS
+var pool  = mysql.createPool({  
+   connectionLimit : 100,
+   host     : 'localhost',
+   port : 3306, 
+   database:'tabarato',
+   user     : 'tabarato',
+   password : 'security'
+ });    
+
+//NA NUVEM
+/*
 var config = {
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
@@ -21,6 +33,7 @@ if (process.env.INSTANCE_CONNECTION_NAME) {
 }
 
 var pool  = mysql.createPool(config);    
+*/
 
 const API_GOOGLE_PLACE = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 const API_KEY='key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc';
@@ -121,19 +134,21 @@ router.get('/api/confignotificacao', function(req, res){
 
 // Configuracao Notificacao =============================
 router.post('/api/confignotificacao', function(req, res) {	    
-    let medidas = req.query.medidas;
-    let tipos = req.query.tipos;
-    let marcas = req.query.marcas;
-    let raio = req.query.raio;
-    let cdusuario = req.query.cdusuario;
+    let medidas = req.body.medidas;
+    let tipos = req.body.tipos;
+    let marcas = req.body.marcas;
+    let raio = req.body.raio;
+    let cdusuario = req.body.cdusuario;
 
     pool.getConnection(function(err, connection) {
 
         connection.beginTransaction(function(err) {
             if (err) { throw err; }
 
+            var cdconfignotificacao = 0;
+
             connection.query(`
-            select * from confignotificacao    
+            select cdconfignotificacao from confignotificacao    
             WHERE 
             cdusuario = ?
             `,[cdusuario],function(err,result){
@@ -144,8 +159,10 @@ router.post('/api/confignotificacao', function(req, res) {
                 }
                 
                 if(result.length > 0) {
+                    cdconfignotificacao = result[0].cdconfignotificacao;
+
                     console.log("Existe configuracao para esse usuario, detele td e insere tudo novamente");
-                    connection.query(`delete from configmarca where cdusuario = ?`,[cdusaurio],function(err){
+                    connection.query(`delete from configmarca where cdconfignotificacao = ?`,[cdconfignotificacao],function(err){
                         if(err) {
                             console.log("Erro ao tentar deletar configmarca");
                             return connection.rollback(function() {
@@ -153,7 +170,7 @@ router.post('/api/confignotificacao', function(req, res) {
                             });
                         }
                     });
-                    connection.query(`delete from configtipo where cdusuario = ?`,[cdusaurio],function(err){
+                    connection.query(`delete from configtipo where cdconfignotificacao = ?`,[cdconfignotificacao],function(err){
                         if(err) {
                             console.log("Erro ao tentar deletar configtipo");
                             return connection.rollback(function() {
@@ -161,7 +178,7 @@ router.post('/api/confignotificacao', function(req, res) {
                             });
                         }
                     });
-                    connection.query(`delete from configmedida where cdusuario = ?`,[cdusaurio],function(err){
+                    connection.query(`delete from configmedida where cdconfignotificacao = ?`,[cdconfignotificacao],function(err){
                         console.log("Erro ao tentar deletar configmedida");
                         if(err) {
                             return connection.rollback(function() {
@@ -169,7 +186,7 @@ router.post('/api/confignotificacao', function(req, res) {
                             });
                         }
                     });
-                    connection.query(`delete from confignotificacao where cdusuario = ?`,[cdusaurio],function(err){
+                    connection.query(`delete from confignotificacao where cdconfignotificacao = ?`,[cdconfignotificacao],function(err){
                         console.log("Erro ao tentar deletar confignotificacao");
                         if(err) {
                             return connection.rollback(function() {
@@ -178,8 +195,6 @@ router.post('/api/confignotificacao', function(req, res) {
                         }
                     });
                 }
-
-                var cdconfignotificacao = 0;
 
                 connection.query('INSERT INTO confignotificacao(cdusuario, raio) values(?, ?) ', [cdusuario, raio], function(err,result){                        
                         if(err) {
@@ -190,10 +205,10 @@ router.post('/api/confignotificacao', function(req, res) {
                         }
                         cdconfignotificacao = result.insertId;
 
-                        medidas.array.forEach(function(element) {
+                        medidas.forEach(function(element) {
                             connection.query('INSERT INTO configmedida(cdmedida, cdconfignotificacao) values(?, ?) ', [element, cdconfignotificacao], function(err,result){                        
                                 if(err) {
-                                    console.log("Erro ao tentar inserir configmarca");                        
+                                    console.log("Erro ao tentar inserir configmedida");                        
                                     return connection.rollback(function() {
                                         throw error;
                                     });                        
@@ -202,7 +217,7 @@ router.post('/api/confignotificacao', function(req, res) {
                         }, this);
 
 
-                        tipos.array.forEach(function(element){
+                        tipos.forEach(function(element){
                             connection.query('INSERT INTO configtipo(cdtipo, cdconfignotificacao) values(?, ?) ', [element, cdconfignotificacao], function(err,result){                        
                                 if(err) {
                                     console.log("Erro ao tentar inserir configtipo");                        
@@ -214,7 +229,7 @@ router.post('/api/confignotificacao', function(req, res) {
                         }, this);
                         
 
-                        marcas.array.forEach(function(element){
+                        marcas.forEach(function(element){
                             connection.query('INSERT INTO configmarca(cdmarca, cdconfignotificacao) values(?, ?) ', [element, cdconfignotificacao], function(err,result){                        
                                 if(err) {
                                     console.log("Erro ao tentar inserir configmarca");

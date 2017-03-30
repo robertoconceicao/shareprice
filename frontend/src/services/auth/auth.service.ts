@@ -36,7 +36,7 @@ export class AuthService {
   accessToken: string;
   idToken: string;
 
-  storage: Storage = new Storage(['sqlite', 'websql', 'indexeddb'], { name: '__mydb' });
+  storage: Storage = new Storage();//['sqlite', 'websql', 'indexeddb'], { name: '__mydb' });
 
   devicetoken: string;
   lat: number;
@@ -128,8 +128,8 @@ export class AuthService {
   }
 
   public authenticated() { 
-    return !!this.idToken;
-    //return tokenNotExpired('id_token', this.idToken);
+  //    return !!this.idToken;
+    return tokenNotExpired('id_token', this.idToken);
   }  
 
   public login() {

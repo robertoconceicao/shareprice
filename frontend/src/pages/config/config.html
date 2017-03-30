@@ -5,10 +5,10 @@
 </ion-header>
 
 
-<ion-content>
-  <form #configForm="ngForm" (ngSubmit)="salvar()">
+<ion-content>  
         <ion-list>
-            <ion-item>            
+            <ion-item>          
+
                 <ion-label>Marca</ion-label>            
                     <ion-select [(ngModel)]="config.marcas" multiple="true" cancelText="Cancelar" okText="Ok">
                         <ion-option [value]="marca.cdmarca" *ngFor="let marca of sharingService.marcas | async ">
@@ -36,7 +36,7 @@
             </ion-item>
             
             <ion-item>
-                <ion-label>Raio de distância {{filtro.distancia}} Km</ion-label>
+                <ion-label>Raio de distância {{config.raio}} Km</ion-label>
                 <ion-range min="1" max="30" pin="true" [(ngModel)]="config.raio" color="primary">
                     <ion-icon range-left small name="disc"></ion-icon>
                     <ion-icon range-right name="disc"></ion-icon>
@@ -45,10 +45,9 @@
         </ion-list>
 
         <p>
-            <button type="submit" ion-button block icon-left>
+            <button type="submit" ion-button block icon-left (click)="salvar()">
                 <ion-icon name="cloud-upload"></ion-icon>
                 Enviar
             </button>            
-        </p>
-  </form>        
+        </p>     
 </ion-content>
