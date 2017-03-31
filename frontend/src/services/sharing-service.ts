@@ -132,10 +132,11 @@ export class SharingService {
     let jsonConfig = {
       cdusuario: config.cdusuario,
       raio: config.raio,
+      flnotificar: config.flnotificar,
       cdconfignotificacao: config.cdconfignotificacao,
-      tipos: config.tipos,
-      marcas: config.marcas,
-      medidas: config.medidas
+      marcas: config.marcas
+      //tipos: config.tipos,
+      //medidas: config.medidas
     };
 
     console.log("post configurar notificacao: "+JSON.stringify(jsonConfig));

@@ -7,6 +7,10 @@
 
 <ion-content>  
         <ion-list>
+            <ion-item>
+                <ion-label>Notificações</ion-label>
+                <ion-toggle [(ngModel)]="config.flnotificar"></ion-toggle>
+            </ion-item>
             <ion-item>          
 
                 <ion-label>Marca</ion-label>            
@@ -15,24 +19,6 @@
                             {{ marca.descricao }}
                         </ion-option>
                     </ion-select>
-            </ion-item>
-            
-            <ion-item>            
-                <ion-label>Tipo</ion-label>         
-                <ion-select [(ngModel)]="config.tipos" multiple="true" cancelText="Cancelar" okText="Ok">                               
-                    <ion-option [value]="tipo.cdtipo" *ngFor="let tipo of sharingService.tipos | async">
-                        {{ tipo.descricao }}
-                    </ion-option>
-                </ion-select>            
-            </ion-item>
-
-            <ion-item>            
-                <ion-label>Medida</ion-label>
-                <ion-select [(ngModel)]="config.medidas" multiple="true" cancelText="Cancelar" okText="Ok">                
-                    <ion-option [value]="medida.cdmedida" *ngFor="let medida of sharingService.medidas | async" >
-                        {{ medida.descricao }}
-                    </ion-option>
-                </ion-select>
             </ion-item>
             
             <ion-item>

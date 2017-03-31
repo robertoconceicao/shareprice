@@ -39,15 +39,24 @@ export class MyApp {
  initializeApp() {    
     this.platform.ready().then(() => {      
       
+      //pega os produtos pela localizacao do usuario
+      Geolocation.getCurrentPosition()
+        .then((resp) => {
+            console.log("resp location: lat: "+resp.coords.latitude+" lng: "+resp.coords.longitude);
+            this.sharingService.setLat(resp.coords.latitude);
+            this.sharingService.setLng(resp.coords.longitude);           
+      }).catch((error) => {
+           console.log('Error getting location', error);              
+      });
+
       StatusBar.styleDefault();
       Splashscreen.hide();
-      console.log("initializeApp ...");
+      
       this.initPushNotification();      
       this.rootPage = LoginPage;//Home;
     });
   }
-  
-  
+    
 
   initPushNotification(){
     if (!this.platform.is('cordova')) {
@@ -79,7 +88,7 @@ export class MyApp {
         if (data.additionalData.foreground) {
           // if application open, show popup
           let confirmAlert = this.alertCtrl.create({
-            title: 'New Notification',
+            title: 'Promoção de cerveja perto de você',
             message: data.message,
             buttons: [{
               text: 'Ignore',

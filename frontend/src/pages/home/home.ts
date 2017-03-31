@@ -55,26 +55,17 @@ export class Home implements OnInit {
        this.sharingService.lng.subscribe(lng=>{
           this.lng = lng;
        });
+
+       this.carregandoPage();
    }
 
    ionViewWillEnter() {
-      console.log("ionViewWillEnter HomePage");
-        //pega os produtos pela localizacao do usuario
-      Geolocation.getCurrentPosition()
-        .then((resp) => {
-            console.log("resp location: lat: "+resp.coords.latitude+" lng: "+resp.coords.longitude);
-            this.sharingService.setLat(resp.coords.latitude);
-            this.sharingService.setLng(resp.coords.longitude);
-            
-            this.carregandoPage();
-        }).catch((error) => {
-            console.log('Error getting location', error);              
-        });
+      console.log("ionViewWillEnter HomePage");      
    }
 
    carregandoPage(){
        this.loading = this.loadingCtrl.create({
-            content: 'Carregando informações...'
+            content: 'Carregando ...'
         });
 
         this.loading.present();

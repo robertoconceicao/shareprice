@@ -3,6 +3,7 @@ import { NavController, NavParams } from 'ionic-angular';
 import { Filtro } from '../../models/filtro';
 import { NumberUtil } from '../../util/number-util';
 import { SharingService } from '../../services/sharing-service';
+import { Home } from '../home/home';
 
 @Component({
   selector: 'page-filtros',
@@ -42,6 +43,6 @@ export class FiltrosPage implements OnInit {
   }
 
   goBack(){
-    this.navCtrl.pop();
+    this.navCtrl.setRoot(Home);
   }
 }

@@ -74,9 +74,15 @@ export class AppSettings {
      config.cdconfignotificacao = data.cdconfignotificacao;
      config.cdusuario = data.cdusuario;
      config.raio = data.raio;
-     config.tipos = data.tipos;
-     config.marcas = data.marcas;
-     config.medidas = data.medidas;
+     config.flnotificar = data.flnotificar;
+
+     if(!!data.marcas && data.marcas.length > 0) {
+       for(let m of data.marcas){
+         config.marcas.push(m.cdmarca);
+       }
+     }
+     //config.tipos = data.tipos;
+     //config.medidas = data.medidas;
      
      return config;
    }   
