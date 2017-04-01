@@ -10,6 +10,7 @@ var router  = express.Router();
 var gcm = require('node-gcm');
 var gcmApiKey = 'AIzaSyANN9rbE4VXHxIhS0_T5vnN2puc2tG0WLg'; // GCM API KEY OF YOUR GOOGLE CONSOLE PROJECT
 
+/*
 // TESTES LOCAIS
 var pool  = mysql.createPool({  
    connectionLimit : 100,
@@ -19,9 +20,9 @@ var pool  = mysql.createPool({
    user     : 'tabarato',
    password : 'security'
  });    
-
+*/
 //NA NUVEM
-/*
+
 var config = {
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
@@ -33,7 +34,6 @@ if (process.env.INSTANCE_CONNECTION_NAME) {
 }
 
 var pool  = mysql.createPool(config);    
-*/
 
 const API_GOOGLE_PLACE = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 const API_KEY='key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc';
@@ -513,8 +513,7 @@ router.post('/api/produto', function(req, res) {
                                         JOIN configmarca ma ON ma.cdconfignotificacao = cn.cdconfignotificacao              
                                         join produto p on p.cdmarca = ma.cdmarca
                                         join loja l on  p.cdloja = l.cdloja
-                                        where p.codigo = ?
-                                        and u.cdusuario <> ?
+                                        where p.codigo = ?                                        
                                         and cn.flnotificar = 1
                                         and cn.cdusuario = u.cdusuario                                              
                                         and  (6371 * acos(
@@ -525,7 +524,7 @@ router.post('/api/produto', function(req, res) {
                                                     sin(radians(l.lat))
                                                 )) <= cn.raio
                                 )
-                    `,[cdproduto, cdusuario], function(err, result){
+                    `,[cdproduto], function(err, result){
                         //Notifica todos os usuarios que estao próximos, e que estejam configurados
                         pushNotification(cdproduto, result);               
                     });
