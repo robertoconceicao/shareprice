@@ -21,6 +21,7 @@ import { Medida } from '../../models/medida';
 export class ConfigPage implements OnInit {
   
   public config: Confignotificacao;  
+  public cdusuario: string;
 
   constructor(public navCtrl: NavController,
       public sharingService: SharingService,
@@ -28,7 +29,7 @@ export class ConfigPage implements OnInit {
 
     this.config = new Confignotificacao();
     this.sharingService.cdusuario.subscribe(cdusuario=>{
-      this.config.cdusuario = cdusuario;
+      this.cdusuario = cdusuario;
     });
   }
 
@@ -37,7 +38,7 @@ export class ConfigPage implements OnInit {
   }
 
   ngOnInit(){
-    this.sharingService.getConfiguraNotificacao(this.config.cdusuario).then(dados=>{
+    this.sharingService.getConfiguraNotificacao(this.cdusuario).then(dados=>{
       if(!!dados && dados.length > 0){
         this.config = AppSettings.convertToConfignotificacao(dados[0]);
         console.log("Buscando config do usuario: "+JSON.stringify(this.config));
@@ -46,6 +47,7 @@ export class ConfigPage implements OnInit {
   }
   
   salvar(){    
+    this.config.cdusuario = this.cdusuario;
     this.sharingService.configuraNotificacao(this.config)
       .then(success => {
             let msg = "Configuração realizada com sucesso.";
