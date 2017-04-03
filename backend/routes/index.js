@@ -10,7 +10,6 @@ var router  = express.Router();
 var gcm = require('node-gcm');
 var gcmApiKey = 'AIzaSyANN9rbE4VXHxIhS0_T5vnN2puc2tG0WLg'; // GCM API KEY OF YOUR GOOGLE CONSOLE PROJECT
 
-/*
 // TESTES LOCAIS
 var pool  = mysql.createPool({  
    connectionLimit : 100,
@@ -18,9 +17,10 @@ var pool  = mysql.createPool({
    port : 3306, 
    database:'tabarato',
    user     : 'tabarato',
-   password : 'security'
+   password : 'security',
+   multipleStatements: true
  });    
-*/
+/*
 //NA NUVEM
 
 var config = {
@@ -34,6 +34,7 @@ if (process.env.INSTANCE_CONNECTION_NAME) {
 }
 
 var pool  = mysql.createPool(config);    
+*/
 
 const API_GOOGLE_PLACE = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 const API_KEY='key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc';
@@ -157,14 +158,14 @@ router.post('/api/confignotificacao', function(req, res) {
                         cdconfignotificacao = result[0].cdconfignotificacao;
 
                         console.log("Existe configuracao para esse usuario, detele td e insere tudo novamente");
-                        connection.query(`delete from configmarca where cdconfignotificacao = ?`,[cdconfignotificacao],function(err){
+                        connection.query(`delete from configmarca where cdconfignotificacao = ?`,[cdconfignotificacao],function(err, result2){
                             if(err) {
                                 console.log("Erro ao tentar deletar configmarca");
                                 return connection.rollback(function() {
                                     throw error;
                                 });
                             }
-                            connection.query(`delete from confignotificacao where cdconfignotificacao = ?`,[cdconfignotificacao],function(err){
+                            connection.query(`delete from confignotificacao where cdconfignotificacao = ?`,[cdconfignotificacao],function(err, result3){
                                 console.log("Erro ao tentar deletar confignotificacao");
                                 if(err) {
                                     return connection.rollback(function() {
@@ -172,17 +173,17 @@ router.post('/api/confignotificacao', function(req, res) {
                                     });
                                 }
 
-                                connection.query('INSERT INTO confignotificacao(cdusuario, raio, flnotificar) values(?, ?) ', [cdusuario, raio, flnotificar], function(err,result){
+                                connection.query('INSERT INTO confignotificacao(cdusuario, raio, flnotificar) values(?, ?, ?) ', [cdusuario, raio, flnotificar], function(err,result4){
                                     if(err) {
                                         console.log("Erro ao tentar inserir confignotificacao");                        
                                         return connection.rollback(function() {
                                             throw error;
                                         });                        
                                     }
-                                    cdconfignotificacao = result.insertId;
+                                    cdconfignotificacao = result4.insertId;
 
                                     marcas.forEach(function(element){
-                                        connection.query('INSERT INTO configmarca(cdmarca, cdconfignotificacao) values(?, ?) ', [element, cdconfignotificacao], function(err,result){
+                                        connection.query('INSERT INTO configmarca(cdmarca, cdconfignotificacao) values(?, ?) ', [element, cdconfignotificacao], function(err,result5){
                                             if(err) {
                                                 console.log("Erro ao tentar inserir configmarca");
                                                 return connection.rollback(function() {
@@ -200,8 +201,8 @@ router.post('/api/confignotificacao', function(req, res) {
                                             });
                                         }
                                         console.log('success!');
+                                        return res.status(200);
                                     });
-                                    return res.status(200);
                                 });
                             });
                         });                 
@@ -216,7 +217,7 @@ router.post('/api/confignotificacao', function(req, res) {
                             cdconfignotificacao = result.insertId;
 
                             marcas.forEach(function(element){
-                                connection.query('INSERT INTO configmarca(cdmarca, cdconfignotificacao) values(?, ?) ', [element, cdconfignotificacao], function(err,result){
+                                connection.query('INSERT INTO configmarca(cdmarca, cdconfignotificacao) values(?, ?) ', [element, cdconfignotificacao], function(err,result1){
                                     if(err) {
                                         console.log("Erro ao tentar inserir configmarca");
                                         return connection.rollback(function() {
@@ -234,8 +235,8 @@ router.post('/api/confignotificacao', function(req, res) {
                                     });
                                 }
                                 console.log('success!');
+                                return res.status(200);
                             });
-                            return res.status(200);
                         });
                     }
                 });
@@ -562,12 +563,34 @@ function pushNotification(produto, device_tokens){
     device_tokens.push(device_bob);
     device_tokens.push(device_jean);
     */
-    sender.send(message, device_tokens, retry_times, function (result) {
-        console.log('push sent to: ' + device_tokens);
-        res.status(200).send('Pushed notification ' + device_tokens);
-    }, function (err) {
-        res.status(500).send('failed to push notification ');
-    });
+    if(device_tokens.length <= 0 ){
+        console.log("Nao encontrou ninguem para notificar");
+        return;
+    }
+
+    //guarda em cada possicao uma lista de devices de no máximo 1000(valor maximo da API de push notification) elementos
+    var arrayDevices = new Array(); 
+    
+    if(device_tokens.length > 1000){
+        while(device_tokens.length > 1000){
+            //remove da posicao 0, 1000 elementos e add esses 1000 na lista de push
+            arrayDevices.push(device_tokens.splice(0, 1000));
+        }
+        arrayDevices.push(device_tokens.splice(0, device_tokens.length - 1));
+    } else {
+        arrayDevices.push(device_tokens);
+    }
+
+
+
+    for(var tokens of arrayDevices){
+        sender.send(message, tokens, retry_times, function (result) {
+            console.log('push sent to: ' + device_tokens);
+            res.status(200).send('Pushed notification ' + device_tokens);
+        }, function (err) {
+            res.status(500).send('failed to push notification ');
+        });    
+    }
 }
 
 /* NOVO USUARIO =============================================
