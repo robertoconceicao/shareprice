@@ -10,6 +10,7 @@ var router  = express.Router();
 var gcm = require('node-gcm');
 var gcmApiKey = 'AIzaSyANN9rbE4VXHxIhS0_T5vnN2puc2tG0WLg'; // GCM API KEY OF YOUR GOOGLE CONSOLE PROJECT
 
+/*
 // TESTES LOCAIS
 var pool  = mysql.createPool({  
    connectionLimit : 100,
@@ -20,7 +21,7 @@ var pool  = mysql.createPool({
    password : 'security',
    multipleStatements: true
  });    
-/*
+*/
 //NA NUVEM
 
 var config = {
@@ -34,7 +35,6 @@ if (process.env.INSTANCE_CONNECTION_NAME) {
 }
 
 var pool  = mysql.createPool(config);    
-*/
 
 const API_GOOGLE_PLACE = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 const API_KEY='key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc';
