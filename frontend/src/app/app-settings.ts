@@ -5,7 +5,7 @@ export class AppSettings {
 
    public static get API_ENDPOINT(): string {
       //google cloud
-       return 'https://tahbarato-154614.appspot.com/api/';//http://tabarato.ddns.net:9000/api/'; 'http://localhost:8080/api/';
+       return 'http://tabarato.ddns.net:9000/api/';//'https://tahbarato-154614.appspot.com/api/';//http://tabarato.ddns.net:9000/api/'; 'http://localhost:8080/api/';
    }
 
    //API marca

@@ -8,7 +8,7 @@ var router  = express.Router();
 
 //https://developers.google.com/mobile/add?platform=android&cntapi=signin
 var gcm = require('node-gcm');
-var gcmApiKey = 'AIzaSyANN9rbE4VXHxIhS0_T5vnN2puc2tG0WLg'; // GCM API KEY OF YOUR GOOGLE CONSOLE PROJECT
+var gcmApiKey = 'AIzaSyAFoZL_ofOX3kT5W_k77gyT99QCz5_XbqA';//'AIzaSyANN9rbE4VXHxIhS0_T5vnN2puc2tG0WLg'; // GCM API KEY OF YOUR GOOGLE CONSOLE PROJECT
 
 /*
 // TESTES LOCAIS
@@ -533,6 +533,36 @@ router.post('/api/produto', function(req, res) {
             });
         connection.release();       
     });    
+});
+
+//apenas para testes depois remover esse codigo
+router.get('/api/push', function (req, res) {
+    var device_tokens = []; //create array for storing device tokens
+    var retry_times = 4; //the number of times to retry sending the message if it fails
+    var sender = new gcm.Sender(gcmApiKey); //create a new sender
+    var message = new gcm.Message(); //create a new message    
+    message.addData('title', 'Titulo da cerveja...');
+    message.addData('message', "Mensagem de teste de notificacao");
+    message.addData('sound', 'default');
+    message.addData('icon', 'assets/images/111.png');
+    message.collapseKey = 'Testing Push'; //grouping messages
+    message.delayWhileIdle = true; //delay sending while receiving device is offline
+    message.timeToLive = 3; //number of seconds to keep the message on 
+    //server if the device is offline
+    
+    //Take the registration id(lengthy string) that you logged 
+    //in your ionic v2 app and update device_tokens[0] with it for testing.
+    //Later save device tokens to db and 
+    //get back all tokens and push to multiple devices        
+    device_bob = "cHuB9agvyCY:APA91bFwXmQuliTLKP7cp2Z0aQxzPwm-SXOrcF405vnBOJkc11CVDadPZCmKdfpbNLwjYZut-2NWdAYpF9DNCu-MH_Bj_a_cUndt9z2kBEMJ-DH580YcZkWOjWuS88rUvRpJfqQOveWA";
+    device_tokens.push(device_bob);
+    
+    sender.send(message, device_tokens, retry_times, function (result) {
+        console.log('push sent to: ' + device_tokens);
+        res.status(200).send('Pushed notification ' + device_tokens);
+    }, function (err) {
+        res.status(500).send('failed to push notification ');
+    });
 });
 
 //router.get('/api/push', function (req, res) {

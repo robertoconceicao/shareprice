@@ -23,16 +23,23 @@ export class LoginPage implements OnInit {
   */  
   constructor(public navCtrl: NavController, public auth: AuthService) {
     //Estou me inscrevendo para receber as alterações na variavel onlogin
-    auth.onlogin.subscribe((val) => {      
-      if(this.auth.authenticated()) {
-        this.navCtrl.setRoot(Home);
-      }
-    });
+  }
+
+  ionViewWillEnter() {
+      console.log("ionViewWillEnter HomePage");      
   }
 
   ngOnInit(){
     console.log("Iniciando LoginPage");
-    this.auth.login();
+    if(!this.auth.authenticated()) {
+      this.auth.login();
+    }
+    
+    this.auth.onlogin.subscribe((val) => {      
+      if(this.auth.authenticated()) {
+        this.navCtrl.setRoot(Home);
+      }
+    });
     
     /*
     this.facebookAuth.login().then(res => {

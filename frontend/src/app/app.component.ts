@@ -45,15 +45,15 @@ export class MyApp {
             console.log("resp location: lat: "+resp.coords.latitude+" lng: "+resp.coords.longitude);
             this.sharingService.setLat(resp.coords.latitude);
             this.sharingService.setLng(resp.coords.longitude);           
+            
+            Splashscreen.hide();
+            this.rootPage = LoginPage;//Home;
       }).catch((error) => {
            console.log('Error getting location', error);              
       });
 
       StatusBar.styleDefault();
-      Splashscreen.hide();
-      
       this.initPushNotification();      
-      this.rootPage = Home;//LoginPage;//Home;
     });
   }
     
@@ -66,7 +66,7 @@ export class MyApp {
 
     var push = Push.init({
         android: {
-          senderID: "874200786883"
+          senderID: "449887022881"
         },
         ios: {
           alert: "true",

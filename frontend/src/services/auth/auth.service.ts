@@ -82,9 +82,9 @@ export class AuthService {
     this.lock.on('authenticated', authResult => {
       console.log("authenticated: "+JSON.stringify(authResult));
       if (authResult && authResult.accessToken && authResult.idToken) {
-        this.storage.set('access_token', authResult.accessToken);
-        this.storage.set('id_token', authResult.idToken);
-        this.storage.set('refresh_token', authResult.refreshToken);
+       // this.storage.set('access_token', authResult.accessToken);
+       // this.storage.set('id_token', authResult.idToken);
+       // this.storage.set('refresh_token', authResult.refreshToken);
         this.accessToken = authResult.accessToken;
         this.idToken = authResult.idToken;
 
@@ -97,7 +97,7 @@ export class AuthService {
           }
 
           profile.user_metadata = profile.user_metadata || {};          
-          this.storage.set('profile', JSON.stringify(profile));
+         // this.storage.set('profile', JSON.stringify(profile));
           this.user = profile;
           this.inserirUsuario(profile);
         });
