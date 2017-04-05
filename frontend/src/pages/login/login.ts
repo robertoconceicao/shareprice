@@ -1,61 +1,51 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController }  from 'ionic-angular';
-import { AuthService } from '../../services/auth/auth.service';
-import { Home } from '../home/home';
-
-import { FacebookAuth, GoogleAuth, User } from '@ionic/cloud-angular';
-
+import { Component } from '@angular/core';
+import { Facebook, NativeStorage } from 'ionic-native';
+import { NavController } from 'ionic-angular';
+import { UserPage } from '../user/user';
 
 @Component({
-  templateUrl: './login.html',
+  selector: 'page-login',
+  templateUrl: 'login.html'
 })
-export class LoginPage implements OnInit {
-  
-  // We need to inject AuthService so that we can
-  // use it in the view
-  /*
-  constructor(public navCtrl: NavController,
-              public facebookAuth: FacebookAuth, 
-              public googleAuth: GoogleAuth,
-              public user: User) {
+export class LoginPage {
+  FB_APP_ID: number = 1244276078941737;
 
-  }
-  */  
-  constructor(public navCtrl: NavController, public auth: AuthService) {
-    //Estou me inscrevendo para receber as alterações na variavel onlogin
+  constructor(public navCtrl: NavController) {
+    Facebook.browserInit(this.FB_APP_ID, "v2.8");
   }
 
-  ionViewWillEnter() {
-      console.log("ionViewWillEnter HomePage");      
-  }
+  doFbLogin(){
+    let permissions = new Array();
+    let nav = this.navCtrl;
+    //the permissions your facebook app needs from the user
+    permissions = ["public_profile"];
 
-  ngOnInit(){
-    console.log("Iniciando LoginPage");
-    if(!this.auth.authenticated()) {
-      this.auth.login();
-    }
-    
-    this.auth.onlogin.subscribe((val) => {      
-      if(this.auth.authenticated()) {
-        this.navCtrl.setRoot(Home);
-      }
-    });
-    
-    /*
-    this.facebookAuth.login().then(res => {
-        console.log("resposta: "+res);
-        this.navCtrl.setRoot(Home);
-    });
-  
-    this.googleAuth.login().
-      then(res => {
-        console.log("resposta: google "+res);
-        this.navCtrl.setRoot(Home);
+
+    Facebook.login(permissions)
+    .then(function(response){
+      let userId = response.authResponse.userID;
+      let params = new Array();
+
+      //Getting name and gender properties
+      Facebook.api("/me?fields=name,gender", params)
+      .then(function(user) {
+        console.log("Login sucesso");
+        user.picture = "https://graph.facebook.com/" + userId + "/picture?type=large";
+        //now we have the users info, let's save it in the NativeStorage
+        NativeStorage.setItem('user',
+        {
+          name: user.name,
+          gender: user.gender,
+          picture: user.picture
+        })
+        .then(function(){
+          nav.push(UserPage);
+        }, function (error) {
+          console.log(error);
+        })
       })
-      .catch(err =>{
-        console.log("Error: "+err);
-      });
-  */
-
-  } 
+    }, function(error){
+      console.log(error);
+    });
+  }
 }

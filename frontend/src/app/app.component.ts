@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, AlertController  } from 'ionic-angular';
-import { StatusBar, Splashscreen, Network, Push, Geolocation } from 'ionic-native';
+import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage } from 'ionic-native';
 
 import { Home } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
@@ -45,9 +45,21 @@ export class MyApp {
             console.log("resp location: lat: "+resp.coords.latitude+" lng: "+resp.coords.longitude);
             this.sharingService.setLat(resp.coords.latitude);
             this.sharingService.setLng(resp.coords.longitude);           
-            
-            Splashscreen.hide();
-            this.rootPage = LoginPage;//Home;
+
+           let env = this;
+           NativeStorage.getItem('user')
+            .then( function (data) {
+              // user is previously logged and we have his data
+              // we will let him access the app
+              env.nav.push(Home);
+              Splashscreen.hide();
+            }, function (error) {
+              //we don't have the user data so we will ask him to log in
+              env.nav.push(LoginPage);
+              Splashscreen.hide();
+            }); 
+           // Splashscreen.hide();
+           // this.rootPage = LoginPage;//Home;
       }).catch((error) => {
            console.log('Error getting location', error);              
       });
@@ -57,6 +69,7 @@ export class MyApp {
     });
   }
     
+  
 
   initPushNotification(){
     if (!this.platform.is('cordova')) {
