@@ -46,7 +46,7 @@ export class MyApp {
             this.sharingService.setLat(resp.coords.latitude);
             this.sharingService.setLng(resp.coords.longitude);           
 
-            this.nav.push(LoginPage);
+            this.nav.setRoot(LoginPage);
             Splashscreen.hide();
             /*
            let env = this;
@@ -54,11 +54,11 @@ export class MyApp {
             .then( function (data) {
               // user is previously logged and we have his data
               // we will let him access the app
-              env.nav.push(Home);
+              env.nav.setRoot(Home);
               Splashscreen.hide();
             }, function (error) {
               //we don't have the user data so we will ask him to log in
-              env.nav.push(LoginPage);
+              env.nav.setRoot(LoginPage);
               Splashscreen.hide();
             }); 
             */

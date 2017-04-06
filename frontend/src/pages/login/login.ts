@@ -39,7 +39,7 @@ export class LoginPage {
           picture: user.picture
         })
         .then(function(){
-          nav.push(Home);
+          nav.setRoot(Home);
         }, function (error) {
           console.log(error);
         })
@@ -55,7 +55,7 @@ export class LoginPage {
     .then(function(response) {
       //user logged out so we will remove him from the NativeStorage
       NativeStorage.remove('user');
-      nav.push(LoginPage);
+      nav.setRoot(LoginPage);
     }, function(error){
       console.log(error);
     });
@@ -81,7 +81,7 @@ export class LoginPage {
         picture: user.imageUrl
       })
       .then(function(){
-        nav.push(Home);
+        nav.setRoot(Home);
       }, function (error) {
         console.log(error);
       })
@@ -95,7 +95,7 @@ export class LoginPage {
     GooglePlus.logout()
     .then(function (response) {
       NativeStorage.remove('user');
-      nav.push(LoginPage);
+      nav.setRoot(LoginPage);
     },function (error) {
       console.log(error);
     })
