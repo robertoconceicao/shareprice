@@ -1,11 +1,11 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>Full Buttons</ion-title>
-  </ion-navbar>
-</ion-header>
-
-<ion-content>
-  <p>
-    <button ion-button full (click)="doFbLogin()">Facebook Login</button>
+<ion-content class="login">
+  <p class="botoes">
+    <button ion-button block (click)="doFbLogin()" color="facebook">
+        Entrar com Facebook
+    </button> 
+    <br />
+    <button ion-button block (click)="doGoogleLogin()" color="google">
+      Entrar com Google+
+    </button>
   </p>
 </ion-content>

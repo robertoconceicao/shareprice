@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Facebook, NativeStorage } from 'ionic-native';
-import { NavController } from 'ionic-angular';
+import { Facebook, GooglePlus, NativeStorage } from 'ionic-native';
+import { NavController, LoadingController } from 'ionic-angular';
 import { Home } from '../home/home';
 @Component({
   selector: 'page-login',
@@ -9,7 +9,8 @@ import { Home } from '../home/home';
 export class LoginPage {
   FB_APP_ID: number = 1244276078941737;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController,
+              public loadingCtrl: LoadingController) {
     Facebook.browserInit(this.FB_APP_ID, "v2.8");
   }
 
@@ -46,5 +47,57 @@ export class LoginPage {
     }, function(error){
       console.log(error);
     });
+  }
+
+  doFbLogout(){
+    var nav = this.navCtrl;
+    Facebook.logout()
+    .then(function(response) {
+      //user logged out so we will remove him from the NativeStorage
+      NativeStorage.remove('user');
+      nav.push(LoginPage);
+    }, function(error){
+      console.log(error);
+    });
+  }
+
+  doGoogleLogin(){
+    let nav = this.navCtrl;
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+    loading.present();
+    GooglePlus.login({
+      'scopes': '', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
+      'webClientId': '449887022881-480nmee2j5il8rt23vaq2hf7vrecdghb.apps.googleusercontent.com', // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
+      'offline': true
+    })
+    .then(function (user) {
+      loading.dismiss();
+
+      NativeStorage.setItem('user', {
+        name: user.displayName,
+        email: user.email,
+        picture: user.imageUrl
+      })
+      .then(function(){
+        nav.push(Home);
+      }, function (error) {
+        console.log(error);
+      })
+    }, function (error) {
+      loading.dismiss();
+    });
+  }  
+
+  doGoogleLogout(){
+    let nav = this.navCtrl;
+    GooglePlus.logout()
+    .then(function (response) {
+      NativeStorage.remove('user');
+      nav.push(LoginPage);
+    },function (error) {
+      console.log(error);
+    })
   }
 }
