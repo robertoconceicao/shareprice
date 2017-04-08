@@ -7,6 +7,7 @@ import { LoginPage } from '../pages/login/login';
 import { MeuEstorage } from './meu-estorage';
 import { SharingService } from '../services/sharing-service';
 import { AuthService } from '../services/auth/auth.service';
+import { Usuario } from '../models/usuario';
 
 @Component({
   templateUrl: 'app.html'
@@ -46,22 +47,27 @@ export class MyApp {
             this.sharingService.setLat(resp.coords.latitude);
             this.sharingService.setLng(resp.coords.longitude);           
 
-            this.nav.setRoot(LoginPage);
-            Splashscreen.hide();
-            /*
+            
            let env = this;
            NativeStorage.getItem('user')
             .then( function (data) {
-              // user is previously logged and we have his data
-              // we will let him access the app
+              env.sharingService.setCdusuario(data.userId);
+
+              //Atualiza as informaçoes do usuario, principalmente por causa da localização
+              let usuario: Usuario = new Usuario();
+              usuario.cdusuario = data.userId;
+              usuario.nome = data.name;
+              usuario.avatar = data.picture;
+              
+              env.sharingService.insereUsuario(usuario);
+
               env.nav.setRoot(Home);
               Splashscreen.hide();
             }, function (error) {
               //we don't have the user data so we will ask him to log in
               env.nav.setRoot(LoginPage);
               Splashscreen.hide();
-            }); 
-            */
+            });             
            // Splashscreen.hide();
            // this.rootPage = LoginPage;//Home;
       }).catch((error) => {

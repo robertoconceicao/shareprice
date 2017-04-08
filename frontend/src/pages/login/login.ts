@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { Facebook, GooglePlus, NativeStorage } from 'ionic-native';
 import { NavController, LoadingController } from 'ionic-angular';
 import { Home } from '../home/home';
+import { Usuario } from '../../models/usuario';
+import { SharingService } from '../../services/sharing-service';
+
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html'
@@ -10,6 +13,7 @@ export class LoginPage {
   FB_APP_ID: number = 1244276078941737;
 
   constructor(public navCtrl: NavController,
+              public sharingService: SharingService,
               public loadingCtrl: LoadingController) {
     Facebook.browserInit(this.FB_APP_ID, "v2.8");
   }
@@ -20,6 +24,7 @@ export class LoginPage {
     //the permissions your facebook app needs from the user
     permissions = ["public_profile"];
 
+    let env = this;
 
     Facebook.login(permissions)
     .then(function(response){
@@ -31,14 +36,26 @@ export class LoginPage {
       .then(function(user) {
         console.log("Login sucesso");
         user.picture = "https://graph.facebook.com/" + userId + "/picture?type=large";
+        
+        env.sharingService.setCdusuario(userId);
+        
+        //insere um novo usuario no sistema
+        let usuario: Usuario = new Usuario();
+        usuario.cdusuario = userId;
+        usuario.nome = user.name;
+        usuario.avatar = user.picture;
+        
+        env.sharingService.insereUsuario(usuario);
+
         //now we have the users info, let's save it in the NativeStorage
         NativeStorage.setItem('user',
         {
           name: user.name,
           gender: user.gender,
-          picture: user.picture
+          picture: user.picture,
+          userId: userId
         })
-        .then(function(){
+        .then(function(){          
           nav.setRoot(Home);
         }, function (error) {
           console.log(error);

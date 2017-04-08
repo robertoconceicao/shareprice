@@ -44,7 +44,7 @@ export class SharingService {
     this._lat = <BehaviorSubject<number>> new BehaviorSubject(0);
     this._lng = <BehaviorSubject<number>> new BehaviorSubject(0);
     //TODO limpar o campo de usuario quando arrumar o login
-    this._cdusuario = <BehaviorSubject<string>> new BehaviorSubject("google-oauth2|115862700861296845675");
+    this._cdusuario = <BehaviorSubject<string>> new BehaviorSubject("");
 
     this.loadListas();
   }
@@ -114,9 +114,9 @@ export class SharingService {
       cdusuario: usuario.cdusuario,
       nome: usuario.nome,
       avatar: usuario.avatar,
-      devicetoken: usuario.devicetoken,
-      lat: usuario.lat,
-      lng: usuario.lng
+      devicetoken: this._device_token.getValue(),
+      lat: this._lat.getValue(),
+      lng: this._lng.getValue()
     };
 
     this.setCdusuario(usuario.cdusuario);
