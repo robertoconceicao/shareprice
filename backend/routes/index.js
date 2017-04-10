@@ -167,8 +167,8 @@ router.post('/api/confignotificacao', function(req, res) {
                                 });
                             }
                             connection.query(`delete from confignotificacao where cdconfignotificacao = ?`,[cdconfignotificacao],function(err, result3){
-                                console.log("Erro ao tentar deletar confignotificacao");
                                 if(err) {
+                                    console.log("Erro ao tentar deletar confignotificacao");
                                     return connection.rollback(function() {
                                         throw error;
                                     });
@@ -191,7 +191,6 @@ router.post('/api/confignotificacao', function(req, res) {
                                                     throw error;
                                                 });                        
                                             }
-                                            return;
                                         });
                                     }, this);                         
                                                                 
@@ -202,7 +201,7 @@ router.post('/api/confignotificacao', function(req, res) {
                                             });
                                         }
                                         console.log('success!');
-                                        return res.status(200);
+                                        return res.status(200).json();
                                     });
                                 });
                             });
@@ -224,8 +223,7 @@ router.post('/api/confignotificacao', function(req, res) {
                                         return connection.rollback(function() {
                                             throw error;
                                         });                        
-                                    }
-                                    return;
+                                    }                                   
                                 });
                             }, this);                         
                                                    
@@ -236,13 +234,14 @@ router.post('/api/confignotificacao', function(req, res) {
                                     });
                                 }
                                 console.log('success!');
-                                return res.status(200);
+                                return res.status(200).json();
                             });
                         });
                     }
                 });
             });
         connection.release();
+        return res.status(200).json();
     });
 });
 
@@ -484,21 +483,19 @@ function getFiltrosUrl(req){
 }
 
 /* NOVO PRODUTO =============================================
-    codigo: number;    
-    descricao: string;
-    quantidade: number;
-    preco: number;
-    cdloja: cdloja;
-    cdcategoria: number;    
-    dtpromocao: Date;
-    dtpublicacao: Date;
-    cdusuario: string
+    cdusuario: this._cdusuario.value,
+    cdtipo: produto.tipo.cdtipo,
+    cdmarca: produto.marca.cdmarca,
+    cdloja: produto.loja.cdloja,
+    cdmedida: produto.medida.cdmedida,
+    preco: produto.preco,
+    dtpublicacao: produto.dtpublicacao
 */
 router.post('/api/produto', function(req, res) {
     console.log("Dados recebidos: "+JSON.stringify(req.body));
     var cdproduto = 0;
     var cdusuario = req.body.cdusuario;
-
+    
     pool.getConnection(function(err, connection) {        
         connection.query('INSERT INTO produto SET ? ', req.body,
             function(err,result){
@@ -509,7 +506,7 @@ router.post('/api/produto', function(req, res) {
                 cdproduto = result.insertId;
                 
                 connection.query(
-                    `   SELECT u.devicetoken 
+                    `   SELECT u.devicetoken as devicetoken
                         FROM usuario u
                         where exists (SELECT 1 from confignotificacao cn                      
                                         JOIN configmarca ma ON ma.cdconfignotificacao = cn.cdconfignotificacao              
@@ -526,9 +523,29 @@ router.post('/api/produto', function(req, res) {
                                                     sin(radians(l.lat))
                                                 )) <= cn.raio
                                 )
-                    `,[cdproduto], function(err, result){
-                        //Notifica todos os usuarios que estao próximos, e que estejam configurados
-                        pushNotification(cdproduto, result);               
+                    `,[cdproduto], function(err, resultUsuarios){
+
+                        connection.query(`
+                            SELECT p.codigo, p.preco, m.descricao AS marca, l.nome AS loja, md.descricao AS medida, md.ml as ml
+                                FROM produto p
+                                JOIN loja l ON l.cdloja = p.cdloja
+                                JOIN marca m ON m.cdmarca = p.cdmarca                                
+                                JOIN medida md ON md.cdmedida = p.cdmedida                                
+                                where p.codigo = ?
+                        `, [cdproduto], function(err, resultProduto){
+                            var produto = {
+                                codigo: resultProduto[0].codigo,
+                                marca: resultProduto[0].marca,
+                                loja: resultProduto[0].loja,
+                                medida: resultProduto[0].medida,
+                                preco: resultProduto[0].preco,
+                                cdtipo: req.body.cdtipo,
+                                cdmarca: req.body.cdmarca,
+                                cdmedida: req.body.cdmedida
+                            };
+                            //Notifica todos os usuarios que estao próximos, e que estejam configurados
+                            pushNotification(produto, resultUsuarios);
+                        });
                     });
                 return res.status(200).json(result);            
             });
@@ -566,60 +583,59 @@ router.get('/api/push', function (req, res) {
     });
 });
 
-//router.get('/api/push', function (req, res) {
+/*
+var produto = {
+    codigo: resultProduto[0].codigo,
+    marca: resultProduto[0].marca,
+    loja: resultProduto[0].loja,
+    medida: resultProduto[0].medida,
+    preco: resultProduto[0].ml
+};
+*/
 function pushNotification(produto, device_tokens){
     //var device_tokens = []; //create array for storing device tokens
     
     var retry_times = 4; //the number of times to retry sending the message if it fails
     var sender = new gcm.Sender(gcmApiKey); //create a new sender
     var message = new gcm.Message(); //create a new message    
-    message.addData('title', 'Cerveja '+produto.cdproduto);
-    message.addData('message', "Push message");
+    message.addData('title', 'Cerveja '+produto.marca+' '+produto.medida+' R$ '+produto.preco);
+    message.addData('message', "Promoção de cerveja no estabelecimento "+produto.loja);
     message.addData('sound', 'default');
+    message.addData('codigo', produto.codigo);
+    message.addData('icon', produto.cdtipo+""+produto.cdmarca+""+produto.cdmedida+".png");
     message.collapseKey = 'Testing Push'; //grouping messages
     message.delayWhileIdle = true; //delay sending while receiving device is offline
     message.timeToLive = 3; //number of seconds to keep the message on 
-    //server if the device is offline
     
-    //Take the registration id(lengthy string) that you logged 
-    //in your ionic v2 app and update device_tokens[0] with it for testing.
-    //Later save device tokens to db and 
-    //get back all tokens and push to multiple devices    
-    /*
-    device_bob = "dunNZ5K9JLk:APA91bHlXnRfxzfTWmx55NwCHIcmPym7ZOvmIUm1bK74JMUuYSTdVhdl1SwoA0NyEETKDMh2bDYxkUUVdVlhx6ivW9zEMQ8zHKzmLYQslr2Sf9u6gemp5lJ8QmMfaKmILOJ8zK88-Jym";
-    device_osama = "cKIJWzUdN9U:APA91bGFqKpEY4jc8ad6YB07gwgRvwyVFf-6bqvvv48qq17K9Yg2Qxjmcgs1mQV-GhpeLKp547HJk-jsMCgIgOm3B7uNXJ6oBr7lKHm5WTldYfs5pMBeFcsiedslm-YBanKd747I3AEV";
-    device_jean = "d6bUJBLzx6c:APA91bHCiM-8kFN7xn3bCQAhImLZya1WkfYZP4zm-0GvQT7rfesOTerUj2e3f0vj2cs_RwpE33_Ofa71K-KJFuF7g43V5tlxaI6rNqIli0SqE7P_cetRaU5DUd6IJLfiy0Bn7is4Jwjt";
-        
-    device_tokens.push(device_osama);
-    device_tokens.push(device_bob);
-    device_tokens.push(device_jean);
-    */
     if(device_tokens.length <= 0 ){
         console.log("Nao encontrou ninguem para notificar");
         return;
     }
 
+    //converter a lista de result que veio do banco para uma lista de string device-token
+    var listaDeviceToken = new Array();    
+    for(var i = 0; i < device_tokens.length; i++){
+        listaDeviceToken.push(device_tokens[i].devicetoken);
+    }
+
     //guarda em cada possicao uma lista de devices de no máximo 1000(valor maximo da API de push notification) elementos
     var arrayDevices = new Array(); 
-    
-    if(device_tokens.length > 1000){
-        while(device_tokens.length > 1000){
+    if(listaDeviceToken.length > 1000){        
+        while(listaDeviceToken.length > 1000){
             //remove da posicao 0, 1000 elementos e add esses 1000 na lista de push
-            arrayDevices.push(device_tokens.splice(0, 1000));
+            arrayDevices.push(listaDeviceToken.splice(0, 1000));
         }
-        arrayDevices.push(device_tokens.splice(0, device_tokens.length - 1));
+        arrayDevices.push(listaDeviceToken.splice(0, listaDeviceToken.length - 1));
     } else {
-        arrayDevices.push(device_tokens);
+        arrayDevices.push(listaDeviceToken);
     }
 
 
-
-    for(var tokens of arrayDevices){
-        sender.send(message, tokens, retry_times, function (result) {
-            console.log('push sent to: ' + device_tokens);
-            res.status(200).send('Pushed notification ' + device_tokens);
+    for(var i = 0; i < arrayDevices.length; i++){
+        sender.send(message, arrayDevices[i], retry_times, function (result) {
+            console.log('push sent to ');
         }, function (err) {
-            res.status(500).send('failed to push notification ');
+            console.log('failed to push notification');
         });    
     }
 }
@@ -640,7 +656,7 @@ router.post('/api/usuario', function(req, res) {
                  connection.query('update usuario set lat = ?, lng = ?, devicetoken = ? where cdusuario = ? ',
                     [req.body.lat, req.body.lng, req.body.devicetoken,req.body.cdusuario], function(err, result){
                         connection.release();
-                        return res.status(200); 
+                        return res.status(200).json(); 
                     })
 
              } else {
@@ -652,7 +668,7 @@ router.post('/api/usuario', function(req, res) {
                             return res.status(400).json(err);
                         }
                         connection.release();
-                        return res.status(200);
+                        return res.status(200).json();
                     });
              }
         });

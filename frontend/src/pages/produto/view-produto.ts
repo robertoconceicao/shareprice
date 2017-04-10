@@ -65,8 +65,7 @@ export class ViewProdutoPage {
                     this.loading.dismiss();            
                 });
 
-                let profile = JSON.parse(localStorage.getItem("profile"));       
-                this.sharingService.getUserJaValidouPreco(this.produto.codigo, profile.userId)
+                this.sharingService.getUserJaValidouPreco(this.produto.codigo)
                     .then(dados => {
                         this.flValidou = dados.length > 0;
                         this.loading.dismiss();
@@ -87,8 +86,7 @@ export class ViewProdutoPage {
         });
         this.loading.present(); 
 
-        let profile = JSON.parse(localStorage.getItem("profile"));       
-        this.sharingService.validarPreco(this.produto.codigo, profile.userId, opcao)
+        this.sharingService.validarPreco(this.produto.codigo, opcao)
             .then(dados => {
                 this.loading.dismiss();
                 this.getQtdeValidarPreco();

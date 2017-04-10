@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, ToastController, LoadingController, ModalController  } from 'ionic-angular';
+import { NavController, NavParams, ToastController, LoadingController, ModalController, AlertController  } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 import { Produto } from '../../models/produto';
 
 import { Loja } from '../../models/loja';
 import { LojaPage } from '../loja/loja-page';
+import { Home } from '../home/home';
 import { SharingService } from '../../services/sharing-service';
 import { NumberUtil } from '../../util/number-util';
 
@@ -26,7 +27,8 @@ export class CadProdutoPage implements OnInit {
               public toastCtrl: ToastController,
               public sharingService: SharingService,
               public loadingCtrl: LoadingController,
-              public modalCtrl: ModalController) {
+              public modalCtrl: ModalController,
+              public alertCtrl: AlertController) {
   }
 
   ngOnInit(): void {
@@ -34,13 +36,13 @@ export class CadProdutoPage implements OnInit {
     this.produto = new Produto();
 
     this.sharingService.marcas.subscribe(marcas => {
-      this.produto.marca = marcas[0];
+      this.produto.marca.cdmarca = marcas[0].cdmarca;
     });
     this.sharingService.tipos.subscribe(tipos => {
-      this.produto.tipo = tipos[0];
+      this.produto.tipo.cdtipo = tipos[0].cdtipo;
     });
     this.sharingService.medidas.subscribe(medidas => {
-      this.produto.medida = medidas[0];
+      this.produto.medida.cdmedida = medidas[0].cdmedida;
     });    
   }
 
@@ -59,16 +61,51 @@ export class CadProdutoPage implements OnInit {
   }
 
   postar(): void {
-    this.produto.preco = this.produto.preco.replace(/,/, '.'); //replace , por .
-    this.sharingService.postar(this.produto)
-      .then(success => {
-            let msg = "Obrigado por cadastrar o produto";            
-            this.presentToast(msg);
-            this.goBack();
-        })
-        .catch(error => {
-            this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
-        });
+ //   if(this.validaCamposObrigatorios()){
+      this.produto.preco = this.produto.preco.replace(/,/, '.'); //replace , por .
+      this.sharingService.postar(this.produto)
+        .then(success => {
+              let msg = "Obrigado por cadastrar o produto";            
+              this.presentToast(msg);
+              this.goBack();
+          })
+          .catch(error => {
+              this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
+          });
+ //   }
+  }
+
+  validaCamposObrigatorios(){
+      if(this.produto.marca.cdmarca > 0){
+        this.showAlertCamposObrigatorio("seleciona uma marca");
+        return false;
+      }
+
+      if(this.produto.tipo.cdtipo > 0){
+        this.showAlertCamposObrigatorio("seleciona um tipo");
+        return false;
+      }
+
+      if(this.produto.medida.cdmedida > 0){
+        this.showAlertCamposObrigatorio("seleciona uma medida");
+        return false;
+      }
+
+      if(this.produto.preco != '0' && this.produto.preco.length > 0){
+        this.showAlertCamposObrigatorio("informe o preço");
+        return false;
+      }
+      return true;
+  }
+
+  showAlertCamposObrigatorio(campo: string){   
+    let alert = this.alertCtrl.create({
+      title: 'Campo obrigatório',
+      subTitle: campo,
+      buttons: ['OK']
+    });
+    alert.present();
+
   }
 
   presentToast(msg: string) {
@@ -80,7 +117,7 @@ export class CadProdutoPage implements OnInit {
   }
 
   goBack(){
-    this.navCtrl.pop();
+    this.navCtrl.setRoot(Home);
   }
 
   getLojasByLocation(){

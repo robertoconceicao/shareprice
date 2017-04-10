@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
 import { Confignotificacao } from '../../models/confignotificacao';
 import { NumberUtil } from '../../util/number-util';
 import { SharingService } from '../../services/sharing-service';
@@ -22,10 +22,12 @@ export class ConfigPage implements OnInit {
   
   public config: Confignotificacao;  
   public cdusuario: string;
-
+  public loading: any;
+  
   constructor(public navCtrl: NavController,
       public sharingService: SharingService,
-      public toastCtrl: ToastController) {
+      public toastCtrl: ToastController,
+      public loadingCtrl: LoadingController) {
 
     this.config = new Confignotificacao();
     this.sharingService.cdusuario.subscribe(cdusuario=>{
@@ -35,14 +37,19 @@ export class ConfigPage implements OnInit {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ConfigPage');
+    this.loading = this.loadingCtrl.create({
+      content: 'Carregando configurações...'
+    });
+    this.loading.present();
   }
 
   ngOnInit(){
     this.sharingService.getConfiguraNotificacao(this.cdusuario).then(dados=>{
       if(!!dados && dados.length > 0){
-        this.config = AppSettings.convertToConfignotificacao(dados[0]);
-        console.log("Buscando config do usuario: "+JSON.stringify(this.config));
+        this.config = AppSettings.convertToConfignotificacao(dados[0]);        
       }
+
+      this.loading.dismiss();
     });
   }
   

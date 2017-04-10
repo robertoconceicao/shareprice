@@ -130,7 +130,7 @@ export class SharingService {
 
   configuraNotificacao(config: Confignotificacao){
     let jsonConfig = {
-      cdusuario: config.cdusuario,
+      cdusuario: this._cdusuario.value,
       raio: config.raio,
       flnotificar: config.flnotificar,
       cdconfignotificacao: config.cdconfignotificacao,
@@ -154,10 +154,10 @@ export class SharingService {
   }
 
 
-  validarPreco(cdproduto: any, cdusuario: any, opcao: any){    
+  validarPreco(cdproduto: any, opcao: any){    
     let jsonValidaPreco = {
       cdproduto: cdproduto,
-      cdusuario: cdusuario,
+      cdusuario: this._cdusuario.value,
       flcerto: opcao
     };
     return  this.http
@@ -285,10 +285,10 @@ export class SharingService {
     return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_ICONE + params);            
   }
 
-  getUserJaValidouPreco(cdproduto, cdusuario){    
+  getUserJaValidouPreco(cdproduto){    
     let params: URLSearchParams = new URLSearchParams();
     params.set('cdproduto',cdproduto);
-    params.set('cdusuario',cdusuario);
+    params.set('cdusuario',this._cdusuario.value);
     return  this.getHttpParamns(AppSettings.API_ENDPOINT + AppSettings.GET_VALIDA_PRECO, params);
   }
 

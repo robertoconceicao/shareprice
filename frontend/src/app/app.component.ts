@@ -3,6 +3,7 @@ import { Platform, Nav, AlertController  } from 'ionic-angular';
 import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage } from 'ionic-native';
 
 import { Home } from '../pages/home/home';
+import { ViewProdutoPage } from '../pages/produto/view-produto';
 import { LoginPage } from '../pages/login/login';
 import { MeuEstorage } from './meu-estorage';
 import { SharingService } from '../services/sharing-service';
@@ -46,28 +47,27 @@ export class MyApp {
             console.log("resp location: lat: "+resp.coords.latitude+" lng: "+resp.coords.longitude);
             this.sharingService.setLat(resp.coords.latitude);
             this.sharingService.setLng(resp.coords.longitude);           
-
             
-           let env = this;
-           NativeStorage.getItem('user')
-            .then( function (data) {
-              env.sharingService.setCdusuario(data.userId);
+            let env = this;
+            NativeStorage.getItem('user')
+              .then( function (data) {
+                env.sharingService.setCdusuario(data.userId);
 
-              //Atualiza as informaçoes do usuario, principalmente por causa da localização
-              let usuario: Usuario = new Usuario();
-              usuario.cdusuario = data.userId;
-              usuario.nome = data.name;
-              usuario.avatar = data.picture;
-              
-              env.sharingService.insereUsuario(usuario);
+                //Atualiza as informaçoes do usuario, principalmente por causa da localização
+                let usuario: Usuario = new Usuario();
+                usuario.cdusuario = data.userId;
+                usuario.nome = data.name;
+                usuario.avatar = data.picture;
+                
+                env.sharingService.insereUsuario(usuario);
 
-              env.nav.setRoot(Home);
-              Splashscreen.hide();
-            }, function (error) {
-              //we don't have the user data so we will ask him to log in
-              env.nav.setRoot(LoginPage);
-              Splashscreen.hide();
-            });             
+                env.nav.setRoot(Home);
+                Splashscreen.hide();
+              }, function (error) {
+                //we don't have the user data so we will ask him to log in
+                env.nav.setRoot(LoginPage);
+                Splashscreen.hide();
+              });
            // Splashscreen.hide();
            // this.rootPage = LoginPage;//Home;
       }).catch((error) => {
@@ -105,22 +105,23 @@ export class MyApp {
       });
 
       push.on('notification', (data) => {        
-        console.log('message', data.message);
+        console.log('data.message: '+ JSON.stringify(data.message));
+        console.log('data.additionalData: '+ JSON.stringify(data.additionalData));
         let self = this;
         //if user using app and push notification comes
         if (data.additionalData.foreground) {
           // if application open, show popup
+          let json = JSON.parse(JSON.stringify(data.additionalData));
           let confirmAlert = this.alertCtrl.create({
-            title: 'Promoção de cerveja perto de você',
+            title: data.title,
             message: data.message,
             buttons: [{
-              text: 'Ignore',
+              text: 'Ignorar',
               role: 'cancel'
             }, {
-              text: 'View',
+              text: 'Ver',
               handler: () => {
-                //TODO: Your logic here
-                //self.nav.push(DetailsPage, {message: data.message});
+                self.nav.push(ViewProdutoPage, {codigo: json.codigo});
               }
             }]
           });
