@@ -124,7 +124,7 @@ export class ViewProdutoPage {
         // this code is to use the social sharing plugin
         // message, subject, file, url
         let message = this.formataShareMessage();                    
-        SocialSharing.share(message, message, this.produto.icon, "vivacerveja://produto/" + this.produto.codigo)
+        SocialSharing.share(message, message, this.pathImagem(), null)
             .then(resp => {
                 console.log("Funcionou o compartilhamento... "+ resp);
             })
