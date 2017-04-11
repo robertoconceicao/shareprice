@@ -5,9 +5,23 @@
     background-position: center;
 }
 
+.logo {
+  position: absolute;
+  top: 15%;  
+  width: 100%;  
+  ion-img {
+    background-color: transparent;
+    width: 180px;
+    height: 180px;     
+  }
+  p {
+    font-size: 16px;    
+  }
+}
+
 .div-botao {
   position: absolute;
-  top: 65%;
+  top: 60%;
   width: 100%;
 }
 
