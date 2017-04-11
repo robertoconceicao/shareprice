@@ -1,12 +1,27 @@
 <ion-content class="fundo">
-    <div class="botao-fb">
-      <button ion-button block (click)="doFbLogin()" color="facebook">
-          Entrar com Facebook
-      </button>
+    <div class="div-botao">
+        <ion-grid>
+          <ion-row>
+            <ion-col col-md-1></ion-col>
+            <ion-col col-md-10>
+                  <button ion-button icon-left round (click)="doFbLogin()" color="facebook" class="botao-fb">
+                      <ion-icon name="logo-facebook"></ion-icon>
+                      Entrar com o Facebook
+                  </button>
+            </ion-col>
+            <ion-col col-md-1></ion-col>        
+          </ion-row>
+
+          <ion-row>
+            <ion-col col-md-1></ion-col>
+            <ion-col col-md-10>                
+                  <button ion-button icon-left round (click)="doGoogleLogin()" color="google" class="botao-g">
+                    <ion-icon name="logo-googleplus"></ion-icon>
+                    Entrar com o Google
+                  </button>          
+            </ion-col>
+            <ion-col col-md-1></ion-col>        
+          </ion-row>          
+        </ion-grid>
     </div>
-    <div class="botao-g">
-      <button ion-button block (click)="doGoogleLogin()" color="google">
-        Entrar com Google+
-      </button>      
-    </div>  
 </ion-content>
