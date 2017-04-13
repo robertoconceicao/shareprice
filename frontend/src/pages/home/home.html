@@ -1,33 +1,40 @@
 <ion-header>
   <ion-navbar color="twitter">
-    <ion-title class="center">
-        BobBeer
-        <ion-icon ios="ios-beer" md="md-beer"></ion-icon>
-    </ion-title>
+    <div>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-md-1>
+              <ion-icon ios="ios-beer" md="md-beer"></ion-icon>
+          </ion-col>
+          <ion-col col-md-10>
+            <ion-searchbar 
+                [(ngModel)]="searchTerm" 
+                [formControl]="searchTermControl"
+                [showCancelButton]=true         
+                placeholder="busca..." >
+            </ion-searchbar>              
+          </ion-col>
+          <ion-col col-md-1>
+             <ion-buttons end>
+                <button ion-button icon-only (click)="showFilters()">
+                    <ion-icon name="funnel" [style.color]="hasFilter() ? 'red' : 'inherit'" class="icon-filter"></ion-icon>
+                </button>
 
-    <ion-searchbar 
-        [(ngModel)]="searchTerm" 
-        [formControl]="searchTermControl"
-        [showCancelButton]=true         
-        placeholder="busca..." >
-    </ion-searchbar>
-
-    <ion-buttons end>
-        <button ion-button icon-only (click)="showFilters()">
-            <ion-icon name="funnel" [style.color]="hasFilter() ? 'red' : 'inherit'" class="icon-filter"></ion-icon>
-        </button>
-
-        <button ion-button icon-only (click)="showConfig()">
-            <ion-icon name="ios-notifications" class="icon-filter"></ion-icon>
-        </button>        
-    </ion-buttons>
+                <button ion-button icon-only (click)="showConfig()">
+                    <ion-icon name="ios-notifications" class="icon-filter"></ion-icon>
+                </button>        
+            </ion-buttons>
+          </ion-col>
+        </ion-row>        
+      </ion-grid>
+    </div>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
 
     <div *ngIf="isEmpty()" class="card-background-page">  
-        <img src="assets/images/sharing.png"/>
+        <img src="assets/images/logo-BEA.png"/>
     </div>
 
     <ion-refresher (ionRefresh)="doRefresh($event)" [pullMin]=90>

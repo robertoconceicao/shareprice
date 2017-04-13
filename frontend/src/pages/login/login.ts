@@ -81,17 +81,17 @@ export class LoginPage {
   doGoogleLogin(){
     let nav = this.navCtrl;
     let loading = this.loadingCtrl.create({
-      content: 'Please wait...'
+      content: 'Aguarde...'
     });
     loading.present();
     GooglePlus.login({
       'scopes': '', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
-      'webClientId': '449887022881-480nmee2j5il8rt23vaq2hf7vrecdghb.apps.googleusercontent.com', // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
+      'webClientId': '449887022881-0f3qgjul4igf4dgajgfon3uos89bpv3h.apps.googleusercontent.com',
       'offline': true
     })
     .then(function (user) {
       loading.dismiss();
-
+      console.log("Resposta do login G+: "+JSON.stringify(user));
       NativeStorage.setItem('user', {
         name: user.displayName,
         email: user.email,
@@ -103,6 +103,7 @@ export class LoginPage {
         console.log(error);
       })
     }, function (error) {
+      console.log("Resposta Error login G+: "+JSON.stringify(error));
       loading.dismiss();
     });
   }  

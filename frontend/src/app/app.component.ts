@@ -48,6 +48,7 @@ export class MyApp {
             this.sharingService.setLat(resp.coords.latitude);
             this.sharingService.setLng(resp.coords.longitude);           
             
+            /*
             let env = this;
             NativeStorage.getItem('user')
               .then( function (data) {
@@ -68,8 +69,9 @@ export class MyApp {
                 env.nav.setRoot(LoginPage);
                 Splashscreen.hide();
               });
-           // Splashscreen.hide();
-           // this.rootPage = LoginPage;//Home;
+              */
+            this.rootPage = LoginPage;//Home;
+            Splashscreen.hide();
       }).catch((error) => {
            console.log('Error getting location', error);              
       });
