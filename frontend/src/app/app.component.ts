@@ -42,7 +42,7 @@ export class MyApp {
     this.platform.ready().then(() => {      
       
       //pega os produtos pela localizacao do usuario
-      Geolocation.getCurrentPosition()
+      Geolocation.getCurrentPosition({timeout: 5000})
         .then((resp) => {
             console.log("resp location: lat: "+resp.coords.latitude+" lng: "+resp.coords.longitude);
             this.sharingService.setLat(resp.coords.latitude);
@@ -69,11 +69,12 @@ export class MyApp {
                 env.nav.setRoot(LoginPage);
                 Splashscreen.hide();
               });
-              */
-            this.rootPage = LoginPage;//Home;
+            */
+            this.rootPage = Home;
             Splashscreen.hide();
       }).catch((error) => {
            console.log('Error getting location', error);              
+           this.openAlertNotGeolocation();
       });
 
       StatusBar.styleDefault();
@@ -156,6 +157,20 @@ export class MyApp {
     let alert = this.alertCtrl.create({
             title: "Sem conexão com a internet",
             subTitle: "Por favor verifique sua conexão e tente novamente.",
+            buttons: [{
+              text: 'Ok',
+              handler: () => {
+                this.platform.exitApp();
+              }
+            }]
+        });
+    alert.present();
+  }
+
+  openAlertNotGeolocation(){
+    let alert = this.alertCtrl.create({
+            title: "O serviço de localização esta desligado",
+            subTitle: "Por favor ligue sua localização e tente novamente.",
             buttons: [{
               text: 'Ok',
               handler: () => {

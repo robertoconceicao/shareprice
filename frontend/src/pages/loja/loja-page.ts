@@ -6,7 +6,7 @@ import { Loja } from '../../models/loja';
     selector: 'loja-page',
     template: `
         <ion-content>
-            <ion-navbar color="twitter">
+            <ion-navbar color="geladas">
                 <ion-searchbar 
                     [(ngModel)]="searchTerm" 
                     [showCancelButton]=true

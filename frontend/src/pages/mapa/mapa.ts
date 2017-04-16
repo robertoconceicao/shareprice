@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavParams, NavController } from 'ionic-angular';
+import { NavParams, AlertController } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 import { Produto }          from '../../models/produto';
 import { SharingService } from '../../services/sharing-service';
@@ -21,10 +21,10 @@ export class MapaPage {
     public codigo: any;
 
     constructor(public navParams: NavParams,
-                public sharingService: SharingService){
+                public sharingService: SharingService,
+                public alertCtrl: AlertController){
         this.produto = new Produto();            
         this.codigo = this.navParams.get('codigo');        
-        console.log("CODIGO: "+this.codigo);
         this.sharingService.findProdutoById(this.codigo)
             .then(produto => {
                 this.produto = AppSettings.convertToProduto(produto[0]);
@@ -37,7 +37,7 @@ export class MapaPage {
 
     loadMap(){
         console.log("loadMap ... "+this.produto.loja.lat+" lng: "+this.produto.loja.lng);
-        Geolocation.getCurrentPosition().then((position) => { 
+        Geolocation.getCurrentPosition({timeout: 5000}).then((position) => { 
             let latLng = new google.maps.LatLng(this.produto.loja.lat, this.produto.loja.lng); 
             let mapOptions = {
                 center: latLng,
@@ -48,7 +48,18 @@ export class MapaPage {
             this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
         
             }, (err) => {
-            console.log(err);
+              console.log(err);            
+              let alert = this.alertCtrl.create({
+                      title: "O serviço de localização esta desligado",
+                      subTitle: "Por favor ligue sua localização e tente novamente.",
+                      buttons: [{
+                        text: 'Ok',
+                        handler: () => {
+                         
+                        }
+                      }]
+                  });
+              alert.present();
         });
     }
 }

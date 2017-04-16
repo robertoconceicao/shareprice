@@ -76,7 +76,7 @@ export class SharingService {
       });
     
     let filtro = new Filtro();
-    filtro.distancia = 1;
+    filtro.distancia = 30;
     this.setFiltro(filtro);
   }
 

@@ -1,12 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
+import { NavController, ToastController, LoadingController } from 'ionic-angular';
 import { Confignotificacao } from '../../models/confignotificacao';
-import { NumberUtil } from '../../util/number-util';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
-import { Marca } from '../../models/marca';
-import { Tipo } from '../../models/tipo';
-import { Medida } from '../../models/medida';
 
 /*
   Generated class for the Config page.

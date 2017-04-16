@@ -1,6 +1,6 @@
-import { Component, OnInit     }  from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef}  from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { NavController, LoadingController }  from 'ionic-angular';
+import { NavController, LoadingController, Searchbar}  from 'ionic-angular';
 import { FiltrosPage }         from '../filtros/filtros';
 import { CadProdutoPage } from '../cad-produto/cad-produto';
 import { ConfigPage } from '../config/config';
@@ -8,7 +8,6 @@ import { Produto } from '../../models/produto';
 import { Filtro } from '../../models/filtro';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
-import { Geolocation } from 'ionic-native';
 
 @Component({
    selector: 'page-home',
@@ -16,6 +15,7 @@ import { Geolocation } from 'ionic-native';
 })
 export class Home implements OnInit {
 
+   @ViewChild('searchbar') searchbar: Searchbar;
    public searchTerm: string = "";
    public produtos: Array<Produto>;
    public noFilter: Array<Produto> = [];
@@ -24,6 +24,7 @@ export class Home implements OnInit {
    public lat: any;
    public lng: any;
    public filtro: Filtro;
+   public search: boolean;
 
    constructor(public navCtrl: NavController,
                public sharingService: SharingService,
@@ -39,6 +40,8 @@ export class Home implements OnInit {
                 this.filterItems();
             }
         });
+
+     this.search = false;   
    }
 
    ngOnInit(){
@@ -61,6 +64,20 @@ export class Home implements OnInit {
 
    ionViewWillEnter() {
       console.log("ionViewWillEnter HomePage");      
+   }
+
+   clickSearch(){
+       this.search = true;
+   }
+
+   isSearch(){
+       return this.search;
+   }
+
+   onCancel(event){
+      this.searchTerm = "";
+      this.search = false;
+      this.filterItems();
    }
 
    carregandoPage(){
@@ -134,7 +151,7 @@ export class Home implements OnInit {
    }
 
    hasFilter(){
-       return (!!this.filtro.marca || !!this.filtro.medida || !!this.filtro.tipo || !!this.filtro.maxvalor || this.filtro.distancia > 1);
+       return (!!this.filtro.marca || !!this.filtro.medida || !!this.filtro.tipo || !!this.filtro.maxvalor || this.filtro.distancia != 30);
    }
 
    doRefresh(refresher) {

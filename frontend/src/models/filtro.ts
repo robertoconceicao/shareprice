@@ -7,5 +7,5 @@ export class Filtro {
     lat: number;
     lng: number;
     posicao: number;
-    searchTerm: string;    
+    searchTerm: string;
 }

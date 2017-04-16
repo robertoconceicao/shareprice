@@ -122,7 +122,7 @@ export class CadProdutoPage implements OnInit {
 
   getLojasByLocation(){
     //pega as lojas pela localizacao do usuario
-    Geolocation.getCurrentPosition().then((resp) => {
+    Geolocation.getCurrentPosition({timeout: 5000}).then((resp) => {
       this.lat = resp.coords.latitude;
       this.lng = resp.coords.longitude;
 
@@ -138,7 +138,17 @@ export class CadProdutoPage implements OnInit {
           .catch((error) => {
               console.log('Error ao tentar buscar lojas', error);
               this.loading.dismiss();
-              this.goBack();
+              let alert = this.alertCtrl.create({
+                      title: "O serviço de localização esta desligado",
+                      subTitle: "Por favor ligue sua localização e tente novamente.",
+                      buttons: [{
+                        text: 'Ok',
+                        handler: () => {
+                          this.goBack();
+                        }
+                      }]
+                  });
+              alert.present();
           })
     }).catch((error) => {
       console.log('Error getting location', error);

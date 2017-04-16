@@ -1,6 +1,6 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { Produto }          from '../../models/produto';
-import { NavParams, NavController, ToastController, LoadingController } from 'ionic-angular';
+import { NavParams, NavController, ToastController, LoadingController, AlertController } from 'ionic-angular';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
 import { Geolocation, SocialSharing } from 'ionic-native';
@@ -31,7 +31,8 @@ export class ViewProdutoPage {
                 public sharingService: SharingService,
                 public loadingCtrl: LoadingController,
                 public toastCtrl: ToastController,
-                public navCtrl: NavController){
+                public navCtrl: NavController,
+                public alertCtrl: AlertController){
         this.produto = new Produto();            
         this.codigo = this.navParams.get('codigo');        
         this.urlMapa = "https://www.google.com.br/maps/dir/";
@@ -54,7 +55,7 @@ export class ViewProdutoPage {
             .then(produto => {
                 this.produto = AppSettings.convertToProduto(produto[0]); 
 
-                Geolocation.getCurrentPosition()
+                Geolocation.getCurrentPosition({timeout: 5000})
                 .then((resp) => {
                     let origem =  resp.coords.latitude + ","+ resp.coords.longitude;
                     let destino = this.produto.loja.lat + ","+this.produto.loja.lng;
@@ -62,7 +63,18 @@ export class ViewProdutoPage {
                     this.urlMapa = this.urlMapa + origem + "/" +destino;
                 }).catch((error) => {
                     console.log('Error getting location', error);
-                    this.loading.dismiss();            
+                    this.loading.dismiss();
+                    let alert = this.alertCtrl.create({
+                            title: "O serviço de localização esta desligado",
+                            subTitle: "Por favor ligue sua localização e tente novamente.",
+                            buttons: [{
+                                text: 'Ok',
+                                handler: () => {
+                                
+                                }
+                            }]
+                        });
+                    alert.present();
                 });
 
                 this.sharingService.getUserJaValidouPreco(this.produto.codigo)

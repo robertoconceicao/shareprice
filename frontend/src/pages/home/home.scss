@@ -1,11 +1,15 @@
-.card-background-page {  
-  width: 300px;
-  height: 300px;
-  position:absolute;
-  top:50%;
-  left:50%;
-  margin-top:-150px;
-	margin-left:-150px;
+.logo {
+  position: absolute;
+  top: 15%;  
+  width: 100%;  
+  ion-img {
+    background-color: transparent;
+    width: 180px;
+    height: 180px;     
+  }
+  p {
+    font-size: 16px;    
+  }
 }
 
 .campo-search {  

@@ -599,7 +599,7 @@ function pushNotification(produto, device_tokens){
     var sender = new gcm.Sender(gcmApiKey); //create a new sender
     var message = new gcm.Message(); //create a new message    
     message.addData('title', 'Cerveja '+produto.marca+' '+produto.medida+' R$ '+produto.preco);
-    message.addData('message', "Promoção de cerveja no estabelecimento "+produto.loja);
+    message.addData('message', "Promoção de cerveja no estabelecimento "+produto.loja+" <ion-thumbnail><img [src]='assets/images/"+produto.cdtipo+""+produto.cdmarca+""+produto.cdmedida+".png'></ion-thumbnail>");
     message.addData('sound', 'default');
     message.addData('codigo', produto.codigo);
     message.addData('icon', produto.cdtipo+""+produto.cdmarca+""+produto.cdmedida+".png");

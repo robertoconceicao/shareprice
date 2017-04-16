@@ -1,40 +1,55 @@
 <ion-header>
-  <ion-navbar color="twitter">
-    <div>
-      <ion-grid>
-        <ion-row>
-          <ion-col col-md-1>
-              <ion-icon ios="ios-beer" md="md-beer"></ion-icon>
-          </ion-col>
-          <ion-col col-md-10>
-            <ion-searchbar 
-                [(ngModel)]="searchTerm" 
-                [formControl]="searchTermControl"
-                [showCancelButton]=true         
-                placeholder="busca..." >
-            </ion-searchbar>              
-          </ion-col>
-          <ion-col col-md-1>
-             <ion-buttons end>
-                <button ion-button icon-only (click)="showFilters()">
-                    <ion-icon name="funnel" [style.color]="hasFilter() ? 'red' : 'inherit'" class="icon-filter"></ion-icon>
-                </button>
 
-                <button ion-button icon-only (click)="showConfig()">
-                    <ion-icon name="ios-notifications" class="icon-filter"></ion-icon>
-                </button>        
-            </ion-buttons>
-          </ion-col>
-        </ion-row>        
-      </ion-grid>
-    </div>
+  <ion-navbar *ngIf="!isSearch()" color="geladas">
+    <ion-title>
+        Geladas
+    </ion-title>
+
+    <ion-buttons end>
+        <button ion-button icon-only (click)="clickSearch()">
+            <ion-icon name="search"></ion-icon>
+        </button>
+        <button ion-button icon-only (click)="showFilters()">
+            <ion-icon name="funnel" [style.color]="hasFilter() ? 'red' : 'inherit'"></ion-icon>
+        </button>
+
+        <button ion-button icon-only (click)="showConfig()">
+            <ion-icon name="ios-notifications"></ion-icon>
+        </button>
+    </ion-buttons>
+  </ion-navbar>
+
+  <ion-navbar *ngIf="isSearch()" color="geladas">
+    <ion-searchbar 
+        #searchbar
+        [(ngModel)]="searchTerm" 
+        [formControl]="searchTermControl"
+        [showCancelButton]=true
+        (ionCancel)="onCancel($event)"         
+        (ionClear)="onCancel($event)"
+        placeholder="busca..." >
+    </ion-searchbar>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-
-    <div *ngIf="isEmpty()" class="card-background-page">  
-        <img src="assets/images/logo-BEA.png"/>
+    
+    <div *ngIf="isEmpty()" class="logo">
+      <ion-grid>
+        <ion-row>
+          <ion-col col-md-4>
+          </ion-col>
+          <ion-col col-md-4>
+              <ion-img src="assets/images/logo-BEA.png"></ion-img>
+              <p align="center">
+                 As melhores cervejas
+                 próximas a você!
+              </p>
+          </ion-col>
+          <ion-col col-md-4>
+          </ion-col>
+        </ion-row>        
+      </ion-grid>
     </div>
 
     <ion-refresher (ionRefresh)="doRefresh($event)" [pullMin]=90>

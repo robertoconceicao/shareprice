@@ -31,14 +31,14 @@ export class FiltrosPage implements OnInit {
   }
 
   ionViewWillLeave(){
-    if(!!this.filtro && (!!this.filtro.marca || !!this.filtro.medida || !!this.filtro.tipo || !!this.filtro.maxvalor || (this.filtro.distancia > 1))){
+    if(!!this.filtro && (!!this.filtro.marca || !!this.filtro.medida || !!this.filtro.tipo || !!this.filtro.maxvalor)){
       this.sharingService.setFiltro(this.filtro);
     }
   }
 
   limparFiltros(){
     this.filtro = new Filtro();
-    this.filtro.distancia = 1;    
+    this.filtro.distancia = 30;    
     this.sharingService.setFiltro(this.filtro);
   }
 
