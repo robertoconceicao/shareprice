@@ -55,7 +55,7 @@ export class ViewProdutoPage {
             .then(produto => {
                 this.produto = AppSettings.convertToProduto(produto[0]); 
 
-                Geolocation.getCurrentPosition({timeout: 5000})
+                Geolocation.getCurrentPosition({timeout: 10000})
                 .then((resp) => {
                     let origem =  resp.coords.latitude + ","+ resp.coords.longitude;
                     let destino = this.produto.loja.lat + ","+this.produto.loja.lng;

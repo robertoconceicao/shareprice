@@ -25,12 +25,14 @@
   width: 100%;
 }
 
-.botao-fb {
-  width: 100%;
-  color: #fff;  
+.botao-fb {  
+  background: url('../assets/images/BEA_botao_loginFB.png');
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
-.botao-g {
-  width: 100%;
-  color: #fff;
+.botao-g {  
+  background: url('../assets/images/BEA_botao_loginG.png');
+  background-size: contain;
+  background-repeat: no-repeat;
 }

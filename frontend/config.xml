@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="br.com.rdc.vivacerveja" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Viva Cerveja</name>
+    <name>Geladas</name>
     <description>Encontrar os preços das cerveja nos supermercados mais próximos de você.</description>
     <author email="conceicao.roberto@gmail.com">Roberto da Conceição</author>
     <content src="index.html" />

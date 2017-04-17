@@ -42,13 +42,12 @@ export class MyApp {
     this.platform.ready().then(() => {      
       
       //pega os produtos pela localizacao do usuario
-      Geolocation.getCurrentPosition({timeout: 5000})
+      Geolocation.getCurrentPosition({timeout: 10000})
         .then((resp) => {
             console.log("resp location: lat: "+resp.coords.latitude+" lng: "+resp.coords.longitude);
             this.sharingService.setLat(resp.coords.latitude);
             this.sharingService.setLng(resp.coords.longitude);           
             
-            /*
             let env = this;
             NativeStorage.getItem('user')
               .then( function (data) {
@@ -69,9 +68,10 @@ export class MyApp {
                 env.nav.setRoot(LoginPage);
                 Splashscreen.hide();
               });
-            */
+            /*
             this.rootPage = Home;
             Splashscreen.hide();
+            */
       }).catch((error) => {
            console.log('Error getting location', error);              
            this.openAlertNotGeolocation();
