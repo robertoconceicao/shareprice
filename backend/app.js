@@ -59,41 +59,16 @@ app.use(function (req, res, next) {
 var index = require('./routes/index');
 // definindo nossas rotas na aplicação
 app.use('/', index);
- 
- 
-/* Definir a route principal
-app.get('/', function(req, res) {
-	res.send('Welcome to API');
-});
-
-
-// Definir um endpoint da API
-app.get('/api/get_produtos', function(req, res, next) {
-	console.log("get produtos ");
-	res.send(produtos);
-});
-
-app.get('/api/post_produto', function(req, res, next) {
-	 console.log("post produto: "+req.json());
-	 
-	 res.json({
-				"Error": false,
-				"Message": "Success"
-	 });
-});
-*/
 
 // LISTEN (iniciando nossa aplicação em node) ==========
 // Define a porta 8080 onde será executada nossa aplicação
 // Imprime uma mensagem no console
-if (module === require.main) {
-  // [START server]
-  // Start the server
-  const server = app.listen(process.env.PORT || 8080, () => {
-    const port = server.address().port;
-    console.log(`App listening on port ${port}`);
-  });
-  // [END server]
-}
+// [START server]
+// Start the server
+const server = app.listen(process.env.PORT || 3000, () => {
+  const port = server.address().port;
+  console.log(`App listening on port ${port}`);
+});
+// [END server]
 
 module.exports = app;
