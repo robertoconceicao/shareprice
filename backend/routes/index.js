@@ -12,13 +12,19 @@ var gcmApiKey = 'AIzaSyAFoZL_ofOX3kT5W_k77gyT99QCz5_XbqA';//'AIzaSyANN9rbE4VXHxI
 
 // TESTES LOCAIS
 var pool  = mysql.createPool({  
-   connectionLimit : 100,
-   host     : 'geladas.coqto56dhhuy.us-west-2.rds.amazonaws.com',
-   port : 3306, 
-   database:'geladas',
-   user     : 'conceicaoroberto',
-   password : 'security',
-   multipleStatements: true
+    connectionLimit : 100,
+    host     : process.env.RDS_HOSTNAME,
+    user     : process.env.RDS_USERNAME,
+    password : process.env.RDS_PASSWORD,
+    port     : process.env.RDS_PORT,
+    database : process.env.RDS_DB_NAME
+
+   //host     : 'geladas.coqto56dhhuy.us-west-2.rds.amazonaws.com',
+   //port : 3306, 
+   //database:'geladas',
+   //user     : 'conceicaoroberto',
+   //password : 'security',
+   //multipleStatements: true
  });    
  
 /*
