@@ -35,17 +35,6 @@ CREATE TABLE IF NOT EXISTS `configmarca` (
 
 -- --------------------------------------------------------
 
---
--- Estrutura da tabela `configmedida`
---
-
-CREATE TABLE IF NOT EXISTS `configmedida` (
-  `cdconfigmedida` int(11) NOT NULL,
-  `cdmedida` int(11) NOT NULL,
-  `cdconfignotificacao` int(11) NOT NULL,
-  PRIMARY KEY (`cdconfigmedida`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 -- --------------------------------------------------------
 
 --
@@ -57,19 +46,6 @@ CREATE TABLE IF NOT EXISTS `confignotificacao` (
   `cdusuario` text NOT NULL,
   `raio` int(11) NOT NULL,
   PRIMARY KEY (`cdconfignotificacao`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `configtipo`
---
-
-CREATE TABLE IF NOT EXISTS `configtipo` (
-  `cdconfigtipo` int(11) NOT NULL AUTO_INCREMENT,
-  `cdtipo` int(11) NOT NULL,
-  `cdconfignotificacao` int(11) NOT NULL,
-  PRIMARY KEY (`cdconfigtipo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------

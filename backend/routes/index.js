@@ -13,10 +13,10 @@ var gcmApiKey = 'AIzaSyAFoZL_ofOX3kT5W_k77gyT99QCz5_XbqA';//'AIzaSyANN9rbE4VXHxI
 // TESTES LOCAIS
 var pool  = mysql.createPool({  
    connectionLimit : 100,
-   host     : 'localhost',
+   host     : 'geladas.coqto56dhhuy.us-west-2.rds.amazonaws.com',
    port : 3306, 
-   database:'tabarato',
-   user     : 'tabarato',
+   database:'geladas',
+   user     : 'conceicaoroberto',
    password : 'security',
    multipleStatements: true
  });    
