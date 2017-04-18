@@ -1,12 +1,11 @@
 {
-  "name": "tabaratoserver",
+  "name": "geladas",
   "version": "1.0.0",
   "description": "Web Service para fornecer informações dos produtos anunciados pelos usuários",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "gcloud app deploy --project tahbarato-154614",
-    "start": "node app.js"
+    "start": "node app.js",    
+    "deploy": "eb deploy"
   },
   "author": "Roberto da Conceicao",
   "license": "ISC",
