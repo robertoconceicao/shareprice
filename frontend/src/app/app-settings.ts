@@ -3,9 +3,8 @@ import { Confignotificacao }  from '../models/confignotificacao';
 
 export class AppSettings {
 
-   public static get API_ENDPOINT(): string {
-      //google cloud
-       return 'http://tabarato.ddns.net:9000/api/';//'https://tahbarato-154614.appspot.com/api/';//http://tabarato.ddns.net:9000/api/'; 'http://localhost:8080/api/';
+   public static get API_ENDPOINT(): string {      
+       return 'http://node-express-geladas.misais4yjc.us-west-2.elasticbeanstalk.com/api/';//'https://tahbarato-154614.appspot.com/api/';//http://tabarato.ddns.net:9000/api/'; 'http://localhost:8080/api/';
    }
 
    //API marca

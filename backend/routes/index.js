@@ -521,6 +521,7 @@ router.post('/api/produto', function(req, res) {
                                         where p.codigo = ?                                        
                                         and cn.flnotificar = 1
                                         and cn.cdusuario = u.cdusuario                                              
+                                        and cn.cdusuario <> p.cdusuario
                                         and  (6371 * acos(
                                                     cos(radians(u.lat)) *
                                                     cos(radians(l.lat)) *
