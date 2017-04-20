@@ -824,37 +824,24 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
 
     console.log("url: "+url);
 
+    //busca as lojas do google e insere na base
     https.get(url, function(response) {
         // Continuously update stream with data
         var body = '';
         response.on('data', function(d) {
             body += d;
         });
-        response.on('end', function() {            
-            // Data reception is done, do whatever with it!
-            /*
-            "geometry": {
-            "location": {
-            "lat": -27.6227852,
-            "lng": -48.6774436
-            "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png",
-            "id": "3b6ea34712d3fef2c9d00d54342fa038604ab79d",
-            "name": "Hippo"
-            "vicinity" : "Rua da Universidade, 346 - Passeio Pedra Branca, Palhoça"
-            */
+        response.on('end', function() {
             var parsed = JSON.parse(body);
             var lojas = listaLojas(parsed);
-            // envia resposta para o usuário
-            res.send(lojas);
             
             persisteNovasLojas(lojas);
         });
-    }); 
-});     
-    /*
-    //Primeiro Passo é buscar na base local
-    pool.getConnection(function(err, connection) {
-        console.log("Primeiro Passo é buscar na base local");
+    });
+
+    
+    //busca as lojas da base ordenadas por loja mais próximas do usuario e envia a resposta pra ele
+    pool.getConnection(function(err, connection) {        
         connection.query(`SELECT *, (6371 * 
                 acos(
                     cos(radians( ? )) *
@@ -869,12 +856,11 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
 
                 if(result.length > 0) {
                     return res.json(result);
-                } 
-
-                                     
+                }                    
         });
         connection.release();
-        */
+    });
+});     
 
 function persisteNovasLojas(lojas){
     console.log("Persistindo na base local novas lojas");
