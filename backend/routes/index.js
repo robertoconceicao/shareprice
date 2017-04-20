@@ -46,7 +46,7 @@ var pool  = mysql.createPool(config);
 const API_GOOGLE_PLACE = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 const API_KEY='key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc';
 const TYPES='types=grocery_or_supermarket'; //https://developers.google.com/places/supported_types?hl=pt-br
-const RADIUS='radius=5000'; // 1km
+const RADIUS='radius=10000'; // 10km
 const LIMIT_RESULTADO = 30;
 
 const PROJECAO_PRODUTO = `
@@ -63,8 +63,11 @@ const PROJECAO_PRODUTO = `
         LEFT JOIN usuario u on u.cdusuario = p.cdusuario
 `;
 
-router.get('/api/confignotificacao', function(req, res){
+router.get('/api/confignotificacao', confignotificacao);
+
+function confignotificacao(req, res){
     var cdusuario = req.query.cdusuario;
+    
     pool.getConnection(function(err, connection){
         var cdconfignotificacao = 0;
         var raio = 10;
@@ -72,67 +75,71 @@ router.get('/api/confignotificacao', function(req, res){
         var marcas = [];
 
         connection.query('select cdconfignotificacao, raio, flnotificar from confignotificacao where cdusuario = ? ', [cdusuario], function(err, result){
-            //let tipos = [];
-            //let medidas = [];
-
-            if(result.length > 0){
+           if(result.length > 0){
                 cdconfignotificacao = result[0].cdconfignotificacao;
                 raio = result[0].raio;
 
-                connection.query('select cdmarca from configmarca where cdconfignotificacao = ? ', [cdconfignotificacao], function(err, result){
-                    marcas = result;
-                    let obj = [{
-                        'cdconfignotificacao': cdconfignotificacao,
-                        'cdusuario': cdusuario,
-                        'raio': raio,
-                        'flnotificar': flnotificar,
-                        'marcas': marcas
-                    }];
-
-                    return res.status(200).json(obj);
-                });
+                retornaConfigMarcas(cdconfignotificacao, cdusuario, raio, flnotificar, res);                
             } else {
-                connection.query('INSERT INTO confignotificacao(cdusuario, raio, flnotificar) values(?, 10, 1) ', [cdusuario], function(err,result){                        
-                    if(err) {
-                        console.log("Erro ao tentar inserir confignotificacao");                        
-                        return connection.rollback(function() {
-                            throw error;
-                        });                        
-                    }
-                    
-                    cdconfignotificacao = result.insertId;
-
-                    connection.query(`INSERT INTO configmarca(cdmarca, cdconfignotificacao ) 
-                                        SELECT cdmarca, `+cdconfignotificacao+`
-                                        FROM marca `, [], function(err,result){
-                            if(err) {
-                                console.log("Erro ao tentar inserir configmarca");
-                                return connection.rollback(function() {
-                                    throw error;
-                                });
-                            }
-                   
-                        connection.query('select cdmarca from configmarca where cdconfignotificacao = ? ', [cdconfignotificacao], function(err, result){
-                            marcas = result;
-                            
-                            var obj = [{
-                                'cdconfignotificacao': cdconfignotificacao,
-                                'cdusuario': cdusuario,
-                                'raio': raio,
-                                'flnotificar': flnotificar,
-                                'marcas': marcas
-                            }];
-
-                            return res.status(200).json(obj);
-                        });
-                    });
-
-                });
+                insereConfignotificacao(cdusuario, res);                
             }
         });
         connection.release();
     });
-});
+}
+
+function insereConfignotificacao(cdusuario, res){
+    var cdconfignotificacao = 0;
+    var raio = 10;
+    var flnotificar = 1;
+
+    pool.getConnection(function(err, connection) {
+        connection.query('INSERT INTO confignotificacao(cdusuario, raio, flnotificar) values(?, 10, 1) ', [cdusuario], function(err,result){
+            if(err) {
+                console.log("Erro ao tentar inserir confignotificacao");                        
+                return connection.rollback(function() {
+                    throw error;
+                });                        
+            }
+            
+            cdconfignotificacao = result.insertId;
+            
+            connection.query(`INSERT INTO configmarca(cdmarca, cdconfignotificacao ) 
+                                        SELECT cdmarca, `+cdconfignotificacao+`
+                                        FROM marca `, [], function(err2,result2){
+                if(err2) {
+                    console.log("Erro ao tentar inserir configmarca");
+                    return connection.rollback(function() {
+                        throw error;
+                    });
+                }
+                                
+                retornaConfigMarcas(cdconfignotificacao, cdusuario, raio, flnotificar, res);
+            });
+        });
+       connection.release();
+    });
+}
+
+/*
+    Retorna as configurações de marcas do usuario da tela de notificações
+*/
+function retornaConfigMarcas(cdconfignotificacao, cdusuario, raio, flnotificar, res){    
+    pool.getConnection(function(err, connection) {
+        connection.query('select cdmarca from configmarca where cdconfignotificacao = ? ', [cdconfignotificacao], function(err, marcas){
+            var obj = [{
+                'cdconfignotificacao': cdconfignotificacao,
+                'cdusuario': cdusuario,
+                'raio': raio,
+                'flnotificar': flnotificar,
+                'marcas': marcas
+            }];
+
+            return res.status(200).json(obj);
+        });
+       connection.release();
+    });
+}
 
 // Configuracao Notificacao =============================
 router.post('/api/confignotificacao', function(req, res) {	    
@@ -675,7 +682,8 @@ router.post('/api/usuario', function(req, res) {
                             return res.status(400).json(err);
                         }
                         connection.release();
-                        return res.status(200).json();
+                        insereConfignotificacao(req.body.cdusuario, res);
+                        //return res.status(200).json();
                     });
              }
         });
@@ -786,25 +794,6 @@ router.get('/api/tipos', function(req, res) {
         connection.release();
     });    
 });
-
-
-/* BUSCA ICONE DO PRODUTO ============================
-router.get('/api/icone/:cdmarca/:cdtipo/:cdmedida', function(req, res, callback) {
-    console.log("Buscar icone: cdmarca: "+req.params.cdmarca+", cdtipo: "+req.params.cdtipo+", cdmedida: "+req.params.cdmedida);
-    //Primeiro Passo é buscar na base local
-    pool.getConnection(function(err, connection) {        
-        connection.query(`SELECT icon
-                FROM iconproduto 
-                WHERE cdmarca = ? and cdtipo = ? and cdmedida = ? `,[req.params.cdmarca, req.params.cdtipo, req.params.cdmedida],function(err,result){
-
-                if(result.length > 0) {
-                    return res.json(result);
-                }     
-        });
-        connection.release();
-    });
-});
-*/
 
 // LOJAS ============================================
 // http://pt.stackoverflow.com/questions/55669/identificar-se-conjunto-de-coordenadas-est%C3%A1-dentro-de-um-raio-em-android

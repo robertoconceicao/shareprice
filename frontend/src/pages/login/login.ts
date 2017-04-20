@@ -84,6 +84,9 @@ export class LoginPage {
       content: 'Aguarde...'
     });
     loading.present();
+
+    let env = this;
+
     GooglePlus.login({
       'scopes': '', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
       'webClientId': '449887022881-0f3qgjul4igf4dgajgfon3uos89bpv3h.apps.googleusercontent.com',
@@ -92,10 +95,21 @@ export class LoginPage {
     .then(function (user) {
       loading.dismiss();
       console.log("Resposta do login G+: "+JSON.stringify(user));
+      env.sharingService.setCdusuario(user.userId);
+        
+      //insere um novo usuario no sistema
+      let usuario: Usuario = new Usuario();
+      usuario.cdusuario = user.userId;
+      usuario.nome = user.displayName;
+      usuario.avatar = user.imageUrl;
+      
+      env.sharingService.insereUsuario(usuario);
+
       NativeStorage.setItem('user', {
         name: user.displayName,
         email: user.email,
-        picture: user.imageUrl
+        picture: user.imageUrl,
+        userId: user.userId
       })
       .then(function(){
         nav.setRoot(Home);
