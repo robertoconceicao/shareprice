@@ -816,6 +816,7 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
     console.log("Dados recebidos: lat: "+req.params.lat+", lng: "+req.params.lng);
     
     //Primeiro Passo é buscar na base local
+    /*
     pool.getConnection(function(err, connection) {
         console.log("Primeiro Passo é buscar na base local");
         connection.query(`SELECT *, (6371 * 
@@ -833,7 +834,7 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
                 if(result.length > 0) {
                     return res.json(result);
                 } 
-
+*/
                 console.log("Segundo Passo se não encontrou na base local, busca na API place");
                 //Segundo Passo se não encontrou na base local, busca na API place
                 var location = "location="+req.params.lat + "," + req.params.lng;
@@ -871,8 +872,8 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
                         persisteNovasLojas(lojas);
                     });
                 });                      
-        });
-        connection.release();
+       // });
+       // connection.release();
     });     
 
     function persisteNovasLojas(lojas){
