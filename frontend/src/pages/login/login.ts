@@ -22,7 +22,7 @@ export class LoginPage {
     let permissions = new Array();
     let nav = this.navCtrl;
     //the permissions your facebook app needs from the user
-    permissions = ["public_profile"];
+    permissions = ["public_profile, email"];
 
     let env = this;
 
@@ -32,9 +32,8 @@ export class LoginPage {
       let params = new Array();
 
       //Getting name and gender properties
-      Facebook.api("/me?fields=name,gender", params)
+      Facebook.api("/me?fields=name,gender,email", params)
       .then(function(user) {
-        console.log("Login sucesso");
         user.picture = "https://graph.facebook.com/" + userId + "/picture?type=large";
         
         env.sharingService.setCdusuario(userId);
@@ -44,17 +43,12 @@ export class LoginPage {
         usuario.cdusuario = userId;
         usuario.nome = user.name;
         usuario.avatar = user.picture;
+        usuario.email = user.email;
         
         env.sharingService.insereUsuario(usuario);
 
         //now we have the users info, let's save it in the NativeStorage
-        NativeStorage.setItem('user',
-        {
-          name: user.name,
-          gender: user.gender,
-          picture: user.picture,
-          userId: userId
-        })
+        NativeStorage.setItem('user', usuario)
         .then(function(){          
           nav.setRoot(Home);
         }, function (error) {
@@ -102,15 +96,11 @@ export class LoginPage {
       usuario.cdusuario = user.userId;
       usuario.nome = user.displayName;
       usuario.avatar = user.imageUrl;
-      
+      usuario.email = user.email;
+
       env.sharingService.insereUsuario(usuario);
 
-      NativeStorage.setItem('user', {
-        name: user.displayName,
-        email: user.email,
-        picture: user.imageUrl,
-        userId: user.userId
-      })
+      NativeStorage.setItem('user', usuario)
       .then(function(){
         nav.setRoot(Home);
       }, function (error) {

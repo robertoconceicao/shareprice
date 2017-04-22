@@ -1,13 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, AlertController  } from 'ionic-angular';
-import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage } from 'ionic-native';
+import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage, Deeplinks } from 'ionic-native';
 
 import { Home } from '../pages/home/home';
 import { ViewProdutoPage } from '../pages/produto/view-produto';
 import { LoginPage } from '../pages/login/login';
-import { MeuEstorage } from './meu-estorage';
 import { SharingService } from '../services/sharing-service';
-import { AuthService } from '../services/auth/auth.service';
+//import { AuthService } from '../services/auth/auth.service';
 import { Usuario } from '../models/usuario';
 
 @Component({
@@ -20,16 +19,12 @@ export class MyApp {
   rootPage: any;
 
   pages: Array<{title: string, component: any}>;
-
-  meuEstorage: MeuEstorage;
   
   disconnectSubscription: any;
 
   constructor(public platform: Platform, 
-              public sharingService: SharingService,              
-              public auth: AuthService,
+              public sharingService: SharingService,
               public alertCtrl: AlertController) {
-    this.meuEstorage = new MeuEstorage(sharingService);
     this.initializeApp();  
     
     // watch network for a disconnect
@@ -39,26 +34,21 @@ export class MyApp {
   }
 
  initializeApp() {    
-    this.platform.ready().then(() => {      
-      
+    this.platform.ready().then(() => {
       //pega os produtos pela localizacao do usuario
       Geolocation.getCurrentPosition({timeout: 10000})
         .then((resp) => {
             console.log("resp location: lat: "+resp.coords.latitude+" lng: "+resp.coords.longitude);
             this.sharingService.setLat(resp.coords.latitude);
-            this.sharingService.setLng(resp.coords.longitude);           
-            
+            this.sharingService.setLng(resp.coords.longitude); 
+
+            this.nav.setRoot(LoginPage);
+            Splashscreen.hide();          
+          /*  
             let env = this;
             NativeStorage.getItem('user')
-              .then( function (data) {
-                env.sharingService.setCdusuario(data.userId);
-
-                //Atualiza as informaçoes do usuario, principalmente por causa da localização
-                let usuario: Usuario = new Usuario();
-                usuario.cdusuario = data.userId;
-                usuario.nome = data.name;
-                usuario.avatar = data.picture;
-                
+              .then( function (usuario) {
+                env.sharingService.setCdusuario(usuario.cdusuario);
                 env.sharingService.insereUsuario(usuario);
 
                 env.nav.setRoot(Home);
@@ -79,10 +69,21 @@ export class MyApp {
 
       StatusBar.styleDefault();
       this.initPushNotification();      
+      this.initDeeplink();
     });
   }
     
-  
+  initDeeplink(){
+    //This is the code who responds to the app deeplinks
+    //Deeplinks if from Ionic Native
+    Deeplinks.routeWithNavController(this.nav, {
+        '/produto/:codigo': ViewProdutoPage
+      }).subscribe((match) => {
+        console.log('Successfully routed', match);
+      }, (nomatch) => {
+        console.log('Unmatched Route', nomatch);
+      });      
+  }
 
   initPushNotification(){
     if (!this.platform.is('cordova')) {
@@ -140,17 +141,6 @@ export class MyApp {
       push.on('error', (e) => {
         console.log(e.message);
       });
-
-      //This is the code who responds to the app deeplinks
-			/*Deeplinks if from Ionic Native
-	    Deeplinks.routeWithNavController(this.navChild, {
-	        '/produto/:codigo': ViewProdutoPage
-	      }).subscribe((match) => {
-	        console.log('Successfully routed', match);
-	      }, (nomatch) => {
-	        console.log('Unmatched Route', nomatch);
-	      });
-        */
   }
 
   openAlertNotInternet(){

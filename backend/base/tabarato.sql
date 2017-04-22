@@ -252,19 +252,12 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `cdusuario` varchar(100) NOT NULL,
   `nome` varchar(100) NOT NULL,
   `avatar` varchar(200) NOT NULL,
+  `email` varchar(100) NOT NULL,
   `lat` double NOT NULL,
   `lng` double NOT NULL,
   `devicetoken` text NOT NULL,
   PRIMARY KEY (`cdusuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Extraindo dados da tabela `usuario`
---
-
-INSERT INTO `usuario` (`cdusuario`, `nome`, `avatar`, `lat`, `lng`, `devicetoken`) VALUES
-('facebook|395753717458940', 'Feito Toda da Silva', 'https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/12552646_161030307597950_6999094692632515479_n.jpg?oh=6f2b9636d60670e31481b6020c52d8c5&oe=5932AA68', 0, 0, ''),
-('google-oauth2|115862700861296845675', 'Roberto da conceicao', 'https://lh5.googleusercontent.com/-NkphZfbAqNI/AAAAAAAAAAI/AAAAAAAAC2Y/2RbWqlwadFI/photo.jpg', 0, 0, '');
 
 -- --------------------------------------------------------
 

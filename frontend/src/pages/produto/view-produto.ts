@@ -5,7 +5,7 @@ import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
 import { Geolocation, SocialSharing } from 'ionic-native';
 import { MapaPage } from '../mapa/mapa';
-
+import { NumberUtil } from '../../util/number-util';
 
 @Component({
     selector: 'view-produto',
@@ -26,6 +26,8 @@ export class ViewProdutoPage {
     public qtdeok: any = 0;
     public qtdenok: any = 0;
     public urlMapa: string;
+    public lat: any;
+    public lng: any;
 
     constructor(public navParams: NavParams,
                 public sharingService: SharingService,
@@ -33,10 +35,18 @@ export class ViewProdutoPage {
                 public toastCtrl: ToastController,
                 public navCtrl: NavController,
                 public alertCtrl: AlertController){
+
         this.produto = new Produto();            
         this.codigo = this.navParams.get('codigo');        
         this.urlMapa = "https://www.google.com.br/maps/dir/";
-       
+
+        this.sharingService.lat.subscribe(lat=>{
+            this.lat = lat;
+        });
+
+        this.sharingService.lng.subscribe(lng=>{
+            this.lng = lng;
+        });
     }
 
     ionViewDidLoad() {
@@ -53,29 +63,12 @@ export class ViewProdutoPage {
     editarProduto(){
         this.sharingService.findProdutoById(this.codigo)
             .then(produto => {
-                this.produto = AppSettings.convertToProduto(produto[0]); 
-
-                Geolocation.getCurrentPosition({timeout: 10000})
-                .then((resp) => {
-                    let origem =  resp.coords.latitude + ","+ resp.coords.longitude;
-                    let destino = this.produto.loja.lat + ","+this.produto.loja.lng;
-                    
-                    this.urlMapa = this.urlMapa + origem + "/" +destino;
-                }).catch((error) => {
-                    console.log('Error getting location', error);
-                    this.loading.dismiss();
-                    let alert = this.alertCtrl.create({
-                            title: "O serviço de localização esta desligado",
-                            subTitle: "Por favor ligue sua localização e tente novamente.",
-                            buttons: [{
-                                text: 'Ok',
-                                handler: () => {
-                                
-                                }
-                            }]
-                        });
-                    alert.present();
-                });
+                this.produto = AppSettings.convertToProduto(produto[0]);
+                
+                let origem =  this.lat + ","+ this.lng;
+                let destino = this.produto.loja.lat + ","+this.produto.loja.lng;
+                
+                this.urlMapa = this.urlMapa + origem + "/" +destino;
 
                 this.sharingService.getUserJaValidouPreco(this.produto.codigo)
                     .then(dados => {
@@ -133,10 +126,8 @@ export class ViewProdutoPage {
     }
 
     shareProduto() {
-        // this code is to use the social sharing plugin
-        // message, subject, file, url
         let message = this.formataShareMessage();                    
-        SocialSharing.share(message, message, this.pathImagem(), null)
+        SocialSharing.share(message, "Promoção de Cerveja", "www/"+this.pathImagem(), null)
             .then(resp => {
                 console.log("Funcionou o compartilhamento... "+ resp);
             })
@@ -145,11 +136,12 @@ export class ViewProdutoPage {
             });
     }
 
-    formataShareMessage(){
+    formataShareMessage(){        
         return this.produto.marca.descricao 
         + ' ' + this.produto.medida.descricaoML 
-        + ' R$ ' + this.produto.preco
-        + ' ' + this.produto.loja.nome;
+        + ' R$ ' + NumberUtil.formataMoeda(this.produto.preco)
+        + ' ' + this.produto.loja.nome
+        + ' geladas://produto/'+this.produto.codigo;
     }
 
     pathImagem(){

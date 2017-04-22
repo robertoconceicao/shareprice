@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "449887022881",
+    "firebase_url": "https://tahbarato-154614.firebaseio.com",
+    "project_id": "tahbarato-154614",
+    "storage_bucket": "tahbarato-154614.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:449887022881:android:c6dce229e41c90a6",
+        "android_client_info": {
+          "package_name": "br.com.rdc.vivacerveja"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "449887022881-480nmee2j5il8rt23vaq2hf7vrecdghb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.rdc.vivacerveja",
+            "certificate_hash": "9c1cc683459cc2cdf7200e7201b893ab1552ac77"
+          }
+        },
+        {
+          "client_id": "449887022881-vphs6g92c44nani3jqibr14ok4j2es8d.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "449887022881-0f3qgjul4igf4dgajgfon3uos89bpv3h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKhKHuBI9Nhnmnl8SCGMKCds0BCqbz19M"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "449887022881-vphs6g92c44nani3jqibr14ok4j2es8d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
