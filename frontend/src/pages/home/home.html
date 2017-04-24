@@ -27,7 +27,8 @@
         [showCancelButton]=true
         (ionCancel)="onCancel($event)"         
         (ionClear)="onCancel($event)"
-        placeholder="busca..." >
+        placeholder="busca..."
+        (ionInput)="filterItems()">
     </ion-searchbar>
   </ion-navbar>
 </ion-header>

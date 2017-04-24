@@ -35,11 +35,10 @@ export class Home implements OnInit {
                public loadingCtrl: LoadingController) {
      this.searchTermControl = new FormControl();
      this.searchTermControl.valueChanges
-         .debounceTime(1000)
+         .debounceTime(500)
          .distinctUntilChanged()
          .subscribe(search => {
-            if (search !== '' && search) {
-            //if (search) {
+            if (search !== '' && search) {            
                 this.searchTerm = search;
                 this.filterItems();
             }
