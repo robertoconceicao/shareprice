@@ -142,31 +142,27 @@ function retornaConfigMarcas(cdconfignotificacao, cdusuario, raio, flnotificar, 
 }
 
 // Configuracao Notificacao =============================
-router.post('/api/confignotificacao', function(req, res) {	    
-    //let medidas = req.body.medidas;
-    //let tipos = req.body.tipos;
+router.post('/api/confignotificacao', function(req, res) {
     let marcas = req.body.marcas;
     let raio = req.body.raio;
     let cdusuario = req.body.cdusuario;
     let flnotificar = req.body.flnotificar;
 
     pool.getConnection(function(err, connection) {
-
         connection.beginTransaction(function(err) {
             if (err) { throw err; }
 
             var cdconfignotificacao = 0;
-
             connection.query(`
             select cdconfignotificacao from confignotificacao    
             WHERE 
             cdusuario = ?
             `,[cdusuario],function(err,result){
-                if(err) {
-                    return connection.rollback(function() {
-                        throw error;
-                    });
-                }
+                    if(err) {
+                        return connection.rollback(function() {
+                            throw error;
+                        });
+                    }
                 
                     if(result.length > 0) {
                         cdconfignotificacao = result[0].cdconfignotificacao;
@@ -220,36 +216,16 @@ router.post('/api/confignotificacao', function(req, res) {
                             });
                         });                 
                     } else {
-                        connection.query('INSERT INTO confignotificacao(cdusuario, raio, flnotificar) values(?, ?) ', [cdusuario, raio, flnotificar], function(err,result){
-                            if(err) {
-                                console.log("Erro ao tentar inserir confignotificacao");                        
+                        insereConfignotificacao(cdusuario, res);
+                        connection.commit(function(err) {
+                            if (err) {
                                 return connection.rollback(function() {
-                                    throw error;
-                                });                        
-                            }
-                            cdconfignotificacao = result.insertId;
-
-                            marcas.forEach(function(element){
-                                connection.query('INSERT INTO configmarca(cdmarca, cdconfignotificacao) values(?, ?) ', [element, cdconfignotificacao], function(err,result1){
-                                    if(err) {
-                                        console.log("Erro ao tentar inserir configmarca");
-                                        return connection.rollback(function() {
-                                            throw error;
-                                        });                        
-                                    }                                   
+                                    throw err;
                                 });
-                            }, this);                         
-                                                   
-                            connection.commit(function(err) {
-                                if (err) {
-                                    return connection.rollback(function() {
-                                        throw err;
-                                    });
-                                }
-                                console.log('success!');
-                                return res.status(200).json();
-                            });
-                        });
+                            }
+                            console.log('success!');
+                            return res.status(200).json();
+                        });                       
                     }
                 });
             });

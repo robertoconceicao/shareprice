@@ -140,8 +140,7 @@ export class ViewProdutoPage {
         return this.produto.marca.descricao 
         + ' ' + this.produto.medida.descricaoML 
         + ' R$ ' + NumberUtil.formataMoeda(this.produto.preco)
-        + ' ' + this.produto.loja.nome
-        + ' geladas://produto/'+this.produto.codigo;
+        + ' ' + this.produto.loja.nome;
     }
 
     pathImagem(){

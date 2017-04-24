@@ -22,9 +22,12 @@ export class MyApp {
   
   disconnectSubscription: any;
 
+  flVeioDoPush: boolean;
+
   constructor(public platform: Platform, 
               public sharingService: SharingService,
               public alertCtrl: AlertController) {
+    
     this.initializeApp();  
     
     // watch network for a disconnect
@@ -34,38 +37,31 @@ export class MyApp {
   }
 
  initializeApp() {    
+    this.flVeioDoPush = false;   
     this.platform.ready().then(() => {
       //pega os produtos pela localizacao do usuario
       Geolocation.getCurrentPosition({timeout: 10000})
         .then((resp) => {
-            console.log("resp location: lat: "+resp.coords.latitude+" lng: "+resp.coords.longitude);
             this.sharingService.setLat(resp.coords.latitude);
             this.sharingService.setLng(resp.coords.longitude); 
-
-            this.nav.setRoot(LoginPage);
-            Splashscreen.hide();          
-          /*  
+          
             let env = this;
             NativeStorage.getItem('user')
               .then( function (usuario) {
                 env.sharingService.setCdusuario(usuario.cdusuario);
                 env.sharingService.insereUsuario(usuario);
-
-                env.nav.setRoot(Home);
-                Splashscreen.hide();
+                // se o usuario esta entrando pelo push notification ele cai direto dentro da tela de ViewProdutoPage
+                if(!env.flVeioDoPush){
+                  env.nav.setRoot(Home);
+                  Splashscreen.hide();
+                }
               }, function (error) {
-                //we don't have the user data so we will ask him to log in
                 env.nav.setRoot(LoginPage);
                 Splashscreen.hide();
               });
-            /*
-            this.rootPage = Home;
-            Splashscreen.hide();
-            */
-      }).catch((error) => {
-           console.log('Error getting location', error);              
-           this.openAlertNotGeolocation();
-      });
+        }).catch((error) => {
+            this.openAlertNotGeolocation();
+        });
 
       StatusBar.styleDefault();
       this.initPushNotification();      
@@ -103,19 +99,14 @@ export class MyApp {
         windows: {}
       });
 
-      push.on('registration', (data) => {
-        console.log("device token -> ", data.registrationId);  
+      push.on('registration', (data) => {        
         this.sharingService.setDevicetoken(data.registrationId);
       });
 
-      push.on('notification', (data) => {        
-        console.log('data.message: '+ JSON.stringify(data.message));
-        console.log('data.additionalData: '+ JSON.stringify(data.additionalData));
-        let self = this;
-        //if user using app and push notification comes
-        if (data.additionalData.foreground) {
-          // if application open, show popup
-          let json = JSON.parse(JSON.stringify(data.additionalData));
+      push.on('notification', (data) => {
+        let self = this;        
+        let json = JSON.parse(JSON.stringify(data.additionalData));
+        if (data.additionalData.foreground) {          
           let confirmAlert = this.alertCtrl.create({
             title: data.title,
             message: data.message,
@@ -130,11 +121,10 @@ export class MyApp {
             }]
           });
           confirmAlert.present();
-        } else {
-          //if user NOT using app and push notification comes
-          //TODO: Your logic on click of push notification directly
-          //self.nav.push(DetailsPage, {message: data.message});
-          console.log("Push notification clicked");
+        } else {          
+          self.flVeioDoPush = true;
+          Splashscreen.hide();
+          self.nav.push(ViewProdutoPage, {codigo: json.codigo});
         }
       });
 
