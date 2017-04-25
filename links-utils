@@ -10,3 +10,26 @@ https://ionicthemes.com/tutorials/about/ionic2-facebook-login
 
 #Push notifications
 https://medium.com/@ankushaggarwal/push-notifications-in-ionic-2-658461108c59#.sxsfvv6jw
+
+
+#Gerar versao release e jogar no google
+http://ionicframework.com/docs/v1/guide/publishing.html
+
+keytool -genkey -v -keystore geladas-release-key.keystore -alias geladas -keyalg RSA -keysize 2048 -validity 10000
+senha security
+CN=Roberto da Conceição, OU=Geladas, O=Geladas, L=Florianópolis, ST=Santa Catarina, C=BR Est▒ correto?
+SHA256withRSA
+
+
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore geladas-release-key.keystore platforms/android/build/outputs/apk/android-release-unsigned.apk geladas
+
+
+breve descricao
+Encontrar os preços das cerveja nos supermercados mais próximos de você.
+
+descricao
+Geladas é um aplicativo colaborativo onde as pessoas publicam as promoções de cervejas que encontram nos supermercados, disponibilizando para toda a comunidade. 
+O Geladas utiliza a localização do usuário para mostrar apenas as promoções que estão próximas dele, podendo ser configurado um raio de no máximo 30km.
+Com o recurso de notificação o usuário poderá escolher as marcas de cervejas de sua preferência, junto com um raio máximo de distância que deseja ser informado, assim quando um usuário publicar uma promoção que atenda as preferências de notificação de alguém, eles receberam a notificação da promoção.
+Com o Geladas você também pode compartilhar uma promoção via rede social e whatsApp, além de navegar ao estabelecimento via google maps.
+O que está esperando instala o Geladas e fique por dentro das melhores promoções de cervejas perto de você, economizando mais grana e bebendo mais geladas.
