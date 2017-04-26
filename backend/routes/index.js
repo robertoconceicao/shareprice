@@ -63,6 +63,17 @@ const PROJECAO_PRODUTO = `
         LEFT JOIN usuario u on u.cdusuario = p.cdusuario
 `;
 
+router.get('/api/medidapormarca', getMedidapormarca);
+
+function getMedidapormarca(req, res){    
+    pool.getConnection(function(err, connection) {
+        connection.query('select cdmedida, cdmarca from medidapormarca ', [], function(err, result){
+            return res.status(200).json(result);
+        });
+        connection.release();
+    });
+}
+
 router.get('/api/confignotificacao', confignotificacao);
 
 function confignotificacao(req, res){
