@@ -15,13 +15,23 @@ https://medium.com/@ankushaggarwal/push-notifications-in-ionic-2-658461108c59#.s
 #Gerar versao release e jogar no google
 http://ionicframework.com/docs/v1/guide/publishing.html
 
+
+Compilar versao release
+ionic run android --prod --release
+
+Só executa isso se nao tem a chave
 keytool -genkey -v -keystore geladas-release-key.keystore -alias geladas -keyalg RSA -keysize 2048 -validity 10000
 senha security
 CN=Roberto da Conceição, OU=Geladas, O=Geladas, L=Florianópolis, ST=Santa Catarina, C=BR Est▒ correto?
 SHA256withRSA
 
-
+Assinar a versao
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore geladas-release-key.keystore platforms/android/build/outputs/apk/android-release-unsigned.apk geladas
+
+Aplica o ziper
+ cd 'C:\ide\adt\sdk\build-tools\21.1.2'
+ 
+./zipalign.exe -v 4 'D:\github\shareprice\frontend\platforms\android\build\outputs\apk\android-release-unsigned.apk' 'D:\github\shareprice\frontend\platforms\android\build\outputs\apk\geladas.apk'
 
 
 breve descricao
