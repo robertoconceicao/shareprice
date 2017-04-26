@@ -543,7 +543,7 @@ router.post('/api/produto', function(req, res) {
     });    
 });
 
-//apenas para testes depois remover esse codigo
+/*apenas para testes depois remover esse codigo
 router.get('/api/push', function (req, res) {
     var device_tokens = []; //create array for storing device tokens
     var retry_times = 4; //the number of times to retry sending the message if it fails
@@ -572,7 +572,7 @@ router.get('/api/push', function (req, res) {
         res.status(500).send('failed to push notification ');
     });
 });
-
+*/
 /*
 var produto = {
     codigo: resultProduto[0].codigo,
