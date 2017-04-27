@@ -40,7 +40,7 @@ export class MyApp {
     this.flVeioDoPush = false;   
     this.platform.ready().then(() => {
       //pega os produtos pela localizacao do usuario
-      Geolocation.getCurrentPosition({timeout: 10000})
+      Geolocation.getCurrentPosition({timeout: 20000})
         .then((resp) => {
             this.sharingService.setLat(resp.coords.latitude);
             this.sharingService.setLng(resp.coords.longitude); 

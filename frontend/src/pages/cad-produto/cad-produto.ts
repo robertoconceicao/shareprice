@@ -154,7 +154,7 @@ export class CadProdutoPage implements OnInit {
 
   getLojasByLocation(){
     //pega as lojas pela localizacao do usuario
-    Geolocation.getCurrentPosition({timeout: 10000}).then((resp) => {
+    Geolocation.getCurrentPosition({timeout: 20000}).then((resp) => {
       this.lat = resp.coords.latitude;
       this.lng = resp.coords.longitude;
 
