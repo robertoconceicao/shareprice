@@ -15,7 +15,8 @@ INSERT INTO `medida` (`cdmedida`, `descricao`, `ml`) VALUES
 (13, 'Lata', 310),
 (14, 'Long Neck', 343),
 (15, 'Garrafa', 550),
-(16, 'Long Neck', 275);
+(16, 'Long Neck', 275),
+(17, 'Lata', 355);
 
 -- Insere medida por marca
 -- SKOL (1)
@@ -66,6 +67,7 @@ INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 7, 5);
 -- HEINEKEN (6)
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 1, 6);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 2, 6);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 4, 6);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 5, 6);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 8, 6);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 9, 6);
@@ -98,6 +100,7 @@ INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 16, 9);
 
 -- Budweiser (10)
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 2, 10);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 5, 10);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 7, 10);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 10, 10);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 12, 10);
@@ -119,7 +122,9 @@ INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 5, 13);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 7, 13);
 
 -- Corona (14)
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 3, 14);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 4, 14);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 17, 14);
 
 -- Sol (15)
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 2, 15);
@@ -129,7 +134,7 @@ INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 5, 15);
 -- Bavaria (16)
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 2, 16);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 3, 16);
-INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 4, 16);
+--INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 4, 16);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 5, 16);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 8, 16);
 
@@ -138,18 +143,18 @@ INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 1, 17);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 2, 17);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 3, 17);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 5, 17);
-INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 6, 17);
+--INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 6, 17);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 7, 17);
 
 -- Crystal (18)
-INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 1, 18);
+--INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 1, 18);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 2, 18);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 3, 18);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 4, 18);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 5, 18);
-INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 6, 18);
+--INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 6, 18);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 7, 18);
-INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 8, 18);
+--INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 8, 18);
 
 
 select ma.descricao, m.descricao, m.ml
