@@ -67,7 +67,11 @@ router.get('/api/medidapormarca', getMedidapormarca);
 
 function getMedidapormarca(req, res){    
     pool.getConnection(function(err, connection) {
-        connection.query('select cdmedida, cdmarca from medidapormarca order by cdmarca asc, cdmedida asc', [], function(err, result){            
+        connection.query(`
+            select mpm.cdmedida as cdmedida, mpm.cdmarca as cdmarca 
+            from medidapormarca mpm
+            join medida m on m.cdmedida = mpm.cdmedida
+            order by mpm.cdmarca asc, m.ml asc`, [], function(err, result){            
             var cdmarca = -1;
             var medidas = new Array();
             var objJson = new Array();
