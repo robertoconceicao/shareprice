@@ -6,14 +6,8 @@ import 'rxjs/add/operator/toPromise';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { Produto }      from '../models/produto';
-import { Filtro }       from '../models/filtro';
+import { Produto, Filtro, Usuario, Marca, Tipo, Medida, Confignotificacao, Medidapormarca }  from '../models';
 import { AppSettings }  from '../app/app-settings';
-import { Usuario }      from '../models/usuario';
-import { Marca }        from '../models/marca';
-import { Tipo }         from '../models/tipo';
-import { Medida }       from '../models/medida';
-import { Confignotificacao } from '../models/confignotificacao';
 
 
 export const contentHeaders = new Headers();
@@ -23,7 +17,8 @@ contentHeaders.append('Content-Type','application/json');
 export class SharingService {
   
   public produtos: Array<Produto>;
- 
+  public medidaspormarcas: Array<Medidapormarca>;
+
   private _marcas: BehaviorSubject<Marca[]>;
   private _tipos: BehaviorSubject<Tipo[]>;
   private _medidas: BehaviorSubject<Medida[]>;
@@ -45,6 +40,7 @@ export class SharingService {
     this._lng = <BehaviorSubject<number>> new BehaviorSubject(0);
     this._cdusuario = <BehaviorSubject<string>> new BehaviorSubject("");
 
+    this.medidaspormarcas = new Array<Medidapormarca>();
     this.loadListas();
   }
   
@@ -74,6 +70,34 @@ export class SharingService {
           console.log("Erro ao buscar as Marcas");
       });
     
+    this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MEDIDA_POR_MARCA)      
+      .then(lista => {
+         var medidapormarca = new Medidapormarca();
+         var cdmarca = -1;
+         for(let i = 0; i < lista.length; i++) {
+           if(cdmarca == -1){
+             cdmarca = lista[i].cdmarca;
+           }
+
+           if(cdmarca == lista[i].cdmarca){
+              medidapormarca.cdmarca = cdmarca;
+              medidapormarca.medidas.push(lista[i].cdmedida);
+           } else {
+             this.medidaspormarcas.push(medidapormarca);
+
+             cdmarca = lista[i].cdmarca;
+             medidapormarca = new Medidapormarca();
+             medidapormarca.cdmarca = cdmarca;
+             medidapormarca.medidas.push(lista[i].cdmedida);
+           }
+         }
+         this.medidaspormarcas.push(medidapormarca);
+        console.log("elementos: "+JSON.stringify(this.medidaspormarcas));
+      })
+      .catch(error => {
+        console.log("Erro ao tentar carregar medidas por marca");
+      });
+
     let filtro = new Filtro();
     filtro.distancia = 30;
     this.setFiltro(filtro);
@@ -253,6 +277,10 @@ export class SharingService {
 
   get cdusuario(){
     return this._cdusuario.asObservable();
+  }
+
+  get getMedidaspormarcas(){
+    return this.medidaspormarcas;
   }
 
   setCdusuario(cdusuario: string){

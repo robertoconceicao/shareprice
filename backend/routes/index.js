@@ -67,7 +67,7 @@ router.get('/api/medidapormarca', getMedidapormarca);
 
 function getMedidapormarca(req, res){    
     pool.getConnection(function(err, connection) {
-        connection.query('select cdmedida, cdmarca from medidapormarca ', [], function(err, result){
+        connection.query('select cdmedida, cdmarca from medidapormarca order by cdmarca asc, cdmedida asc', [], function(err, result){
             return res.status(200).json(result);
         });
         connection.release();

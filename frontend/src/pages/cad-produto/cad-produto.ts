@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, ToastController, LoadingController, ModalController, AlertController  } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
-import { Produto } from '../../models/produto';
+import { Medida, Produto, Loja } from '../../models';
 
-import { Loja } from '../../models/loja';
 import { LojaPage } from '../loja/loja-page';
 import { Home } from '../home/home';
 import { SharingService } from '../../services/sharing-service';
@@ -21,6 +20,7 @@ export class CadProdutoPage implements OnInit {
   public lng: any;  
   public loading: any;  
   public lojas: Array<Loja> = [];  
+  public medidas: Array<Medida> = [];
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -42,8 +42,9 @@ export class CadProdutoPage implements OnInit {
       this.produto.tipo.cdtipo = tipos[0].cdtipo;
     });
     this.sharingService.medidas.subscribe(medidas => {
+      this.medidas = medidas;
       this.produto.medida.cdmedida = medidas[0].cdmedida;
-    });    
+    });
   }
 
   ionViewDidLoad() {
@@ -54,10 +55,30 @@ export class CadProdutoPage implements OnInit {
     });
 
     this.loading.present();
- 
+
     this.buscarIconeCerveja();
     // get localizacao do usuario
     this.getLojasByLocation();   
+  }
+
+  callbackFiltroMarca(medidapormarca){
+    if(medidapormarca.cdmarca == this.produto.marca.cdmarca){
+      console.log("callbackFiltroMarca: "+medidapormarca.cdmarca);
+      return medidapormarca.medidas; //retorna um array de cdmedidas configurados por marca
+    }
+  }
+
+  callbackRetornarAsMedidas(cdmedida){
+    for(let i=0; i<this.medidas.length; i++){
+      if(this.medidas[i].cdmedida == cdmedida){
+        return this.medidas[i]; //retorna o objeto medida com todas as informações
+      }
+    }
+  }
+
+  filtraMedidas(){
+    var medidaspormarcas = this.sharingService.getMedidaspormarcas.filter(this.callbackFiltroMarca);
+    return medidaspormarcas.filter(this.callbackRetornarAsMedidas);
   }
 
   postar(): void {

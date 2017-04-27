@@ -41,6 +41,9 @@ export class AppSettings {
    //API Push Notification
    public static POST_CONFIG_NOTIFICACAO = "confignotificacao";
    public static GET_CONFIG_NOTIFICACAO = "confignotificacao";
+
+   //API medidas por marca
+   public static GET_MEDIDA_POR_MARCA = "medidapormarca";
    
    public static convertToProduto(data): Produto {
      var produto = new Produto();
