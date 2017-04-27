@@ -10,6 +10,8 @@ import { NumberUtil } from '../../util/number-util';
 
 import 'rxjs/add/operator/toPromise';
 
+var self;
+
 @Component({
   selector: 'page-cad-produto',
   templateUrl: 'cad-produto.html'
@@ -21,6 +23,7 @@ export class CadProdutoPage implements OnInit {
   public loading: any;  
   public lojas: Array<Loja> = [];  
   public medidas: Array<Medida> = [];
+  public medidasFiltradas: Array<Medida> = [];
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -29,6 +32,7 @@ export class CadProdutoPage implements OnInit {
               public loadingCtrl: LoadingController,
               public modalCtrl: ModalController,
               public alertCtrl: AlertController) {
+    self = this;
   }
 
   ngOnInit(): void {
@@ -45,6 +49,8 @@ export class CadProdutoPage implements OnInit {
       this.medidas = medidas;
       this.produto.medida.cdmedida = medidas[0].cdmedida;
     });
+
+    this.medidasFiltradas = new Array<Medida>();
   }
 
   ionViewDidLoad() {
@@ -55,30 +61,35 @@ export class CadProdutoPage implements OnInit {
     });
 
     this.loading.present();
+    
+    this.filtraMedidas();
 
     this.buscarIconeCerveja();
     // get localizacao do usuario
     this.getLojasByLocation();   
   }
 
-  callbackFiltroMarca(medidapormarca){
-    if(medidapormarca.cdmarca == this.produto.marca.cdmarca){
-      console.log("callbackFiltroMarca: "+medidapormarca.cdmarca);
-      return medidapormarca.medidas; //retorna um array de cdmedidas configurados por marca
-    }
-  }
-
-  callbackRetornarAsMedidas(cdmedida){
-    for(let i=0; i<this.medidas.length; i++){
-      if(this.medidas[i].cdmedida == cdmedida){
-        return this.medidas[i]; //retorna o objeto medida com todas as informações
+  filtraMedidas() {
+    var medidaspormarcas = this.sharingService.medidaspormarcas;
+    var _medidas = new Array<number>();
+    for(let i=0; i < medidaspormarcas.length; i++){
+      if(!!self.produto && medidaspormarcas[i].cdmarca == self.produto.marca.cdmarca){
+        console.log("callbackFiltroMarca: "+medidaspormarcas[i].cdmarca);
+        _medidas = medidaspormarcas[i].medidas; //retorna um array de cdmedidas configurados por marca
+        break;
       }
     }
-  }
 
-  filtraMedidas(){
-    var medidaspormarcas = this.sharingService.getMedidaspormarcas.filter(this.callbackFiltroMarca);
-    return medidaspormarcas.filter(this.callbackRetornarAsMedidas);
+    this.medidasFiltradas = new Array<Medida>();
+    for(let i=0; i < _medidas.length; i++){ //percorre a lista de medidas por marca onde só tem cdmedida
+      for(let j=0; j < self.medidas.length; j++){ //percorre a lista de todas medidas com todas as informações
+        if(_medidas[i] == self.medidas[j].cdmedida){
+          this.medidasFiltradas.push(self.medidas[j]); //retorna o objeto medida com todas as informações
+        }
+      }
+    }
+    self.produto.medida.cdmedida = this.medidasFiltradas[0].cdmedida;
+    console.log("medidasAsermostradas: "+JSON.stringify(this.medidasFiltradas));    
   }
 
   postar(): void {
@@ -196,6 +207,7 @@ export class CadProdutoPage implements OnInit {
 
   onChangeMarca(event){
     this.produto.marca.cdmarca = event;
+    this.filtraMedidas();
     this.buscarIconeCerveja();
   }
 

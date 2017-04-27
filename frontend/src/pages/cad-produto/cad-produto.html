@@ -33,7 +33,7 @@
             <ion-item>            
                 <ion-label>Medida</ion-label>
                 <ion-select [ngModel]="produto.medida.cdmedida" (ngModelChange)="onChangeMedida($event)" name="cdmedida">                                
-                    <ion-option [value]="medida.cdmedida" *ngFor="let medida of filtraMedidas() " >
+                    <ion-option [value]="medida.cdmedida" *ngFor="let medida of medidasFiltradas" >
                         {{ medida.descricao + ' ' + medida.ml + ' ml' }}
                     </ion-option>
                 </ion-select>

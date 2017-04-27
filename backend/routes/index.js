@@ -67,8 +67,35 @@ router.get('/api/medidapormarca', getMedidapormarca);
 
 function getMedidapormarca(req, res){    
     pool.getConnection(function(err, connection) {
-        connection.query('select cdmedida, cdmarca from medidapormarca order by cdmarca asc, cdmedida asc', [], function(err, result){
-            return res.status(200).json(result);
+        connection.query('select cdmedida, cdmarca from medidapormarca order by cdmarca asc, cdmedida asc', [], function(err, result){            
+            var cdmarca = -1;
+            var medidas = new Array();
+            var objJson = new Array();
+            
+            for(let i = 0; i < result.length; i++) {
+                if(cdmarca == -1){
+                    cdmarca = result[i].cdmarca;
+                }
+
+                if(cdmarca == result[i].cdmarca){                
+                    medidas.push(result[i].cdmedida);
+                } else {
+                    objJson.push({
+                            cdmarca: cdmarca,
+                            medidas: medidas
+                        });
+
+                    cdmarca = result[i].cdmarca;
+                    medidas = new Array();
+                    medidas.push(result[i].cdmedida);
+                }
+            }
+            objJson.push({
+                        cdmarca: cdmarca,
+                        medidas: medidas
+                    });
+
+            return res.status(200).json(objJson);
         });
         connection.release();
     });
@@ -826,7 +853,7 @@ router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
                     sin(radians( ? )) *
                     sin(radians(lat))
                 )) AS distance
-                FROM loja HAVING distance <= 5.0 
+                FROM loja HAVING distance <= 10.0 
                 ORDER BY distance ASC 
                 `,[req.params.lat, req.params.lng, req.params.lat],function(err,result){
 

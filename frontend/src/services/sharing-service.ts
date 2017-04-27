@@ -71,28 +71,8 @@ export class SharingService {
       });
     
     this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MEDIDA_POR_MARCA)      
-      .then(lista => {
-         var medidapormarca = new Medidapormarca();
-         var cdmarca = -1;
-         for(let i = 0; i < lista.length; i++) {
-           if(cdmarca == -1){
-             cdmarca = lista[i].cdmarca;
-           }
-
-           if(cdmarca == lista[i].cdmarca){
-              medidapormarca.cdmarca = cdmarca;
-              medidapormarca.medidas.push(lista[i].cdmedida);
-           } else {
-             this.medidaspormarcas.push(medidapormarca);
-
-             cdmarca = lista[i].cdmarca;
-             medidapormarca = new Medidapormarca();
-             medidapormarca.cdmarca = cdmarca;
-             medidapormarca.medidas.push(lista[i].cdmedida);
-           }
-         }
-         this.medidaspormarcas.push(medidapormarca);
-        console.log("elementos: "+JSON.stringify(this.medidaspormarcas));
+      .then(lista => {         
+        this.medidaspormarcas = lista;        
       })
       .catch(error => {
         console.log("Erro ao tentar carregar medidas por marca");
@@ -277,10 +257,6 @@ export class SharingService {
 
   get cdusuario(){
     return this._cdusuario.asObservable();
-  }
-
-  get getMedidaspormarcas(){
-    return this.medidaspormarcas;
   }
 
   setCdusuario(cdusuario: string){
