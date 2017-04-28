@@ -28,7 +28,7 @@
         <ion-list>
             <ion-item>            
                 <ion-label>Marca</ion-label>            
-                    <ion-select [(ngModel)]="filtro.marca">
+                    <ion-select [(ngModel)]="filtro.marca" (ngModelChange)="onChangeMarca($event)" >
                         <ion-option [value]="marca.cdmarca" *ngFor="let marca of sharingService.marcas | async ">
                             {{ marca.descricao }}
                         </ion-option>
@@ -46,9 +46,9 @@
 
             <ion-item>            
                 <ion-label>Medida</ion-label>
-                <ion-select [(ngModel)]="filtro.medida">
-                    <ion-option [value]="medida.cdmedida" *ngFor="let medida of sharingService.medidas | async" >
-                        {{ medida.descricao }}
+                <ion-select [(ngModel)]="filtro.medida">                    
+                    <ion-option [value]="medida.cdmedida" *ngFor="let medida of medidasFiltradas" >
+                        {{ medida.descricao + ' ' + medida.ml + ' ml' }}
                     </ion-option>
                 </ion-select>
             </ion-item>

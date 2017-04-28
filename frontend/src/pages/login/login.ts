@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Facebook, GooglePlus, NativeStorage } from 'ionic-native';
 import { NavController, LoadingController } from 'ionic-angular';
-import { Home } from '../home/home';
+import { TutorialPage } from '../../pages';
 import { Usuario } from '../../models/usuario';
 import { SharingService } from '../../services/sharing-service';
 
@@ -50,7 +50,7 @@ export class LoginPage {
         //now we have the users info, let's save it in the NativeStorage
         NativeStorage.setItem('user', usuario)
         .then(function(){          
-          nav.setRoot(Home);
+          nav.setRoot(TutorialPage);
         }, function (error) {
           console.log(error);
         })
@@ -102,7 +102,7 @@ export class LoginPage {
 
       NativeStorage.setItem('user', usuario)
       .then(function(){
-        nav.setRoot(Home);
+        nav.setRoot(TutorialPage);
       }, function (error) {
         console.log(error);
       })

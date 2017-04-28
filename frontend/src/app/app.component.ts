@@ -1,12 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, AlertController  } from 'ionic-angular';
 import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage, Deeplinks } from 'ionic-native';
-
-import { Home } from '../pages/home/home';
-import { ViewProdutoPage } from '../pages/produto/view-produto';
-import { LoginPage } from '../pages/login/login';
+import { Home, ViewProdutoPage, LoginPage, TutorialPage } from '../pages';
 import { SharingService } from '../services/sharing-service';
-//import { AuthService } from '../services/auth/auth.service';
 import { Usuario } from '../models/usuario';
 
 @Component({
@@ -15,29 +11,23 @@ import { Usuario } from '../models/usuario';
 export class MyApp {
 
   @ViewChild(Nav) nav: Nav;
-
   rootPage: any;
-
-  pages: Array<{title: string, component: any}>;
-  
+  pages: Array<{title: string, component: any}>;  
   disconnectSubscription: any;
-
   flVeioDoPush: boolean;
 
   constructor(public platform: Platform, 
               public sharingService: SharingService,
-              public alertCtrl: AlertController) {
-    
-    this.initializeApp();  
-    
+              public alertCtrl: AlertController) {    
+    this.initializeApp();    
     // watch network for a disconnect
     this.disconnectSubscription = Network.onDisconnect().subscribe(() => {
       this.openAlertNotInternet();
     }); 
   }
 
- initializeApp() {    
-    this.flVeioDoPush = false;   
+ initializeApp() {
+    this.flVeioDoPush = false;
     this.platform.ready().then(() => {
       //pega os produtos pela localizacao do usuario
       Geolocation.getCurrentPosition({timeout: 20000})
@@ -62,7 +52,7 @@ export class MyApp {
         }).catch((error) => {
             this.openAlertNotGeolocation();
         });
-
+      
       StatusBar.styleDefault();
       this.initPushNotification();      
       this.initDeeplink();
