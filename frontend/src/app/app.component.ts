@@ -79,7 +79,8 @@ export class MyApp {
 
     var push = Push.init({
         android: {
-          senderID: "449887022881"
+          senderID: "449887022881",
+          icon:"icon"
         },
         ios: {
           alert: "true",
@@ -91,6 +92,7 @@ export class MyApp {
 
       push.on('registration', (data) => {        
         this.sharingService.setDevicetoken(data.registrationId);
+        console.log("device token: "+data.registrationId);
       });
 
       push.on('notification', (data) => {
@@ -114,6 +116,7 @@ export class MyApp {
         } else {          
           self.flVeioDoPush = true;
           Splashscreen.hide();
+          //self.nav.insert(0, Home);
           self.nav.push(ViewProdutoPage, {codigo: json.codigo});
         }
       });

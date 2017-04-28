@@ -6,7 +6,7 @@
   "icons": [{
     "src": "assets/icon/favicon.ico",
     "sizes": "512x512",
-    "type": "image/png"
+    "type": "image/x-icon"
   }],
   "background_color": "#4e8ef7",
   "theme_color": "#4e8ef7"
