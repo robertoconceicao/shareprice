@@ -162,3 +162,7 @@ from medidapormarca mm
 join medida m on m.cdmedida = mm.cdmedida
 join marca ma on ma.cdmarca = mm.cdmarca
 where mm.cdmarca = 1
+
+-- Script para deletar registros menores q determinada data de publicacao
+--delete from produto where date_format(dtpublicacao,'%d/%m/%Y') < '21/04/2017';
+

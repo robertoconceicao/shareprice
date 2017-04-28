@@ -363,7 +363,7 @@ router.get('/api/produtos', function(req, res) {
             JOIN medida md ON md.cdmedida = p.cdmedida
             LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE p.preco > 0 ` + filtros + `
-        order by DATE(p.dtpublicacao) desc, p.preco asc
+        order by date_format(p.dtpublicacao,'%d/%m/%Y') desc, p.preco asc
         LIMIT 0 , ?
         `,[req.query.lat, req.query.lng, req.query.lat, req.query.distancia, LIMIT_RESULTADO],function(err,result){
             if(err) {
@@ -401,7 +401,7 @@ router.get('/api/filter', function(req, res) {
                 JOIN medida md ON md.cdmedida = p.cdmedida
                 LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE p.preco > 0 ` + filtros + `
-        order by DATE(p.dtpublicacao) desc, p.preco asc
+        order by date_format(p.dtpublicacao,'%d/%m/%Y') desc, p.preco asc
         LIMIT 0 , ?
         `,[req.query.lat, req.query.lng, req.query.lat, req.query.distancia, LIMIT_RESULTADO],function(err,result){
             if(err) {
@@ -439,7 +439,7 @@ router.get('/api/before_produtos', function(req, res) {
                 JOIN medida md ON md.cdmedida = p.cdmedida
                 LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE p.preco > 0 ` + filtros + `
-        order by DATE(p.dtpublicacao) desc, p.preco asc
+        order by date_format(p.dtpublicacao,'%d/%m/%Y') desc, p.preco asc
         LIMIT 0 , ?
         `,[req.query.lat, req.query.lng, req.query.lat, req.query.distancia, LIMIT_RESULTADO], function(err,result){
             if(err) {
@@ -478,7 +478,7 @@ router.get('/api/after_produtos', function(req, res) {
                 JOIN medida md ON md.cdmedida = p.cdmedida
                 LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE p.preco > 0 ` + filtros + `
-        order by DATE(p.dtpublicacao) desc, p.preco asc
+        order by date_format(p.dtpublicacao,'%d/%m/%Y') desc, p.preco asc
         LIMIT ? , ?
         `,[req.query.lat, req.query.lng, req.query.lat, req.query.distancia, posicao, LIMIT_RESULTADO], function(err,result){
             if(err) {
