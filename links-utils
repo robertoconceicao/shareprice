@@ -34,6 +34,16 @@ Aplica o ziper
 ./zipalign.exe -v 4 'D:\github\shareprice\frontend\platforms\android\build\outputs\apk\android-release-unsigned.apk' 'D:\github\shareprice\frontend\platforms\android\build\outputs\apk\geladas.apk'
 
 
+Gerar Hash para Facebook (1NGH63jXNBzbZSh5+DC1FqnqBu0=)
+keytool -exportcert -alias geladas -keystore geladas-release-key.keystore | openssl sha1 -binary | openssl base64
+
+Gerar Hash Google+
+keytool -exportcert -list -v -alias geladas -keystore geladas-release-key.keystore
+MD5:  A9:11:8E:34:F2:5A:E9:8A:0F:81:54:36:A1:84:73:45
+SHA1: D4:D1:87:EB:78:D7:34:1C:DB:65:28:79:F8:30:B5:16:A9:EA:06:ED
+SHA256: 93:A7:6C:AE:80:93:32:46:2D:38:7D:B1:C5:92:31:39:99:29:FC:2B:AE:DB:DA:A4:F5:C6:D4:A4:EA:EB:47:FC
+
+
 breve descricao
 Encontrar os preços das cerveja nos supermercados mais próximos de você.
 
