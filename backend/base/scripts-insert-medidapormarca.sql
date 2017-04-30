@@ -16,7 +16,9 @@ INSERT INTO `medida` (`cdmedida`, `descricao`, `ml`) VALUES
 (14, 'Long Neck', 343),
 (15, 'Garrafa', 550),
 (16, 'Long Neck', 275),
-(17, 'Lata', 355);
+(17, 'Lata', 355),
+(18, 'Long Neck', 330),
+(19,'Garrafinha',200);
 
 -- Insere medida por marca
 -- SKOL (1)
@@ -156,6 +158,51 @@ INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 5, 18);
 INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 7, 18);
 --INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 8, 18);
 
+-- Estrella Galicia (19)
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 2, 19);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 7, 19);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 18, 19);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 19, 19);
+
+-- Proibida (20)
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 1, 20);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 2, 20);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 3, 20);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 4, 20);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 5, 20);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 7, 20);
+
+-- Germânia 55 (21)
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 4, 21);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 18, 21);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 20, 21);
+
+-- Caracu (22)
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 4, 22);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 5, 22);
+
+-- Original (23)
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 2, 23);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 6, 23);
+
+-- Serramalte (24)
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 2, 24);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 6, 24);
+
+-- Polar Export (25)
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 1, 25);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 2, 25);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 3, 25);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 4, 25);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 5, 25);
+
+-- Quilmes (26)
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 21, 26);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 22, 26);
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 23, 26);
+
+-- Dado Bier (27)
+INSERT INTO medidapormarca(cdmedida, cdmarca) VALUES ( 3, 27);
 
 select ma.descricao, m.descricao, m.ml
 from medidapormarca mm
