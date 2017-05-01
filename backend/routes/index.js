@@ -21,28 +21,6 @@ var pool  = mysql.createPool({
     multipleStatements: true
  });
  
-/*
-    database:'geladas',
-AWS enviroment
-host     : process.env.RDS_HOSTNAME,
-user     : process.env.RDS_USERNAME,
-password : process.env.RDS_PASSWORD,
-port     : process.env.RDS_PORT
-
-//NA NUVEM
-
-var config = {
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-};
-
-if (process.env.INSTANCE_CONNECTION_NAME) {
-  config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
-}
-
-var pool  = mysql.createPool(config);    
-*/
-
 const API_GOOGLE_PLACE = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 const API_KEY='key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc';
 const TYPES='types=grocery_or_supermarket'; //https://developers.google.com/places/supported_types?hl=pt-br
@@ -363,7 +341,7 @@ router.get('/api/produtos', function(req, res) {
             JOIN medida md ON md.cdmedida = p.cdmedida
             LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE p.preco > 0 ` + filtros + `
-        order by date_format(p.dtpublicacao,'%d/%m/%Y') desc, p.preco asc
+        order by DATE(p.dtpublicacao) desc, p.preco asc
         LIMIT 0 , ?
         `,[req.query.lat, req.query.lng, req.query.lat, req.query.distancia, LIMIT_RESULTADO],function(err,result){
             if(err) {
@@ -401,7 +379,7 @@ router.get('/api/filter', function(req, res) {
                 JOIN medida md ON md.cdmedida = p.cdmedida
                 LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE p.preco > 0 ` + filtros + `
-        order by date_format(p.dtpublicacao,'%d/%m/%Y') desc, p.preco asc
+        order by DATE(p.dtpublicacao) desc, p.preco asc
         LIMIT 0 , ?
         `,[req.query.lat, req.query.lng, req.query.lat, req.query.distancia, LIMIT_RESULTADO],function(err,result){
             if(err) {
@@ -439,7 +417,7 @@ router.get('/api/before_produtos', function(req, res) {
                 JOIN medida md ON md.cdmedida = p.cdmedida
                 LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE p.preco > 0 ` + filtros + `
-        order by date_format(p.dtpublicacao,'%d/%m/%Y') desc, p.preco asc
+        order by DATE(p.dtpublicacao) desc, p.preco asc
         LIMIT 0 , ?
         `,[req.query.lat, req.query.lng, req.query.lat, req.query.distancia, LIMIT_RESULTADO], function(err,result){
             if(err) {
@@ -478,7 +456,7 @@ router.get('/api/after_produtos', function(req, res) {
                 JOIN medida md ON md.cdmedida = p.cdmedida
                 LEFT JOIN usuario u on u.cdusuario = p.cdusuario
         WHERE p.preco > 0 ` + filtros + `
-        order by date_format(p.dtpublicacao,'%d/%m/%Y') desc, p.preco asc
+        order by DATE(p.dtpublicacao) desc, p.preco asc
         LIMIT ? , ?
         `,[req.query.lat, req.query.lng, req.query.lat, req.query.distancia, posicao, LIMIT_RESULTADO], function(err,result){
             if(err) {

@@ -38,10 +38,8 @@ export class Home implements OnInit {
          .debounceTime(500)
          .distinctUntilChanged()
          .subscribe(search => {
-            if (search !== '' && search) {            
-                this.searchTerm = search;
-                this.filterItems();
-            }
+            this.searchTerm = search;
+            this.filterItems();
         });
 
      this.search = false;   
