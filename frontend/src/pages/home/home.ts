@@ -76,9 +76,6 @@ export class Home implements OnInit {
         isTesting: true,
         autoShow: true
      });
-     
-     this.admob.prepareInterstitial('ca-app-pub-6167102128376930/9203492607')
-        .then(() => { this.admob.showInterstitial(); });
    }
 
    clickSearch(){
