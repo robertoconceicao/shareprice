@@ -8,6 +8,7 @@ import { Produto } from '../../models/produto';
 import { Filtro } from '../../models/filtro';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
+import { AdMob }  from '@ionic-native/admob';
 
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/map';
@@ -32,7 +33,8 @@ export class Home implements OnInit {
 
    constructor(public navCtrl: NavController,
                public sharingService: SharingService,
-               public loadingCtrl: LoadingController) {
+               public loadingCtrl: LoadingController,
+               public admob: AdMob) {
      this.searchTermControl = new FormControl();
      this.searchTermControl.valueChanges
          .debounceTime(500)
@@ -61,10 +63,22 @@ export class Home implements OnInit {
        });
 
        this.carregandoPage();
+       this.createBanner();
    }
 
    ionViewWillEnter() {
       console.log("ionViewWillEnter HomePage");      
+   }
+
+   createBanner(){     
+     this.admob.createBanner({
+        adId: 'ca-app-pub-6167102128376930/5839727008',
+        isTesting: true,
+        autoShow: true
+     });
+     
+     this.admob.prepareInterstitial('ca-app-pub-6167102128376930/9203492607')
+        .then(() => { this.admob.showInterstitial(); });
    }
 
    clickSearch(){
