@@ -1,9 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, AlertController  } from 'ionic-angular';
-import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage, Deeplinks } from 'ionic-native';
-import { Home, ViewProdutoPage, LoginPage, TutorialPage } from '../pages';
+import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage, Deeplinks, Diagnostic } from 'ionic-native';
+import { Home, ViewProdutoPage, LoginPage } from '../pages';
 import { SharingService } from '../services/sharing-service';
-import { Usuario } from '../models/usuario';
+
+//Utilizado para tratar as resposta de verificacao do GPS
+const SUCCESS             = 0;
+const ERRO_GPS_DISABLED   = 1;
+const ERRO_NOT_AUTHORIZED = 2;
+
 
 @Component({
   templateUrl: 'app.html'
@@ -29,36 +34,70 @@ export class MyApp {
  initializeApp() {
     this.flVeioDoPush = false;
     this.platform.ready().then(() => {
-      //pega os produtos pela localizacao do usuario
-      Geolocation.getCurrentPosition({timeout: 20000})
-        .then((resp) => {
-            this.sharingService.setLat(resp.coords.latitude);
-            this.sharingService.setLng(resp.coords.longitude); 
-          
-            let env = this;
-            NativeStorage.getItem('user')
-              .then( function (usuario) {
-                env.sharingService.setCdusuario(usuario.cdusuario);
-                env.sharingService.insereUsuario(usuario);
-                // se o usuario esta entrando pelo push notification ele cai direto dentro da tela de ViewProdutoPage
-                if(!env.flVeioDoPush){
-                  env.nav.setRoot(Home);
+      
+    this.verificaGPSAtivo()
+      .then((resp) => {                
+        //pega os produtos pela localizacao do usuario
+        Geolocation.getCurrentPosition({timeout: 10000})
+          .then((resp) => {
+              this.sharingService.setLat(resp.coords.latitude);
+              this.sharingService.setLng(resp.coords.longitude); 
+            
+              let env = this;
+              NativeStorage.getItem('user')
+                .then( function (usuario) {
+                  env.sharingService.setCdusuario(usuario.cdusuario);
+                  env.sharingService.insereUsuario(usuario);
+                  // se o usuario esta entrando pelo push notification ele cai direto dentro da tela de ViewProdutoPage
+                  if(!env.flVeioDoPush){
+                    env.nav.setRoot(Home);
+                    Splashscreen.hide();
+                  }
+                }, function (error) {
+                  env.nav.setRoot(LoginPage);
                   Splashscreen.hide();
-                }
-              }, function (error) {
-                env.nav.setRoot(LoginPage);
-                Splashscreen.hide();
-              });
-        }).catch((error) => {
-            this.openAlertNotGeolocation();
-        });
+                });
+          }).catch((error) => {
+              // this.verificaGPSAtivo();
+              this.openAlertNotGeolocation("O Geladas não conseguiu pegar sua localização", "Por favor ligue sua localização e tente novamente.");
+          });
+      }).catch((error) => {
+        console.log("Error verificaGPSAtivo: "+error); 
+        if(error === ERRO_GPS_DISABLED){
+          this.openAlertNotGeolocation("O serviço de localização esta desligado", "Por favor ligue sua localização e tente novamente.");
+        } else {
+          this.openAlertNotGeolocation("Você deve permitir que o aplicativo pegue sua localização", "Por favor autorize o serviço de localização e tente novamente.");        
+        }
+      });
       
       StatusBar.styleDefault();
       this.initPushNotification();      
       this.initDeeplink();
     });
   }
-    
+
+  verificaGPSAtivo(): Promise<any> {
+    return new Promise((resolve, reject) => {
+        Diagnostic.isGpsLocationEnabled().then((enabled) => {
+          if(!enabled){            
+            reject(ERRO_GPS_DISABLED);
+          }
+        }).catch((error) => {
+          reject(ERRO_GPS_DISABLED);          
+        });
+
+        Diagnostic.isLocationAuthorized().then((enabled) => {
+          if(!enabled){
+            reject(ERRO_NOT_AUTHORIZED);            
+          } else {
+            resolve(SUCCESS);
+          }
+        }).catch((error) => {
+          reject(ERRO_NOT_AUTHORIZED);
+        });
+    });
+  }
+
   initDeeplink(){
     //This is the code who responds to the app deeplinks
     //Deeplinks if from Ionic Native
@@ -140,10 +179,10 @@ export class MyApp {
     alert.present();
   }
 
-  openAlertNotGeolocation(){
+  openAlertNotGeolocation(title: string, subTitle: string){
     let alert = this.alertCtrl.create({
-            title: "O serviço de localização esta desligado",
-            subTitle: "Por favor ligue sua localização e tente novamente.",
+            title: title,
+            subTitle: subTitle,
             buttons: [{
               text: 'Ok',
               handler: () => {

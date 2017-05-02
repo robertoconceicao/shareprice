@@ -7,8 +7,6 @@ import { Home, CadProdutoPage, FiltrosPage, ConfigPage,
 import { SharingService }         from '../services/sharing-service';
 import { MoedaRealPipe }          from '../pipes/moeda-real';
 
-import { AuthConfig, AuthHttp }   from 'angular2-jwt';
-import { Http }                   from '@angular/http';
 import { ProdutoItem, PrecoComponent } from '../componentes';
 import { AdMob }  from '@ionic-native/admob';
 

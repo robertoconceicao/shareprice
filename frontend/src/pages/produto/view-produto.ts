@@ -3,7 +3,7 @@ import { Produto }          from '../../models/produto';
 import { NavParams, NavController, ToastController, LoadingController, AlertController } from 'ionic-angular';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
-import { Geolocation, SocialSharing } from 'ionic-native';
+import { SocialSharing } from 'ionic-native';
 import { MapaPage } from '../mapa/mapa';
 import { NumberUtil } from '../../util/number-util';
 import { AdMob }  from '@ionic-native/admob';

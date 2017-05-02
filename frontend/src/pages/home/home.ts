@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef}  from '@angular/core';
+import { Component, OnInit, ViewChild}  from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NavController, LoadingController, Searchbar}  from 'ionic-angular';
 import { FiltrosPage }         from '../filtros/filtros';
