@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "449887022881-14gn3v02m0sbf9iif0l5qsrkrdpanhfp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.rdc.vivacerveja",
+            "certificate_hash": "d4d187eb78d7341cdb652879f830b516a9ea06ed"
+          }
+        },
+        {
           "client_id": "449887022881-480nmee2j5il8rt23vaq2hf7vrecdghb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

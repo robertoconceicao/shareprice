@@ -10,6 +10,7 @@ import { MoedaRealPipe }          from '../pipes/moeda-real';
 import { AuthConfig, AuthHttp }   from 'angular2-jwt';
 import { Http }                   from '@angular/http';
 import { ProdutoItem, PrecoComponent } from '../componentes';
+import { AdMob }  from '@ionic-native/admob';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { ProdutoItem, PrecoComponent } from '../componentes';
   ],
   providers: [
       {provide: ErrorHandler, useClass: IonicErrorHandler},
-      SharingService
+      SharingService,
+      AdMob
     ]
 })
 

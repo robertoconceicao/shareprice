@@ -6,6 +6,7 @@ import { AppSettings }  from '../../app/app-settings';
 import { Geolocation, SocialSharing } from 'ionic-native';
 import { MapaPage } from '../mapa/mapa';
 import { NumberUtil } from '../../util/number-util';
+import { AdMob }  from '@ionic-native/admob';
 
 @Component({
     selector: 'view-produto',
@@ -34,7 +35,8 @@ export class ViewProdutoPage {
                 public loadingCtrl: LoadingController,
                 public toastCtrl: ToastController,
                 public navCtrl: NavController,
-                public alertCtrl: AlertController){
+                public alertCtrl: AlertController,
+                public admob: AdMob){
 
         this.produto = new Produto();            
         this.codigo = this.navParams.get('codigo');        
@@ -58,6 +60,14 @@ export class ViewProdutoPage {
         this.flValidou = false;
         this.getQtdeValidarPreco();
         this.editarProduto();
+        this.createBanner();
+    }
+
+    createBanner(){     
+        this.admob.createBanner({
+            adId: 'ca-app-pub-6167102128376930/5839727008',
+            autoShow: true
+        });     
     }
 
     editarProduto(){
