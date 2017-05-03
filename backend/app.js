@@ -57,8 +57,11 @@ app.use(function (req, res, next) {
 // ROTAS ===============================================
 // Incluindo nossas rotas definidas no arquivo routes/index.js
 var index = require('./routes/index');
+var manager = require('./routes/manager');
+
 // definindo nossas rotas na aplicação
 app.use('/', index);
+app.use('/manager', manager);
 
 // LISTEN (iniciando nossa aplicação em node) ==========
 // Define a porta 8080 onde será executada nossa aplicação
