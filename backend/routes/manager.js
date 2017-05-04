@@ -28,12 +28,14 @@ const LIMIT_RESULTADO = 30;
 
 
 router.get('/usernoraio/:lat/:lng/:raio', getUsernoraio);
+router.get('/qtdeusernoraio/:lat/:lng/:raio', getQtdeUserNoRaio);
+router.get('/lojas/:lat/:lng/:raio', getLojas);
 
 function getUsernoraio(req, res){    
     let lat = req.params.lat;
     let lng = req.params.lng;
     let raio = Number.parseInt(req.params.raio) / 1000;
-    console.log("dados recebidos ", lat, lng, raio);
+    console.log("GET USERNORAIO recebidos ", lat, lng, raio);
     pool.getConnection(function(err, connection) {
         connection.query(`
             SELECT u.lat, u.lng, u.nome as label 
@@ -48,6 +50,53 @@ function getUsernoraio(req, res){
         
         `, [lat, lng, lat, raio], function(err, result){
             return res.status(200).json(result);
+        });
+        connection.release();
+    });
+}
+
+function getQtdeUserNoRaio(req, res){    
+    let lat = req.params.lat;
+    let lng = req.params.lng;
+    let raio = Number.parseInt(req.params.raio) / 1000;    
+    pool.getConnection(function(err, connection) {
+        connection.query(`
+            SELECT count(1) as qtde
+                FROM usuario u
+                where (6371 * acos(
+                            cos(radians(u.lat)) *
+                            cos(radians(?)) *
+                            cos(radians(u.lng) - radians(?)) +
+                            sin(radians(u.lat)) *
+                            sin(radians(?))
+                        )) <= ?
+        
+        `, [lat, lng, lat, raio], function(err, result){
+            return res.status(200).json(result);
+        });
+        connection.release();
+    });
+}
+
+function getLojas(req, res) {
+    let lat = req.params.lat;
+    let lng = req.params.lng;
+    let raio = Number.parseInt(req.params.raio) / 1000;
+    console.log("GET LOJAS dados recebidos ", lat, lng, raio);
+    pool.getConnection(function(err, connection) {
+        connection.query(`
+                SELECT l.lat, l.lng, l.nome as label, l.icon 
+                FROM loja l
+                where (6371 * acos(
+                            cos(radians(l.lat)) *
+                            cos(radians(?)) *
+                            cos(radians(l.lng) - radians(?)) +
+                            sin(radians(l.lat)) *
+                            sin(radians(?))
+                        )) <= ?
+
+                `,[lat, lng, lat, raio], function(err, result){
+                    return res.json(result);
         });
         connection.release();
     });

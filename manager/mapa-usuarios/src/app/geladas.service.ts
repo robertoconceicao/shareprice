@@ -17,6 +17,9 @@ interface marker {
 
 const MANAGER_ENDPOINT = 'http://localhost:3000/manager/';
 const GET_USER_NO_RAIO = "usernoraio";
+const GET_QTDE_USER_NO_RAIO = "qtdeusernoraio";
+const GET_LOJAS = "lojas";
+
 
 @Injectable()
 export class GeladasService {
@@ -32,6 +35,15 @@ export class GeladasService {
   getUserNoRaio(lat: any, lng: any, raio: any){
     let params: string = "/"+lat+"/"+lng+"/"+raio;
     return this.getHttp(MANAGER_ENDPOINT + GET_USER_NO_RAIO + params);
+  }
+  
+  getQtdeUserNoRaio(lat: any, lng: any, raio: any){
+    let params: string = "/"+lat+"/"+lng+"/"+raio;
+    return this.getHttp(MANAGER_ENDPOINT + GET_QTDE_USER_NO_RAIO + params);
+  }
+  getLojas(lat: any, lng: any, raio: any) {
+    let params: string = "/"+lat+"/"+lng+"/"+raio;
+    return this.getHttp(MANAGER_ENDPOINT + GET_LOJAS + params);            
   }
 
 
