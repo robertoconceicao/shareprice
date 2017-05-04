@@ -4,7 +4,7 @@
   "description": "Web Service para fornecer informações dos produtos anunciados pelos usuários",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",    
+    "start": "node app.js",
     "deploy": "eb deploy"
   },
   "author": "Roberto da Conceicao",
@@ -15,10 +15,11 @@
     "express-myconnection": "^1.0.4",
     "morgan": "^1.7.0",
     "mysql": "^2.12.0",
+    "node-deeplink": "^0.3.0",
     "node-gcm": "^0.14.4"
   },
-  "engines" : { 
-    "node" : "6.10.0",
-    "npm" : "3.10.10"
+  "engines": {
+    "node": "6.10.0",
+    "npm": "3.10.10"
   }
 }

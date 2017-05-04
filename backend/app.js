@@ -15,6 +15,9 @@ var https = require("https");
 //Push notification
 var gcm = require('node-gcm');
  
+//deeplink
+var deeplink = require('node-deeplink');
+
 // DEFININDO A APLICAÇÃO ==============================
 // definindo local de arquivos públicos
 // app.use(express.static(__dirname + '/public'));
@@ -53,6 +56,12 @@ app.use(function (req, res, next) {
     next();
 });
 
+//Define url para deeplink
+app.get('/deeplink', deeplink({ 
+    fallback: 'https://google.com',
+    android_package_name: 'br.com.rdc.vivacerveja', 
+    ios_store_link: 'https://todo',
+}));
 
 // ROTAS ===============================================
 // Incluindo nossas rotas definidas no arquivo routes/index.js

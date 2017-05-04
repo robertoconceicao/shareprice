@@ -78,21 +78,26 @@ export class MyApp {
 
   verificaGPSAtivo(): Promise<any> {
     return new Promise((resolve, reject) => {
-        Diagnostic.isGpsLocationEnabled().then((enabled) => {
-          if(!enabled){            
-            reject(ERRO_GPS_DISABLED);
-          }
-        }).catch((error) => {
-          reject(ERRO_GPS_DISABLED);          
-        });
-
-        Diagnostic.isLocationAuthorized().then((enabled) => {
-          if(!enabled){
-            reject(ERRO_NOT_AUTHORIZED);            
-          } else {
-            resolve(SUCCESS);
-          }
-        }).catch((error) => {
+        Diagnostic.requestLocationAuthorization()
+        .then((value) => {
+          Diagnostic.isGpsLocationEnabled().then((enabled) => {
+            if(!enabled){            
+              reject(ERRO_GPS_DISABLED);
+            }
+          }).catch((error) => {
+            reject(ERRO_GPS_DISABLED);          
+          });
+          
+          Diagnostic.isLocationAuthorized().then((enabled) => {
+            if(!enabled){
+              reject(ERRO_NOT_AUTHORIZED);            
+            } else {
+              resolve(SUCCESS);
+            }
+          }).catch((error) => {
+            reject(ERRO_NOT_AUTHORIZED);
+          });
+        }).catch((error)=>{
           reject(ERRO_NOT_AUTHORIZED);
         });
     });
