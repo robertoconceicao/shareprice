@@ -104,8 +104,20 @@ export class MyApp {
   }
 
   initDeeplink(){
+    Deeplinks.route({
+      '/produto/:codigo': ViewProdutoPage
+    }).subscribe((match) => {
+      // match.$route - the route we matched, which is the matched entry from the arguments to route()
+      // match.$args - the args passed in the link
+      // match.$link - the full link data
+      this.flVeioDoPush = true;
+      this.nav.setRoot(Home);
+      this.nav.push(ViewProdutoPage, {codigo: match.$args.codigo});      
+    }, (nomatch) => {      
+    });
     //This is the code who responds to the app deeplinks
     //Deeplinks if from Ionic Native
+    /*
     Deeplinks.routeWithNavController(this.nav, {
         '/produto/:codigo': ViewProdutoPage
       }).subscribe((match) => {
@@ -113,6 +125,7 @@ export class MyApp {
       }, (nomatch) => {
         console.log('Unmatched Route', nomatch);
       });      
+      */
   }
 
   initPushNotification(){
@@ -160,7 +173,7 @@ export class MyApp {
         } else {          
           self.flVeioDoPush = true;
           Splashscreen.hide();
-          //self.nav.insert(0, Home);
+          self.nav.setRoot(Home);
           self.nav.push(ViewProdutoPage, {codigo: json.codigo});
         }
       });

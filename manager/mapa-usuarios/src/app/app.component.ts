@@ -22,21 +22,26 @@ export class AppComponent {
 	lojas: marker[];
 	iconLoja: string = "/assets/icon/supermarket.png";
 	iconUsuario: string = "/assets/icon/user.png";
+	flUsuario: boolean = true;
 
 	constructor(public gService: GeladasService){
 		this.buscaQtdeUsuario(this.lat, this.lng);
 		this.buscaLojas(this.lat, this.lng);
+
+		this.buscaDadosUsuario(this.lat, this.lng);
 	}
 
 	buscaDadosUsuario(lat: any, lng: any){
-		this.gService.getUserNoRaio(lat, lng, this.radius)
-			.then((dados) => {
-				this.usuarios = dados;
-				this.lat = lat;
-				this.lng = lng;
-			}).catch((error) => {
-				console.log("Error: "+error);
-			});
+		if(this.flUsuario){
+			this.gService.getUserNoRaio(lat, lng, this.radius)
+				.then((dados) => {
+					this.usuarios = dados;
+					this.lat = lat;
+					this.lng = lng;
+				}).catch((error) => {
+					console.log("Error: "+error);
+				});
+		}
 	}
 
 	buscaQtdeUsuario(lat: any, lng: any){
@@ -60,10 +65,12 @@ export class AppComponent {
   onChangedRadius($event) {
     this.radius = $event;
 		this.buscaQtdeUsuario(this.lat, this.lng);
+		this.buscaDadosUsuario(this.lat, this.lng);
 		this.buscaLojas(this.lat, this.lng);
   }
 
   eventoDragEnd($event: MouseEvent) {    		
+		this.buscaDadosUsuario($event['coords'].lat, $event['coords'].lng);
 		this.buscaQtdeUsuario($event['coords'].lat, $event['coords'].lng);		
 		this.buscaLojas($event['coords'].lat, $event['coords'].lng);
   }

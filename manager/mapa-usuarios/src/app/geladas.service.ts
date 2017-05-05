@@ -15,7 +15,7 @@ interface marker {
 	draggable: boolean;
 }
 
-const MANAGER_ENDPOINT = 'http://localhost:3000/manager/';
+const MANAGER_ENDPOINT = 'http://node-express-geladas.misais4yjc.us-west-2.elasticbeanstalk.com/manager/';
 const GET_USER_NO_RAIO = "usernoraio";
 const GET_QTDE_USER_NO_RAIO = "qtdeusernoraio";
 const GET_LOJAS = "lojas";

@@ -7,19 +7,19 @@
       [disableDefaultUI]="false"
       [zoomControl]="false">
 
-<!--    
+
       <sebm-google-map-marker 
           *ngFor="let usuario of usuarios"
           [latitude]="usuario.lat"
           [longitude]="usuario.lng"
-          [iconUrl]="iconUsuario">
+          >
           
         <sebm-google-map-info-window>
           <strong>{{usuario.label}}</strong>
         </sebm-google-map-info-window>
         
       </sebm-google-map-marker>
--->      
+<!--
       <sebm-google-map-marker 
           *ngFor="let loja of lojas"
           [latitude]="loja.lat"
@@ -31,6 +31,7 @@
         </sebm-google-map-info-window>
         
       </sebm-google-map-marker>
+-->
 
       <sebm-google-map-circle [latitude]="lat" [longitude]="lng" 
           [radius]="radius"
