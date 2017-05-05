@@ -109,7 +109,7 @@ export class MyApp {
     Deeplinks.routeWithNavController(this.nav, {
         '/produto/:codigo': ViewProdutoPage
       }).subscribe((match) => {
-        console.log('Successfully routed', match);
+        console.log('Successfully routed', match);        
       }, (nomatch) => {
         console.log('Unmatched Route', nomatch);
       });      

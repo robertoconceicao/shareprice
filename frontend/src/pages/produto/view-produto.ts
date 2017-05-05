@@ -47,6 +47,7 @@ export class ViewProdutoPage {
         this.sharingService.lng.subscribe(lng=>{
             this.lng = lng;
         });
+        console.log('ViewProdutoPage codigo: ',this.codigo);
     }
 
     ionViewDidLoad() {
@@ -128,7 +129,7 @@ export class ViewProdutoPage {
     }
 
     shareProduto() {
-        let message = this.formataShareMessage();                    
+        let message = this.formataShareMessage();     
         SocialSharing.share(message, "Promoção de Cerveja", "www/"+this.pathImagem(), null)
             .then(resp => {
                 console.log("Funcionou o compartilhamento... "+ resp);
@@ -143,7 +144,7 @@ export class ViewProdutoPage {
         + ' ' + this.produto.medida.descricaoML 
         + ' R$ ' + NumberUtil.formataMoeda(this.produto.preco)
         + ' ' + this.produto.loja.nome
-        + ' geladas://produto/'+this.produto.codigo;
+        + ' https://geladas.com/produto/'+this.produto.codigo;
     }
 
     pathImagem(){
