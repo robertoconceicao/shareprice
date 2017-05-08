@@ -34,7 +34,8 @@ export class ConfigPage implements OnInit {
   ionViewDidLoad() {
     console.log('ionViewDidLoad ConfigPage');
     this.loading = this.loadingCtrl.create({
-      content: 'Carregando configurações...'
+      spinner: 'crescent',
+      showBackdrop: false
     });
     this.loading.present();
   }

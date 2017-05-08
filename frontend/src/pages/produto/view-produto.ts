@@ -62,7 +62,7 @@ export class ViewProdutoPage {
         if(!this.produto){
             console.log('ionViewDidLoad ViewProdutoPage');
             this.loading = this.loadingCtrl.create({
-                content: 'Carregando informações...'
+                spinner: 'crescent'
             });
             this.loading.present();
             this.carregaProdutoByCodigo();

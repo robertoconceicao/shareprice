@@ -75,7 +75,8 @@ export class LoginPage {
   doGoogleLogin(){
     let nav = this.navCtrl;
     let loading = this.loadingCtrl.create({
-      content: 'Aguarde...'
+      spinner: 'crescent',
+      showBackdrop: false
     });
     loading.present();
 

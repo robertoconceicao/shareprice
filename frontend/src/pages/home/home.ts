@@ -94,7 +94,8 @@ export class Home implements OnInit {
 
    carregandoPage(){
        this.loading = this.loadingCtrl.create({
-            content: 'Carregando ...'
+            spinner: 'crescent',
+            showBackdrop: false
         });
 
         this.loading.present();
