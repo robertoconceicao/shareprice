@@ -32,7 +32,7 @@ export class ProdutoItem {
    constructor(public navCtrl: NavController) { }
     
    itemSelected(){
-       this.navCtrl.push(ViewProdutoPage, {codigo: this.produto.codigo});
+       this.navCtrl.push(ViewProdutoPage, {produto: this.produto});
    }
 
    precoPorlitro(){

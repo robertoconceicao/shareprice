@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { Produto }          from '../../models/produto';
 import { NavParams, NavController, ToastController, LoadingController, AlertController } from 'ionic-angular';
 import { SharingService } from '../../services/sharing-service';
-import { AppSettings }  from '../../app/app-settings';
 import { SocialSharing } from 'ionic-native';
 import { MapaPage } from '../mapa/mapa';
 import { NumberUtil } from '../../util/number-util';
+import { AppSettings }  from '../../app/app-settings';
 
 @Component({
     selector: 'view-produto',
@@ -36,8 +36,15 @@ export class ViewProdutoPage {
                 public navCtrl: NavController,
                 public alertCtrl: AlertController){
 
-        this.produto = new Produto();            
-        this.codigo = this.navParams.get('codigo');        
+        this.produto = new Produto();
+        this.produto = this.navParams.get('produto');
+
+        if(!this.produto){
+            this.codigo = this.navParams.get('codigo');
+        } else {
+            this.codigo = this.produto.codigo;
+        }
+
         this.urlMapa = "https://www.google.com.br/maps/dir/";
 
         this.sharingService.lat.subscribe(lat=>{
@@ -46,24 +53,25 @@ export class ViewProdutoPage {
 
         this.sharingService.lng.subscribe(lng=>{
             this.lng = lng;
-        });
-        console.log('ViewProdutoPage codigo: ',this.codigo);
+        });        
     }
 
     ionViewDidLoad() {
-        console.log('ionViewDidLoad ViewProdutoPage');
-        this.loading = this.loadingCtrl.create({
-            content: 'Carregando informações...'
-        });
-        this.loading.present();
         this.flValidou = false;
         this.getQtdeValidarPreco();
-        this.editarProduto();        
+        if(!this.produto){
+            console.log('ionViewDidLoad ViewProdutoPage');
+            this.loading = this.loadingCtrl.create({
+                content: 'Carregando informações...'
+            });
+            this.loading.present();
+            this.carregaProdutoByCodigo();
+        } else {
+            this.editarProduto();
+        }
     }
 
-    
-
-    editarProduto(){
+    carregaProdutoByCodigo(){
         this.sharingService.findProdutoById(this.codigo)
             .then(produto => {
                 this.produto = AppSettings.convertToProduto(produto[0]);
@@ -73,7 +81,7 @@ export class ViewProdutoPage {
                 
                 this.urlMapa = this.urlMapa + origem + "/" +destino;
 
-                this.sharingService.getUserJaValidouPreco(this.produto.codigo)
+                this.sharingService.getUserJaValidouPreco(this.codigo)
                     .then(dados => {
                         this.flValidou = dados.length > 0;
                         this.loading.dismiss();
@@ -88,13 +96,25 @@ export class ViewProdutoPage {
             });
     }
 
-    validarPreco(opcao){
-        this.loading = this.loadingCtrl.create({
-            content: 'Enviando informação...'
-        });
-        this.loading.present(); 
+    editarProduto(){                
+        let origem =  this.lat + ","+ this.lng;
+        let destino = this.produto.loja.lat + ","+this.produto.loja.lng;
+        
+        this.urlMapa = this.urlMapa + origem + "/" +destino;
 
-        this.sharingService.validarPreco(this.produto.codigo, opcao)
+        this.sharingService.getUserJaValidouPreco(this.codigo)
+            .then(dados => {
+                this.flValidou = dados.length > 0;               
+            }).catch(error => {
+                this.presentToast("Erro ao conectart com o servidor, verifique sua conexão com a internet.");
+            });
+    }
+
+    validarPreco(opcao){
+        this.loading = this.loadingCtrl.create();
+        this.loading.present();
+
+        this.sharingService.validarPreco(this.codigo, opcao)
             .then(dados => {
                 this.loading.dismiss();
                 this.getQtdeValidarPreco();
@@ -144,7 +164,7 @@ export class ViewProdutoPage {
         + ' ' + this.produto.medida.descricaoML 
         + ' R$ ' + NumberUtil.formataMoeda(this.produto.preco)
         + ' ' + this.produto.loja.nome
-        + ' https://geladas.com/produto/'+this.produto.codigo;
+        + ' https://geladas.com/produto/'+this.codigo;
     }
 
     pathImagem(){

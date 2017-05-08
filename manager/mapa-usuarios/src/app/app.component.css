@@ -1,4 +1,20 @@
 .sebm-google-map-container {
-  height: 900px;
-  width: 70%;
+  height: 900px;  
+}
+
+.container {
+  width: 100%;
+  height: 100%;  
+}
+
+.divMap {
+  width: auto;
+  border: 1px solid;  
+  overflow: hidden;
+}
+
+.divForm {
+  float: right;  
+  border: 1px solid;
+  width: 30%;
 }

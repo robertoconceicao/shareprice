@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -15,7 +16,7 @@ import { AgmCoreModule } from 'angular2-google-maps/core';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule, 
+    HttpModule,    
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDoEv_-7dw4vRJ0WUU_Uwreq6SvvshV0Qg'
     })

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, ToastController, LoadingController, ModalController, AlertController  } from 'ionic-angular';
+import { NavController, NavParams, ToastController, ModalController, AlertController  } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
 import { Medida, Produto, Loja } from '../../models';
 
@@ -19,8 +19,7 @@ var self;
 export class CadProdutoPage implements OnInit {
   public produto: Produto;
   public lat: any;
-  public lng: any;  
-  public loading: any;  
+  public lng: any;
   public lojas: Array<Loja> = [];  
   public medidas: Array<Medida> = [];
   public medidasFiltradas: Array<Medida> = [];
@@ -28,15 +27,13 @@ export class CadProdutoPage implements OnInit {
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               public toastCtrl: ToastController,
-              public sharingService: SharingService,
-              public loadingCtrl: LoadingController,
+              public sharingService: SharingService,              
               public modalCtrl: ModalController,
               public alertCtrl: AlertController) {
     self = this;
   }
 
-  ngOnInit(): void {
-    console.log("ngOnInit ...");
+  ngOnInit(): void {    
     this.produto = new Produto();
 
     this.sharingService.marcas.subscribe(marcas => {
@@ -53,19 +50,11 @@ export class CadProdutoPage implements OnInit {
     this.medidasFiltradas = new Array<Medida>();
   }
 
-  ionViewDidLoad() {
-    console.log("ionViewDidLoad ...");
-    
-    this.loading = this.loadingCtrl.create({
-      content: 'Carregando informações...'
-    });
-
-    this.loading.present();
-    
+  ionViewDidLoad() {    
     this.filtraMedidas();
 
     this.buscarIconeCerveja();
-    // get localizacao do usuario
+
     this.getLojasByLocation();   
   }
 
@@ -73,9 +62,8 @@ export class CadProdutoPage implements OnInit {
     var medidaspormarcas = this.sharingService.medidaspormarcas;
     var _medidas = new Array<number>();
     for(let i=0; i < medidaspormarcas.length; i++){
-      if(!!self.produto && medidaspormarcas[i].cdmarca == self.produto.marca.cdmarca){
-        console.log("callbackFiltroMarca: "+medidaspormarcas[i].cdmarca);
-        _medidas = medidaspormarcas[i].medidas; //retorna um array de cdmedidas configurados por marca
+      if(!!self.produto && medidaspormarcas[i].cdmarca == self.produto.marca.cdmarca){        
+        _medidas = medidaspormarcas[i].medidas;
         break;
       }
     }
@@ -88,8 +76,7 @@ export class CadProdutoPage implements OnInit {
         }
       }
     }
-    self.produto.medida.cdmedida = this.medidasFiltradas[0].cdmedida;
-    console.log("medidasAsermostradas: "+JSON.stringify(this.medidasFiltradas));    
+    self.produto.medida.cdmedida = this.medidasFiltradas[0].cdmedida;    
   }
 
   postar(): void {
@@ -164,12 +151,10 @@ export class CadProdutoPage implements OnInit {
 
             if(!!lojas && lojas.length > 0){
               this.produto.loja = this.lojas[0];
-            }
-            this.loading.dismiss();
+            }            
           })
           .catch((error) => {
-              console.log('Error ao tentar buscar lojas', error);
-              this.loading.dismiss();
+              console.log('Error ao tentar buscar lojas', error);             
               let alert = this.alertCtrl.create({
                       title: "O serviço de localização esta desligado",
                       subTitle: "Por favor ligue sua localização e tente novamente.",
@@ -183,8 +168,7 @@ export class CadProdutoPage implements OnInit {
               alert.present();
           })
     }).catch((error) => {
-      console.log('Error getting location', error);
-      this.loading.dismiss();
+      console.log('Error getting location', error);      
       this.goBack();
     });
   }

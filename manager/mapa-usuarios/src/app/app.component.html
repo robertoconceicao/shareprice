@@ -1,45 +1,63 @@
-<h1>latitude: {{lat}} longitude: {{lng}} raio: {{radius/1000}} quantide de usuarios: {{qtdeUsuario}}</h1>
+<table>
+  <tr>
+    <td style="width: 80%">
+      <h1>latitude: {{lat}} longitude: {{lng}} raio: {{radius/1000}} quantide de usuarios: {{qtdeUsuario}}</h1>
 
-<sebm-google-map 
-      [latitude]="-27.6210716"
-      [longitude]="-48.6739947"
-      [zoom]="zoom"
-      [disableDefaultUI]="false"
-      [zoomControl]="false">
+      <sebm-google-map 
+            [latitude]="-27.6210716"
+            [longitude]="-48.6739947"
+            [zoom]="zoom"
+            [disableDefaultUI]="false"
+            [zoomControl]="false">
 
 
-      <sebm-google-map-marker 
-          *ngFor="let usuario of usuarios"
-          [latitude]="usuario.lat"
-          [longitude]="usuario.lng"
-          >
-          
-        <sebm-google-map-info-window>
-          <strong>{{usuario.label}}</strong>
-        </sebm-google-map-info-window>
-        
-      </sebm-google-map-marker>
-<!--
-      <sebm-google-map-marker 
-          *ngFor="let loja of lojas"
-          [latitude]="loja.lat"
-          [longitude]="loja.lng"
-          [iconUrl]="iconLoja">
-          
-        <sebm-google-map-info-window>
-          <strong>{{loja.label}}</strong>
-        </sebm-google-map-info-window>
-        
-      </sebm-google-map-marker>
--->
+            <sebm-google-map-marker 
+                *ngFor="let usuario of usuarios"
+                [latitude]="usuario.lat"
+                [longitude]="usuario.lng"
+                >
+                
+              <sebm-google-map-info-window>
+                <strong>{{usuario.label}}</strong>
+              </sebm-google-map-info-window>
+              
+            </sebm-google-map-marker>
 
-      <sebm-google-map-circle [latitude]="lat" [longitude]="lng" 
-          [radius]="radius"
-          (radiusChange)="onChangedRadius($event)"
-          [fillColor]="'red'"
-          [circleDraggable]="true"
-          [editable]="true"
-          (dragEnd)="eventoDragEnd($event);">
-      </sebm-google-map-circle>
+            <sebm-google-map-marker           
+                [latitude]="operador.lat"
+                [longitude]="operador.lng"          
+                [label]="operador.label"
+                [markerDraggable]="true"
+                (dragEnd)="operadorDragEnd($event)"
+                >
+            </sebm-google-map-marker>
+      <!--
+            <sebm-google-map-marker 
+                *ngFor="let loja of lojas"
+                [latitude]="loja.lat"
+                [longitude]="loja.lng"
+                [iconUrl]="iconLoja">
+                
+              <sebm-google-map-info-window>
+                <strong>{{loja.label}}</strong>
+              </sebm-google-map-info-window>
+              
+            </sebm-google-map-marker>
+      -->
 
-    </sebm-google-map>
+            <sebm-google-map-circle [latitude]="lat" [longitude]="lng" 
+                [radius]="radius"
+                (radiusChange)="onChangedRadius($event)"
+                [fillColor]="'red'"
+                [circleDraggable]="true"
+                [editable]="true"
+                (dragEnd)="eventoDragEnd($event);">
+            </sebm-google-map-circle>
+
+          </sebm-google-map>
+    </td>
+    <td>
+      teste form
+    </td>
+  </tr>
+</table>

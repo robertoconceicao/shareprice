@@ -22,13 +22,20 @@ export class AppComponent {
 	lojas: marker[];
 	iconLoja: string = "/assets/icon/supermarket.png";
 	iconUsuario: string = "/assets/icon/user.png";
-	flUsuario: boolean = true;
+	flUsuario: boolean = false;
+	
+	operador: any;
 
 	constructor(public gService: GeladasService){
 		this.buscaQtdeUsuario(this.lat, this.lng);
 		this.buscaLojas(this.lat, this.lng);
 
 		this.buscaDadosUsuario(this.lat, this.lng);
+		this.operador = {
+			lat: -27.6210716,
+			lng: -48.6739947,
+			label: 'Eu'		
+		};
 	}
 
 	buscaDadosUsuario(lat: any, lng: any){
@@ -74,6 +81,10 @@ export class AppComponent {
 		this.buscaQtdeUsuario($event['coords'].lat, $event['coords'].lng);		
 		this.buscaLojas($event['coords'].lat, $event['coords'].lng);
   }
+
+	operadorDragEnd($event: MouseEvent) {
+		console.log("operadorDragEnd: ", $event['coords'].lat, $event['coords'].lng);
+	}
 }
 
 // just an interface for type safety.
