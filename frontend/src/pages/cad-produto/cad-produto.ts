@@ -23,6 +23,7 @@ export class CadProdutoPage implements OnInit {
   public lojas: Array<Loja> = [];  
   public medidas: Array<Medida> = [];
   public medidasFiltradas: Array<Medida> = [];
+  public isBusy: boolean = true;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -145,15 +146,18 @@ export class CadProdutoPage implements OnInit {
       this.lat = resp.coords.latitude;
       this.lng = resp.coords.longitude;
 
+      this.isBusy = true;
       this.sharingService.findLojasByLocation(this.lat, this.lng)
           .then(lojas => {
             this.lojas = lojas;
 
             if(!!lojas && lojas.length > 0){
               this.produto.loja = this.lojas[0];
-            }            
+            }
+            this.isBusy = false;
           })
           .catch((error) => {
+              this.isBusy = false;
               console.log('Error ao tentar buscar lojas', error);             
               let alert = this.alertCtrl.create({
                       title: "O serviço de localização esta desligado",

@@ -51,11 +51,16 @@
             <ion-list-header>
                 <h2>Estabelecimento</h2>
             </ion-list-header>
-
-            <ion-item (click)="changeLoja()">
+            
+            
+            <ion-item *ngIf="!isBusy" (click)="changeLoja()">
                 <ion-icon name="basket" item-left large></ion-icon>
                 <h2>{{produto.loja.nome}}</h2>
                 <p>{{produto.loja.vicinity}}</p>
+            </ion-item>
+            
+            <ion-item *ngIf="isBusy" class="center">
+                <ion-spinner  name="crescent"> </ion-spinner>
             </ion-item>
         </ion-list>
 
