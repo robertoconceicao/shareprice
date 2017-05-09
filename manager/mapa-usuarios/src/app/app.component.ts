@@ -3,6 +3,30 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { GeladasService } from './geladas.service';
 
+interface Codigodescricao {
+    codigo: number;
+    descricao: string;
+}
+
+interface marker {
+	lat: number;
+	lng: number;
+	label: string;
+	icon?: string;
+}
+
+interface Produto {
+    codigo: number;
+    cdloja: number;
+    cdtipo: number;
+    cdmarca: number;
+    cdmedida: number;
+    preco: string;    
+    dtpublicacao: Date;
+    icon: string;
+    cdusuario: number;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -25,6 +49,10 @@ export class AppComponent {
 	flUsuario: boolean = false;
 	
 	operador: any;
+	produto: Produto;
+	marcas: Codigodescricao[];
+	medidas: Codigodescricao[];
+	tipos: Codigodescricao[];
 
 	constructor(public gService: GeladasService){
 		this.buscaQtdeUsuario(this.lat, this.lng);
@@ -35,6 +63,18 @@ export class AppComponent {
 			lat: -27.6210716,
 			lng: -48.6739947,
 			label: 'Eu'		
+		};
+
+		this.produto = {
+			codigo: 0,
+			cdloja: 0,
+			cdtipo: 0,
+			cdmarca: 0,
+			cdmedida: 0,
+			preco: '',    
+			dtpublicacao: null,
+			icon: '',
+			cdusuario: 0
 		};
 	}
 
@@ -85,12 +125,4 @@ export class AppComponent {
 	operadorDragEnd($event: MouseEvent) {
 		console.log("operadorDragEnd: ", $event['coords'].lat, $event['coords'].lng);
 	}
-}
-
-// just an interface for type safety.
-interface marker {
-	lat: number;
-	lng: number;
-	label: string;
-	icon?: string;
 }

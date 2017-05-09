@@ -31,7 +31,7 @@
                 (dragEnd)="operadorDragEnd($event)"
                 >
             </sebm-google-map-marker>
-      <!--
+      
             <sebm-google-map-marker 
                 *ngFor="let loja of lojas"
                 [latitude]="loja.lat"
@@ -40,10 +40,8 @@
                 
               <sebm-google-map-info-window>
                 <strong>{{loja.label}}</strong>
-              </sebm-google-map-info-window>
-              
-            </sebm-google-map-marker>
-      -->
+              </sebm-google-map-info-window>              
+            </sebm-google-map-marker>      
 
             <sebm-google-map-circle [latitude]="lat" [longitude]="lng" 
                 [radius]="radius"
@@ -57,7 +55,42 @@
           </sebm-google-map>
     </td>
     <td>
-      teste form
+      <div class="container">
+          <h1>Publicar Preço</h1>
+          <form>
+            <div class="form-group">
+              <label for="name">Marca</label>
+              <select [(ngModel)]="produto.cdmarca" name="cdmarca">
+                  <option [value]="marca.codigo" *ngFor="let marca of gService.marcas | async">
+                      {{ marca.descricao }}
+                  </option>
+              </select>              
+            </div>
+            <div class="form-group">
+              <label for="name">Tipo</label>
+              <select [(ngModel)]="produto.cdtipo" name="cdtipo">
+                  <option [value]="tipo.codigo" *ngFor="let tipo of gService.tipos | async">
+                      {{ tipo.descricao }}
+                  </option>
+              </select>              
+            </div>
+            <div class="form-group">
+              <label for="name">Medida</label>
+              <select [(ngModel)]="produto.cdmedida" name="cdmedida">
+                  <option [value]="medida.codigo" *ngFor="let medida of gService.medidas | async">
+                      {{ medida.descricao + ' ' + medida.ml + ' ml' }}
+                  </option>
+              </select>              
+            </div>
+            <div>
+              <label for="name">Preço R$</label>
+              <input [ngModel]="produto.preco" type="text" name="preco">
+            </div>
+            <p>
+              <button type="submit" class="btn btn-success">Publicar</button>
+            </p>
+          </form>
+      </div>
     </td>
   </tr>
 </table>
