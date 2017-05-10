@@ -85,7 +85,7 @@ function getLojas(req, res) {
     console.log("GET LOJAS dados recebidos ", lat, lng, raio);
     pool.getConnection(function(err, connection) {
         connection.query(`
-                SELECT l.lat, l.lng, l.nome as label, l.icon 
+                SELECT l.lat, l.lng, l.nome as label, l.icon, l.cdloja 
                 FROM loja l
                 where (6371 * acos(
                             cos(radians(l.lat)) *

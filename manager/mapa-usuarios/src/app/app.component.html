@@ -14,16 +14,13 @@
             <sebm-google-map-marker 
                 *ngFor="let usuario of usuarios"
                 [latitude]="usuario.lat"
-                [longitude]="usuario.lng"
-                >
-                
+                [longitude]="usuario.lng">                
               <sebm-google-map-info-window>
                 <strong>{{usuario.label}}</strong>
-              </sebm-google-map-info-window>
-              
+              </sebm-google-map-info-window>              
             </sebm-google-map-marker>
 
-            <sebm-google-map-marker           
+            <sebm-google-map-marker
                 [latitude]="operador.lat"
                 [longitude]="operador.lng"          
                 [label]="operador.label"
@@ -51,44 +48,58 @@
                 [editable]="true"
                 (dragEnd)="eventoDragEnd($event);">
             </sebm-google-map-circle>
-
           </sebm-google-map>
     </td>
+
     <td>
-      <div class="container">
-          <h1>Publicar Preço</h1>
-          <form>
+      <div class="container">          
+          <form (ngSubmit)="postar()">
+            <h1>Publicar Preço</h1>
             <div class="form-group">
               <label for="name">Marca</label>
-              <select [(ngModel)]="produto.cdmarca" name="cdmarca">
-                  <option [value]="marca.codigo" *ngFor="let marca of gService.marcas | async">
+              <select [(ngModel)]="produto.cdmarca" name="cdmarca" class="form-control">
+                  <option [value]="marca.cdmarca" *ngFor="let marca of gService.marcas | async">
                       {{ marca.descricao }}
                   </option>
               </select>              
             </div>
             <div class="form-group">
               <label for="name">Tipo</label>
-              <select [(ngModel)]="produto.cdtipo" name="cdtipo">
-                  <option [value]="tipo.codigo" *ngFor="let tipo of gService.tipos | async">
+              <select [(ngModel)]="produto.cdtipo" name="cdtipo" class="form-control">
+                  <option [value]="tipo.cdtipo" *ngFor="let tipo of gService.tipos | async">
                       {{ tipo.descricao }}
                   </option>
               </select>              
             </div>
             <div class="form-group">
               <label for="name">Medida</label>
-              <select [(ngModel)]="produto.cdmedida" name="cdmedida">
-                  <option [value]="medida.codigo" *ngFor="let medida of gService.medidas | async">
+              <select [(ngModel)]="produto.cdmedida" name="cdmedida" class="form-control">
+                  <option [value]="medida.cdmedida" *ngFor="let medida of gService.medidas | async">
                       {{ medida.descricao + ' ' + medida.ml + ' ml' }}
                   </option>
               </select>              
             </div>
+            <div class="form-group">
+              <label for="name">Estabelecimento</label>
+              <select [(ngModel)]="produto.cdloja" name="cdloja" class="form-control">
+                  <option [value]="loja.cdloja" *ngFor="let loja of lojas">
+                      {{ loja.label }}
+                  </option>
+              </select>
+            </div>
             <div>
               <label for="name">Preço R$</label>
-              <input [ngModel]="produto.preco" type="text" name="preco">
+              <input [(ngModel)]="produto.preco" type="text" name="preco" class="form-control">
             </div>
-            <p>
-              <button type="submit" class="btn btn-success">Publicar</button>
-            </p>
+            
+            <br />
+
+            <div class="right">                        
+              <button type="submit" class="btn btn-primary" >
+                Publicar
+              </button>
+            </div>
+            <alert *ngIf="msg" type="success" dismissible="true">Produto cadastrado com sucesso</alert>
           </form>
       </div>
     </td>

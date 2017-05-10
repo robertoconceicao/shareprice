@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { GeladasService } from './geladas.service';
 
 import { AgmCoreModule } from 'angular2-google-maps/core';
+import { AlertModule } from 'ngx-bootstrap';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { AgmCoreModule } from 'angular2-google-maps/core';
     BrowserModule,
     FormsModule,
     HttpModule,    
+    AlertModule.forRoot(),
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDoEv_-7dw4vRJ0WUU_Uwreq6SvvshV0Qg'
     })

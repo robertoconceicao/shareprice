@@ -3,16 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { GeladasService } from './geladas.service';
 
-interface Codigodescricao {
-    codigo: number;
-    descricao: string;
-}
-
 interface marker {
 	lat: number;
 	lng: number;
 	label: string;
 	icon?: string;
+	cdloja?: string;
 }
 
 interface Produto {
@@ -50,15 +46,16 @@ export class AppComponent {
 	
 	operador: any;
 	produto: Produto;
-	marcas: Codigodescricao[];
-	medidas: Codigodescricao[];
-	tipos: Codigodescricao[];
+	marcas: any[];
+	medidas: any[];
+	tipos: any[];
+	msg: string;
 
 	constructor(public gService: GeladasService){
 		this.buscaQtdeUsuario(this.lat, this.lng);
 		this.buscaLojas(this.lat, this.lng);
-
 		this.buscaDadosUsuario(this.lat, this.lng);
+
 		this.operador = {
 			lat: -27.6210716,
 			lng: -48.6739947,
@@ -67,15 +64,16 @@ export class AppComponent {
 
 		this.produto = {
 			codigo: 0,
-			cdloja: 0,
-			cdtipo: 0,
-			cdmarca: 0,
-			cdmedida: 0,
+			cdloja: 1,
+			cdtipo: 1,
+			cdmarca: 1,
+			cdmedida: 1,
 			preco: '',    
 			dtpublicacao: null,
 			icon: '',
-			cdusuario: 0
+			cdusuario: 115862700861296845675
 		};
+		this.msg = "";
 	}
 
 	buscaDadosUsuario(lat: any, lng: any){
@@ -104,6 +102,7 @@ export class AppComponent {
 		this.gService.getLojas(lat, lng, this.radius)
 			.then((dados) => {
 				this.lojas = dados;				
+				console.log("lojas: ", dados);
 			}).catch((error) => {
 				console.log("Error: "+error);
 			});
@@ -112,17 +111,33 @@ export class AppComponent {
   onChangedRadius($event) {
     this.radius = $event;
 		this.buscaQtdeUsuario(this.lat, this.lng);
-		this.buscaDadosUsuario(this.lat, this.lng);
-		this.buscaLojas(this.lat, this.lng);
+		this.buscaDadosUsuario(this.lat, this.lng);		
   }
 
   eventoDragEnd($event: MouseEvent) {    		
 		this.buscaDadosUsuario($event['coords'].lat, $event['coords'].lng);
-		this.buscaQtdeUsuario($event['coords'].lat, $event['coords'].lng);		
-		this.buscaLojas($event['coords'].lat, $event['coords'].lng);
+		this.buscaQtdeUsuario($event['coords'].lat, $event['coords'].lng);				
   }
 
 	operadorDragEnd($event: MouseEvent) {
-		console.log("operadorDragEnd: ", $event['coords'].lat, $event['coords'].lng);
+		this.buscaLojas($event['coords'].lat, $event['coords'].lng);
+	}
+
+	postar(): void {
+		this.produto.preco = this.produto.preco.replace(/,/, '.');
+		this.gService.postar(this.produto)
+			.then(success => {
+						this.showAlert("Obrigado por cadastrar o produto");
+				})
+				.catch(error => {
+						this.showAlert("Erro ao conectart com o servidor, favor tentar mais tarde.");
+				});
+  }
+
+	showAlert(text) {
+		this.msg = text;
+		setTimeout(function(){
+			this.msg = "";
+		},3000);
 	}
 }

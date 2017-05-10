@@ -18,3 +18,7 @@
   border: 1px solid;
   width: 30%;
 }
+
+.right {
+    text-align: right;
+}

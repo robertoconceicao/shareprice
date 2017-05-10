@@ -16,9 +16,16 @@ interface marker {
 	draggable: boolean;
 }
 
-interface Codigodescricao {
+interface Produto {
     codigo: number;
-    descricao: string;
+    cdloja: number;
+    cdtipo: number;
+    cdmarca: number;
+    cdmedida: number;
+    preco: string;    
+    dtpublicacao: Date;
+    icon: string;
+    cdusuario: number;
 }
 
 const MANAGER_ENDPOINT = 'http://node-express-geladas.misais4yjc.us-west-2.elasticbeanstalk.com/manager/';
@@ -29,22 +36,24 @@ const GET_LOJAS = "lojas";
 const GET_MARCAS = 'marcas';
 const GET_TIPOS = 'tipos';
 const GET_MEDIDAS = 'medidas';
+const POST_PRODUTO = 'produto';
 
 @Injectable()
 export class GeladasService {
 
-  private _marcas: BehaviorSubject<Codigodescricao[]>;
-  private _tipos: BehaviorSubject<Codigodescricao[]>;
-  private _medidas: BehaviorSubject<Codigodescricao[]>;
+  private _marcas: BehaviorSubject<any>;
+  private _tipos: BehaviorSubject<any>;
+  private _medidas: BehaviorSubject<any>;
 
   constructor(public http: Http) { 
-    this._marcas = <BehaviorSubject<Codigodescricao[]>>new BehaviorSubject([]);
-    this._tipos = <BehaviorSubject<Codigodescricao[]>>new BehaviorSubject([]);
-    this._medidas = <BehaviorSubject<Codigodescricao[]>>new BehaviorSubject([]);
+    this._marcas = <BehaviorSubject<any>>new BehaviorSubject([]);
+    this._tipos = <BehaviorSubject<any>>new BehaviorSubject([]);
+    this._medidas = <BehaviorSubject<any>>new BehaviorSubject([]);
     
     this.getHttp(API_ENDPOINT + GET_MARCAS)
       .then(marcas => {
           this._marcas.next(marcas);
+          console.log("marcas", marcas);
       })
       .catch(error => { 
           console.log("Erro ao buscar as Marcas");
@@ -53,6 +62,7 @@ export class GeladasService {
     this.getHttp(API_ENDPOINT + GET_TIPOS)
       .then(tipos => {
           this._tipos.next(tipos);
+          console.log("tipos", tipos);
       })
       .catch(error => { 
           console.log("Erro ao buscar as Tipos");
@@ -61,10 +71,29 @@ export class GeladasService {
     this.getHttp(API_ENDPOINT + GET_MEDIDAS)
       .then(medidas => {
           this._medidas.next(medidas);
+          console.log("medidas", medidas);
       })
       .catch(error => { 
           console.log("Erro ao buscar as Medidas");
       });
+  }
+
+  postar(produto: Produto) :Promise<any> {
+    let jsonProduto = {
+      cdusuario: produto.cdusuario,
+      cdtipo: produto.cdtipo,
+      cdmarca: produto.cdmarca,
+      cdloja: produto.cdloja,
+      cdmedida: produto.cdmedida,
+      preco: produto.preco,
+      dtpublicacao: new Date()
+    };
+    console.log("Dados enviados: "+JSON.stringify(jsonProduto));
+    return this.http
+                  .post(API_ENDPOINT + POST_PRODUTO, 
+                        JSON.stringify(jsonProduto), 
+                        {headers: contentHeaders}
+                  ).toPromise();    
   }
 
   /*
