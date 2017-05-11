@@ -18,7 +18,7 @@ interface marker {
 
 interface Produto {
     codigo: number;
-    cdloja: number;
+    cdloja: string;
     cdtipo: number;
     cdmarca: number;
     cdmedida: number;
