@@ -46,7 +46,8 @@
     <td>
       <div class="container">          
           <form (ngSubmit)="postar()">
-            <alert *ngIf="msg" type="success" dismissible="true">{{msg}}</alert>
+            <alert *ngIf="msg" type="success">{{msg}}</alert>
+            <alert *ngIf="error" type="danger">{{error}}</alert>
             <h1>Publicar Preço</h1>
             <div class="form-group">
               <label for="name">Marca</label>
@@ -68,7 +69,7 @@
               <label for="name">Medida</label>
               <select [(ngModel)]="produto.cdmedida" name="cdmedida" class="form-control">
                   <option [value]="medida.cdmedida" *ngFor="let medida of gService.medidas | async">
-                      {{ medida.descricao + ' ' + medida.ml + ' ml' }}
+                      {{ + medida.ml + ' ml (' +medida.descricao + ')'}}
                   </option>
               </select>              
             </div>

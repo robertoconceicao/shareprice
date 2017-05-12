@@ -70,8 +70,18 @@ export class GeladasService {
 
     this.getHttp(API_ENDPOINT + GET_MEDIDAS)
       .then(medidas => {
-          this._medidas.next(medidas);
-          console.log("medidas", medidas);
+          var sorrtedArray:Array<any> = medidas.sort((n1,n2)=> {
+            if(n1.ml > n2.ml){
+              return 1;
+            } 
+            
+            if(n1.ml < n2.ml){
+              return -1;
+            }
+            return 0;
+          });
+          this._medidas.next(sorrtedArray);
+          console.log("medidas", sorrtedArray);
       })
       .catch(error => { 
           console.log("Erro ao buscar as Medidas");

@@ -3,6 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AgmCoreModule } from 'angular2-google-maps/core';
 import { GeladasService } from './geladas.service';
 
+const MSG_ERROR = 0;
+const MSG_SUCCESS = 1;
+
 interface marker {
 	lat: number;
 	lng: number;
@@ -48,6 +51,7 @@ export class AppComponent {
 	medidas: any[];
 	tipos: any[];
 	msg: string;
+	error: string;
 
 	loja: marker;
 
@@ -58,10 +62,10 @@ export class AppComponent {
 		this.buscaQtdeUsuario(this.lat, this.lng);
 		this.buscaLojas(this.lat, this.lng);
 
-		this.newProduto();
 
 		this.msg = "";
-		
+		this.error = "";
+
 		this.loja = {
 			lat: 0,
 			lng: 0,
@@ -69,15 +73,17 @@ export class AppComponent {
 			icon: "",
 			cdloja: ""
 		};
+
+		this.newProduto();
 	}
 
 	newProduto(){
 		this.produto = {
 			codigo: 0,
-			cdloja: '',
+			cdloja: this.loja.cdloja,
 			cdtipo: 1,
 			cdmarca: 1,
-			cdmedida: 1,
+			cdmedida: 19,
 			preco: '',
 			dtpublicacao: null,
 			icon: '',
@@ -139,18 +145,25 @@ export class AppComponent {
 		this.produto.cdloja = this.loja.cdloja;
 		this.gService.postar(this.produto)
 			.then(success => {
-				this.showAlert("Obrigado por cadastrar o produto");
+				this.showAlert("Obrigado por cadastrar o produto", MSG_SUCCESS);
 				this.newProduto();
 			})
 			.catch(error => {
-				this.showAlert("Erro ao conectart com o servidor, favor tentar mais tarde.");
+				this.showAlert("Erro ao cadastrar produto, tentar mais tarde.", MSG_ERROR);
 			});
 	}
 
-	showAlert(text) {
-		this.msg = text;
+	showAlert(text, tipo) {
+		if(tipo == MSG_ERROR){
+			this.error = text;
+		} else {
+			this.msg = text;
+		}
+		
+		let self = this;
 		setTimeout(function () {
-			this.msg = "";
-		}, 1000);
+			self.msg = "";
+			self.error = "";
+		}, 3000);
 	}
 }

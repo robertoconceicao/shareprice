@@ -90,7 +90,7 @@ export class CadProdutoPage implements OnInit {
               this.goBack();
           })
           .catch(error => {
-              this.presentToast("Erro ao conectart com o servidor, favor tentar mais tarde.");
+              this.presentToast("Erro ao publicar produto, favor tentar mais tarde.");
           });
  //   }
   }
