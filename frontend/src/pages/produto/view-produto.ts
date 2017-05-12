@@ -5,7 +5,6 @@ import { SharingService } from '../../services/sharing-service';
 import { SocialSharing } from 'ionic-native';
 import { MapaPage } from '../mapa/mapa';
 import { NumberUtil } from '../../util/number-util';
-import { AppSettings }  from '../../app/app-settings';
 
 @Component({
     selector: 'view-produto',
@@ -19,8 +18,7 @@ import { AppSettings }  from '../../app/app-settings';
 })
 export class ViewProdutoPage {
 
-    public produto: Produto;
-    public codigo: any;
+    public produto: Produto;    
     public loading: any;
     public flValidou: boolean;
     public qtdeok: any = 0;
@@ -39,12 +37,6 @@ export class ViewProdutoPage {
         this.produto = new Produto();
         this.produto = this.navParams.get('produto');
 
-        if(!this.produto){
-            this.codigo = this.navParams.get('codigo');
-        } else {
-            this.codigo = this.produto.codigo;
-        }
-
         this.urlMapa = "https://www.google.com.br/maps/dir/";
 
         this.sharingService.lat.subscribe(lat=>{
@@ -58,42 +50,8 @@ export class ViewProdutoPage {
 
     ionViewDidLoad() {
         this.flValidou = false;
-        this.getQtdeValidarPreco();
-        if(!this.produto){
-            console.log('ionViewDidLoad ViewProdutoPage');
-            this.loading = this.loadingCtrl.create({
-                spinner: 'crescent'
-            });
-            this.loading.present();
-            this.carregaProdutoByCodigo();
-        } else {
-            this.editarProduto();
-        }
-    }
-
-    carregaProdutoByCodigo(){
-        this.sharingService.findProdutoById(this.codigo)
-            .then(produto => {
-                this.produto = AppSettings.convertToProduto(produto[0]);
-                
-                let origem =  this.lat + ","+ this.lng;
-                let destino = this.produto.loja.lat + ","+this.produto.loja.lng;
-                
-                this.urlMapa = this.urlMapa + origem + "/" +destino;
-
-                this.sharingService.getUserJaValidouPreco(this.codigo)
-                    .then(dados => {
-                        this.flValidou = dados.length > 0;
-                        this.loading.dismiss();
-                    }).catch(error => {
-                        this.loading.dismiss();            
-                        this.presentToast("Erro ao conectart com o servidor, verifique sua conexão com a internet.");
-                    });
-            })
-            .catch(error => {
-                this.loading.dismiss();            
-                this.presentToast("Erro ao conectart com o servidor, verifique sua conexão com a internet.");
-            });
+        this.getQtdeValidarPreco();        
+        this.editarProduto();
     }
 
     editarProduto(){                
@@ -102,7 +60,7 @@ export class ViewProdutoPage {
         
         this.urlMapa = this.urlMapa + origem + "/" +destino;
 
-        this.sharingService.getUserJaValidouPreco(this.codigo)
+        this.sharingService.getUserJaValidouPreco(this.produto.codigo)
             .then(dados => {
                 this.flValidou = dados.length > 0;               
             }).catch(error => {
@@ -114,7 +72,7 @@ export class ViewProdutoPage {
         this.loading = this.loadingCtrl.create();
         this.loading.present();
 
-        this.sharingService.validarPreco(this.codigo, opcao)
+        this.sharingService.validarPreco(this.produto.codigo, opcao)
             .then(dados => {
                 this.loading.dismiss();
                 this.getQtdeValidarPreco();
@@ -127,7 +85,7 @@ export class ViewProdutoPage {
     }
 
     getQtdeValidarPreco(){
-        this.sharingService.getQtdeValidarPreco(this.codigo)
+        this.sharingService.getQtdeValidarPreco(this.produto.codigo)
             .then(dados => {
                 this.qtdeok = dados[0].qtdeok;
                 this.qtdenok = dados[0].qtdenok;
@@ -145,7 +103,7 @@ export class ViewProdutoPage {
     }
 
     abrirMapa(){
-        this.navCtrl.push(MapaPage, {codigo: this.codigo});
+        this.navCtrl.push(MapaPage, {codigo: this.produto.codigo});
     }
 
     shareProduto() {
@@ -164,7 +122,7 @@ export class ViewProdutoPage {
         + ' ' + this.produto.medida.descricaoML 
         + ' R$ ' + NumberUtil.formataMoeda(this.produto.preco)
         + ' ' + this.produto.loja.nome
-        + ' https://geladas.com/produto/'+this.codigo;
+        + ' https://geladas.com/produto/'+this.produto.codigo;
     }
 
     pathImagem(){

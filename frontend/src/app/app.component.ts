@@ -3,12 +3,12 @@ import { Platform, Nav, AlertController  } from 'ionic-angular';
 import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage, Deeplinks, Diagnostic } from 'ionic-native';
 import { Home, ViewProdutoPage, LoginPage } from '../pages';
 import { SharingService } from '../services/sharing-service';
+import { AppSettings }  from './app-settings';
 
 //Utilizado para tratar as resposta de verificacao do GPS
 const SUCCESS             = 0;
 const ERRO_GPS_DISABLED   = 1;
 const ERRO_NOT_AUTHORIZED = 2;
-
 
 @Component({
   templateUrl: 'app.html'
@@ -110,9 +110,18 @@ export class MyApp {
       // match.$route - the route we matched, which is the matched entry from the arguments to route()
       // match.$args - the args passed in the link
       // match.$link - the full link data
+      let self = this;
       this.flVeioDoPush = true;
-      this.nav.setRoot(Home);
-      this.nav.push(ViewProdutoPage, {codigo: match.$args.codigo});      
+      this.nav.setRoot(Home);      
+      this.sharingService.findProdutoById(match.$args.codigo)
+          .then(produtos => {
+              var _produto = AppSettings.convertToProduto(produtos[0]);
+              self.nav.push(ViewProdutoPage, {produto: _produto});
+          })
+          .catch(error => {                        
+            console.log("Erro ao carregar viewProduto direto do Deeplink", error);
+            self.nav.setRoot(Home);
+          });  
     }, (nomatch) => {      
     });
     //This is the code who responds to the app deeplinks
@@ -165,7 +174,15 @@ export class MyApp {
             }, {
               text: 'Ver',
               handler: () => {
-                self.nav.push(ViewProdutoPage, {codigo: json.codigo});
+                this.sharingService.findProdutoById(json.codigo)
+                    .then(produtos => {
+                        var _produto = AppSettings.convertToProduto(produtos[0]);
+                        self.nav.push(ViewProdutoPage, {produto: _produto});
+                    })
+                    .catch(error => {                        
+                      console.log("Erro ao carregar viewProduto direto do push", error);
+                      self.nav.setRoot(Home);
+                    });
               }
             }]
           });
@@ -174,14 +191,23 @@ export class MyApp {
           self.flVeioDoPush = true;
           Splashscreen.hide();
           self.nav.setRoot(Home);
-          self.nav.push(ViewProdutoPage, {codigo: json.codigo});
+          
+          this.sharingService.findProdutoById(json.codigo)
+              .then(produtos => {
+                  var _produto = AppSettings.convertToProduto(produtos[0]);
+                  self.nav.push(ViewProdutoPage, {produto: _produto});
+              })
+              .catch(error => {                        
+                console.log("Erro ao carregar viewProduto direto do push", error);
+                self.nav.setRoot(Home);
+              });
         }
       });
 
       push.on('error', (e) => {
         console.log(e.message);
       });
-  }
+  } 
 
   openAlertNotInternet(){
     let alert = this.alertCtrl.create({

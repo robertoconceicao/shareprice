@@ -20,7 +20,7 @@ interface Produto {
 	preco: string;
 	dtpublicacao: Date;
 	icon: string;
-	cdusuario: number;
+	cdusuario: string;
 }
 
 @Component({
@@ -81,7 +81,7 @@ export class AppComponent {
 			preco: '',
 			dtpublicacao: null,
 			icon: '',
-			cdusuario: 115862700861296845675
+			cdusuario: '395753717458940'//'115862700861296845675'
 		};
 	}
 

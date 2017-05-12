@@ -25,7 +25,7 @@ interface Produto {
     preco: string;    
     dtpublicacao: Date;
     icon: string;
-    cdusuario: number;
+    cdusuario: string;
 }
 
 const MANAGER_ENDPOINT = 'http://node-express-geladas.misais4yjc.us-west-2.elasticbeanstalk.com/manager/';
