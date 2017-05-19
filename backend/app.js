@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({ type: 'application/json' }));
 
 //http://expressjs.com/pt-br/starter/static-files.html
-app.use('/static', express.static('public'));
+app.use('/site', express.static(__dirname + '/site'));
 
 // Add headers
 app.use(function (req, res, next) {
@@ -67,10 +67,13 @@ app.get('/deeplink', deeplink({
 // Incluindo nossas rotas definidas no arquivo routes/index.js
 var index = require('./routes/index');
 var manager = require('./routes/manager');
+//var site = require('./routes/site');
+
 
 // definindo nossas rotas na aplicação
 app.use('/', index);
 app.use('/manager', manager);
+//app.use('/site', site);
 
 // LISTEN (iniciando nossa aplicação em node) ==========
 // Define a porta 8080 onde será executada nossa aplicação
