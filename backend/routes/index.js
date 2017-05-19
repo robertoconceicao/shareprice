@@ -41,7 +41,7 @@ const PROJECAO_PRODUTO = `
         LEFT JOIN usuario u on u.cdusuario = p.cdusuario
 `;
 
-router.get('/api/medidapormarca', getMedidapormarca);
+router.get('/medidapormarca', getMedidapormarca);
 
 function getMedidapormarca(req, res){    
     pool.getConnection(function(err, connection) {
@@ -83,7 +83,7 @@ function getMedidapormarca(req, res){
     });
 }
 
-router.get('/api/confignotificacao', confignotificacao);
+router.get('/confignotificacao', confignotificacao);
 
 function confignotificacao(req, res){
     var cdusuario = req.query.cdusuario;
@@ -162,7 +162,7 @@ function retornaConfigMarcas(cdconfignotificacao, cdusuario, raio, flnotificar, 
 }
 
 // Configuracao Notificacao =============================
-router.post('/api/confignotificacao', function(req, res) {
+router.post('/confignotificacao', function(req, res) {
     let marcas = req.body.marcas;
     let raio = req.body.raio;
     let cdusuario = req.body.cdusuario;
@@ -283,7 +283,7 @@ function buscaUsuariosParaPushNotificacion(cdusuario, cdproduto){
 }
 
 //  PRODUTOS ============================================
-router.get('/api/produto/:codigo', function(req, res) {	    
+router.get('/produto/:codigo', function(req, res) {	    
     pool.getConnection(function(err, connection) {
         connection.query(
             PROJECAO_PRODUTO +
@@ -299,7 +299,7 @@ router.get('/api/produto/:codigo', function(req, res) {
     }); 
 });
 
-router.put('/api/produto/:codigo', function(req, res) {
+router.put('/produto/:codigo', function(req, res) {
     var produtoData = req.body;
     var codigo = req.params.codigo;
 
@@ -315,7 +315,7 @@ router.put('/api/produto/:codigo', function(req, res) {
     });    
 });
 
-router.get('/api/produtos', function(req, res) {
+router.get('/produtos', function(req, res) {
     var filtros = getFiltrosUrl(req);
     pool.getConnection(function(err, connection) {
         connection.query(`
@@ -353,7 +353,7 @@ router.get('/api/produtos', function(req, res) {
     }); 
 });
 
-router.get('/api/filter', function(req, res) {
+router.get('/filter', function(req, res) {
     var filtros = getFiltrosUrl(req);
     pool.getConnection(function(err, connection) {
         connection.query(`
@@ -391,7 +391,7 @@ router.get('/api/filter', function(req, res) {
     }); 
 });
 
-router.get('/api/before_produtos', function(req, res) {
+router.get('/before_produtos', function(req, res) {
    var filtros = getFiltrosUrl(req);
    pool.getConnection(function(err, connection) {
         connection.query(`
@@ -429,7 +429,7 @@ router.get('/api/before_produtos', function(req, res) {
     }); 
 });
 
-router.get('/api/after_produtos', function(req, res) {
+router.get('/after_produtos', function(req, res) {
     var posicao = Number.parseInt(req.query.posicao);
     var filtros = getFiltrosUrl(req);
     pool.getConnection(function(err, connection) {
@@ -500,7 +500,7 @@ function getFiltrosUrl(req){
     preco: produto.preco,
     dtpublicacao: produto.dtpublicacao
 */
-router.post('/api/produto', function(req, res) {
+router.post('/produto', function(req, res) {
     console.log("Dados recebidos: "+JSON.stringify(req.body));
     var cdproduto = 0;
     var cdusuario = req.body.cdusuario;
@@ -564,7 +564,7 @@ router.post('/api/produto', function(req, res) {
 });
 
 /*apenas para testes depois remover esse codigo
-router.get('/api/push', function (req, res) {
+router.get('/push', function (req, res) {
     var device_tokens = []; //create array for storing device tokens
     var retry_times = 4; //the number of times to retry sending the message if it fails
     var sender = new gcm.Sender(gcmApiKey); //create a new sender
@@ -655,7 +655,7 @@ function pushNotification(produto, device_tokens){
     nome: string;
     avatar: string;
 */
-router.post('/api/usuario', function(req, res) {
+router.post('/usuario', function(req, res) {
     console.log("Dados recebidos: "+JSON.stringify(req.body));
     
     pool.getConnection(function(err, connection) {
@@ -687,7 +687,7 @@ router.post('/api/usuario', function(req, res) {
 });
 
 //validapreco
-router.post('/api/validapreco', function(req, res) {
+router.post('/validapreco', function(req, res) {
     console.log("Dados recebidos: "+JSON.stringify(req.body));
     
     pool.getConnection(function(err, connection) {
@@ -712,7 +712,7 @@ router.post('/api/validapreco', function(req, res) {
 });
 
 //verifica se o usuario ja votou nesse produto
-router.get('/api/validapreco', function(req, res) {
+router.get('/validapreco', function(req, res) {
     let cdproduto = req.query.cdproduto;
     let cdusuario = req.query.cdusuario;
     pool.getConnection(function(err, connection) {
@@ -727,7 +727,7 @@ router.get('/api/validapreco', function(req, res) {
 });
 
 //verifica se o usuario ja votou nesse produto
-router.get('/api/validapreco/qtde', function(req, res) {
+router.get('/validapreco/qtde', function(req, res) {
     let cdproduto = req.query.cdproduto;
     pool.getConnection(function(err, connection) {
         connection.query(`
@@ -753,7 +753,7 @@ router.get('/api/validapreco/qtde', function(req, res) {
 
 
 // MARCAS ============================================
-router.get('/api/marcas', function(req, res) {	
+router.get('/marcas', function(req, res) {	
     pool.getConnection(function(err, connection) {
         connection.query('SELECT * FROM marca order by descricao',[],function(err,result){
             if(err) {
@@ -766,7 +766,7 @@ router.get('/api/marcas', function(req, res) {
 });
 
 // MEDIDAS ============================================
-router.get('/api/medidas', function(req, res) {	
+router.get('/medidas', function(req, res) {	
     pool.getConnection(function(err, connection) {
         connection.query('SELECT * FROM medida',[],function(err,result){
             if(err) {
@@ -779,7 +779,7 @@ router.get('/api/medidas', function(req, res) {
 });
 
 // TIPOS ============================================
-router.get('/api/tipos', function(req, res) {	
+router.get('/tipos', function(req, res) {	
     pool.getConnection(function(err, connection) {
         connection.query('SELECT * FROM tipo',[],function(err,result){
             if(err) {
@@ -797,7 +797,7 @@ router.get('/api/tipos', function(req, res) {
 // HAVING distance <= 5 (em kilometros)
 // Esse metodo busca a loja onde o usuário esta pela sua localizacao, estou mapeando um raio em 100 metros (0.1) 
 //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-27.6210716,-48.6739947&radius=500&types=grocery_or_supermarket&key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc
-router.get('/api/lojas/:lat/:lng', function(req, res, callback) {
+router.get('/lojas/:lat/:lng', function(req, res, callback) {
     console.log("Dados recebidos: lat: "+req.params.lat+", lng: "+req.params.lng);  
     //Segundo Passo se não encontrou na base local, busca na API place
     var location = "location="+req.params.lat + "," + req.params.lng;
