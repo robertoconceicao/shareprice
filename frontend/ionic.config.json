@@ -1,6 +1,5 @@
 {
   "name": "Viva Cerveja",
   "app_id": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlZmJkYjAyOC05NGYxLTQ2MzgtYTc4NC1iNmU2ZWFhYjE1YzAifQ.zj5MMaKCY2CZ81O6sqjmiiMeA0dCGuFdUsCG7X2F3SE",
-  "v2": true,
-  "typescript": true
+  "type": "ionic-angular"
 }

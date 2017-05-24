@@ -78,13 +78,14 @@ export class MyApp {
 
   verificaGPSAtivo(): Promise<any> {
     return new Promise((resolve, reject) => {
-        Diagnostic.requestLocationAuthorization()
+        Diagnostic.requestLocationAuthorization("always")
         .then((value) => {
           Diagnostic.isGpsLocationEnabled().then((enabled) => {
             if(!enabled){            
               reject(ERRO_GPS_DISABLED);
             }
           }).catch((error) => {
+            console.log("Resultado 2: ", error);
             reject(ERRO_GPS_DISABLED);          
           });
           
@@ -95,9 +96,11 @@ export class MyApp {
               resolve(SUCCESS);
             }
           }).catch((error) => {
+            console.log("Resultado 3: ", error);
             reject(ERRO_NOT_AUTHORIZED);
           });
         }).catch((error)=>{
+          console.log("Resultado 1: ", error);
           reject(ERRO_NOT_AUTHORIZED);
         });
     });
