@@ -89,17 +89,12 @@ function confignotificacao(req, res){
     var cdusuario = req.query.cdusuario;
     
     pool.getConnection(function(err, connection){
-        var cdconfignotificacao = 0;
-        var raio = 10;
-        var flnotificar = 1;
-        var flemail = 1;
-        var marcas = [];
-
         connection.query('select cdconfignotificacao, raio, flnotificar, flemail from confignotificacao where cdusuario = ? ', [cdusuario], function(err, result){
            if(result.length > 0){
-                cdconfignotificacao = result[0].cdconfignotificacao;
-                raio = result[0].raio;
-
+                var cdconfignotificacao = result[0].cdconfignotificacao;
+                var raio = result[0].raio;
+                var flnotificar = result[0].flnotificar;
+                var flemail = result[0].flemail;
                 retornaConfigMarcas(cdconfignotificacao, cdusuario, raio, flnotificar, flemail, res);                
             } else {
                 insereConfignotificacao(cdusuario, res);                
@@ -195,17 +190,17 @@ router.post('/confignotificacao', function(req, res) {
                     }
                 
                     if(result.length > 0) {
-                        cdconfignotificacao = result[0].cdconfignotificacao;
-
                         console.log("Existe configuracao para esse usuario, detele td e insere tudo novamente");
-                        connection.query(`delete from configmarca where cdconfignotificacao = ?`,[cdconfignotificacao],function(err, result2){
+                        connection.query(`delete from configmarca
+                                            where cdconfignotificacao in 
+                                            (select cdconfignotificacao from confignotificacao where cdusuario = ? )`,[cdusuario],function(err, result2){
                             if(err) {
                                 console.log("Erro ao tentar deletar configmarca");
                                 return connection.rollback(function() {
                                     throw error;
                                 });
                             }
-                            connection.query(`delete from confignotificacao where cdconfignotificacao = ?`,[cdconfignotificacao],function(err, result3){
+                            connection.query(`delete from confignotificacao where cdusuario = ?`,[cdusuario],function(err, result3){
                                 if(err) {
                                     console.log("Erro ao tentar deletar confignotificacao");
                                     return connection.rollback(function() {
