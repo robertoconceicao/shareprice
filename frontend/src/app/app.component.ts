@@ -35,8 +35,8 @@ export class MyApp {
     this.flVeioDoPush = false;
     this.platform.ready().then(() => {
       
-    this.verificaGPSAtivo()
-      .then((resp) => {                
+  //  this.verificaGPSAtivo()
+  //    .then((resp) => {                
         //pega os produtos pela localizacao do usuario
         Geolocation.getCurrentPosition({timeout: 10000})
           .then((resp) => {
@@ -54,7 +54,8 @@ export class MyApp {
                     Splashscreen.hide();
                   }
                 }, function (error) {
-                  env.nav.setRoot(LoginPage);
+                  env.nav.setRoot(Home);
+                  //env.nav.setRoot(LoginPage);
                   Splashscreen.hide();
                 });
           }).catch((error) => {
@@ -73,7 +74,7 @@ export class MyApp {
       StatusBar.styleDefault();
       this.initPushNotification();      
       this.initDeeplink();
-    });
+  //  });
   }
 
   verificaGPSAtivo(): Promise<any> {

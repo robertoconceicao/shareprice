@@ -92,14 +92,15 @@ function confignotificacao(req, res){
         var cdconfignotificacao = 0;
         var raio = 10;
         var flnotificar = 1;
+        var flemail = 1;
         var marcas = [];
 
-        connection.query('select cdconfignotificacao, raio, flnotificar from confignotificacao where cdusuario = ? ', [cdusuario], function(err, result){
+        connection.query('select cdconfignotificacao, raio, flnotificar, flemail from confignotificacao where cdusuario = ? ', [cdusuario], function(err, result){
            if(result.length > 0){
                 cdconfignotificacao = result[0].cdconfignotificacao;
                 raio = result[0].raio;
 
-                retornaConfigMarcas(cdconfignotificacao, cdusuario, raio, flnotificar, res);                
+                retornaConfigMarcas(cdconfignotificacao, cdusuario, raio, flnotificar, flemail, res);                
             } else {
                 insereConfignotificacao(cdusuario, res);                
             }
@@ -112,9 +113,10 @@ function insereConfignotificacao(cdusuario, res){
     var cdconfignotificacao = 0;
     var raio = 10;
     var flnotificar = 1;
+    var flemail = 1;
 
     pool.getConnection(function(err, connection) {
-        connection.query('INSERT INTO confignotificacao(cdusuario, raio, flnotificar) values(?, 10, 1) ', [cdusuario], function(err,result){
+        connection.query('INSERT INTO confignotificacao(cdusuario, raio, flnotificar, flemail) values(?, ?, ?, ?) ', [cdusuario, raio, flnotificar, flemail], function(err,result){
             if(err) {
                 console.log("Erro ao tentar inserir confignotificacao");                        
                 return connection.rollback(function() {
@@ -134,7 +136,7 @@ function insereConfignotificacao(cdusuario, res){
                     });
                 }
                                 
-                retornaConfigMarcas(cdconfignotificacao, cdusuario, raio, flnotificar, res);
+                retornaConfigMarcas(cdconfignotificacao, cdusuario, raio, flnotificar, flemail, res);
             });
         });
        connection.release();
@@ -144,7 +146,7 @@ function insereConfignotificacao(cdusuario, res){
 /*
     Retorna as configurações de marcas do usuario da tela de notificações
 */
-function retornaConfigMarcas(cdconfignotificacao, cdusuario, raio, flnotificar, res){    
+function retornaConfigMarcas(cdconfignotificacao, cdusuario, raio, flnotificar, flemail, res){    
     pool.getConnection(function(err, connection) {
         connection.query('select cdmarca from configmarca where cdconfignotificacao = ? ', [cdconfignotificacao], function(err, marcas){
             var obj = [{
@@ -152,6 +154,7 @@ function retornaConfigMarcas(cdconfignotificacao, cdusuario, raio, flnotificar, 
                 'cdusuario': cdusuario,
                 'raio': raio,
                 'flnotificar': flnotificar,
+                'flemail': flemail,
                 'marcas': marcas
             }];
 
@@ -167,6 +170,13 @@ router.post('/confignotificacao', function(req, res) {
     let raio = req.body.raio;
     let cdusuario = req.body.cdusuario;
     let flnotificar = req.body.flnotificar;
+    let flemail;
+    try {
+        flemail = req.body.flemail;
+    } catch (error) {
+        flemail = 1;
+        console.log("Erro nao veio no comando o flemail, default para 1");        
+    }
 
     pool.getConnection(function(err, connection) {
         connection.beginTransaction(function(err) {
@@ -203,7 +213,7 @@ router.post('/confignotificacao', function(req, res) {
                                     });
                                 }
 
-                                connection.query('INSERT INTO confignotificacao(cdusuario, raio, flnotificar) values(?, ?, ?) ', [cdusuario, raio, flnotificar], function(err,result4){
+                                connection.query('INSERT INTO confignotificacao(cdusuario, raio, flnotificar, flemail) values(?, ?, ?, ?) ', [cdusuario, raio, flnotificar, flemail], function(err,result4){
                                     if(err) {
                                         console.log("Erro ao tentar inserir confignotificacao");                        
                                         return connection.rollback(function() {

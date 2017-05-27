@@ -5,25 +5,38 @@
 </ion-header>
 
 
-<ion-content>  
-        <p align="center">
-            Escolha as marcas e a distância, que deseja receber as notificações quando alguém publicar o preço de uma cerveja.
-        </p>
-        <ion-list>
+<ion-content>        
+        <ion-list>            
+            <button ion-item>
+                <ion-label>
+                    <h3>Notificações de e-mail</h3>
+                    <p>
+                        Desejas receber notificações de e-mail?
+                    </p>                
+                </ion-label>
+                <ion-toggle [(ngModel)]="config.flemail" item-right></ion-toggle>                
+            </button>
             <ion-item>
-                <ion-label>Notificações</ion-label>
-                <ion-toggle [(ngModel)]="config.flnotificar"></ion-toggle>
+                <ion-label>
+                    <h3>Notificações de promoção</h3>
+                    <p>
+                        Escolha as marcas e a distância,    <br>
+                        que deseja receber as notificações, <br>
+                        quando alguém publicar uma promoção.<br>
+                    </p>
+                </ion-label>
+                <ion-toggle [(ngModel)]="config.flnotificar" item-right></ion-toggle>                
             </ion-item>
-            <ion-item>          
-
-                <ion-label>Marca</ion-label>            
-                    <ion-select [(ngModel)]="config.marcas" multiple="true" cancelText="Cancelar" okText="Ok">
-                        <ion-option [value]="marca.cdmarca" *ngFor="let marca of sharingService.marcas | async ">
-                            {{ marca.descricao }}
-                        </ion-option>
-                    </ion-select>
+            <ion-item>
+                <ion-label>
+                    Marcas
+                </ion-label>
+                <ion-select [(ngModel)]="config.marcas" multiple="true" cancelText="Cancelar" okText="Ok">
+                    <ion-option [value]="marca.cdmarca" *ngFor="let marca of sharingService.marcas | async ">
+                        {{ marca.descricao }}
+                    </ion-option>
+                </ion-select>
             </ion-item>
-            
             <ion-item>
                 <ion-label>Raio de distância {{config.raio}} Km</ion-label>
                 <ion-range min="1" max="30" pin="true" [(ngModel)]="config.raio" color="primary">
@@ -38,5 +51,5 @@
                 <ion-icon name="cloud-upload"></ion-icon>
                 Enviar
             </button>            
-        </p>     
+        </p>
 </ion-content>

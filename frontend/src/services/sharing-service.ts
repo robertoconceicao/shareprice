@@ -137,6 +137,7 @@ export class SharingService {
       cdusuario: this._cdusuario.value,
       raio: config.raio,
       flnotificar: config.flnotificar,
+      flemail: config.flemail,
       cdconfignotificacao: config.cdconfignotificacao,
       marcas: config.marcas
       //tipos: config.tipos,

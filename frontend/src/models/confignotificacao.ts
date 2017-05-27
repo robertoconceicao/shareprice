@@ -4,13 +4,10 @@ export class Confignotificacao{
     public cdusuario: string;
     public raio: number;
     public flnotificar: number;
+    public flemail: number;
     public marcas: Array<number>;
-    //public tipos: Array<number>;
-    //public medidas: Array<number>;
     
     constructor(){
-        this.marcas = new Array();
-      //  this.tipos = new Array();
-      //  this.medidas = new Array();
+        this.marcas = new Array();    
     }
 }

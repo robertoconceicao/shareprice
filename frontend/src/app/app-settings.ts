@@ -77,14 +77,13 @@ export class AppSettings {
      config.cdusuario = data.cdusuario;
      config.raio = data.raio;
      config.flnotificar = data.flnotificar;
+     config.flemail = data.flemail;
 
      if(!!data.marcas && data.marcas.length > 0) {
        for(let m of data.marcas){
          config.marcas.push(m.cdmarca);
        }
      }
-     //config.tipos = data.tipos;
-     //config.medidas = data.medidas;
      
      return config;
    }   
