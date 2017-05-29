@@ -28,8 +28,8 @@ interface Produto {
     cdusuario: string;
 }
 
-const MANAGER_ENDPOINT = 'http://node-express-geladas.misais4yjc.us-west-2.elasticbeanstalk.com/manager/';
-const API_ENDPOINT = 'http://node-express-geladas.misais4yjc.us-west-2.elasticbeanstalk.com/api/';
+const MANAGER_ENDPOINT = 'http://geladasoficial.com/manager/';
+const API_ENDPOINT = 'http://geladasoficial.com/api/';
 const GET_USER_NO_RAIO = "usernoraio";
 const GET_QTDE_USER_NO_RAIO = "qtdeusernoraio";
 const GET_LOJAS = "lojas";
