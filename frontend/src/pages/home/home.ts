@@ -63,7 +63,7 @@ export class Home implements OnInit {
        });
 
        this.carregandoPage();
-       this.createBanner();
+       //this.createBanner();
    }
 
    ionViewWillEnter() {

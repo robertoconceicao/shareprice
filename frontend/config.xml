@@ -6,6 +6,7 @@
     <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="*" />
+    <allow-navigation href="http://192.168.0.23:8100" />
     <allow-intent href="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -37,6 +38,18 @@
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
+        <splash height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
+        <splash height="1334" src="resources/ios/splash/Default-667h.png" width="750" />
+        <splash height="2208" src="resources/ios/splash/Default-736h.png" width="1242" />
+        <splash height="1242" src="resources/ios/splash/Default-Landscape-736h.png" width="2208" />
+        <splash height="1536" src="resources/ios/splash/Default-Landscape@2x~ipad.png" width="2048" />
+        <splash height="2048" src="resources/ios/splash/Default-Landscape@~ipadpro.png" width="2732" />
+        <splash height="768" src="resources/ios/splash/Default-Landscape~ipad.png" width="1024" />
+        <splash height="2048" src="resources/ios/splash/Default-Portrait@2x~ipad.png" width="1536" />
+        <splash height="2732" src="resources/ios/splash/Default-Portrait@~ipadpro.png" width="2048" />
+        <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
+        <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
+        <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
         <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
         <icon height="40" src="resources/ios/icon/icon-40.png" width="40" />
@@ -77,16 +90,19 @@
         <param name="android-package" value="nl.xservices.plugins.SocialSharing" />
     </feature>
     <icon src="resources/ios/icon/icon-small@3x.png" />
+    <engine name="ios" spec="^4.4.0" />
     <plugin name="cordova-custom-config" spec="~3.1.2" />
     <plugin name="cordova-plugin-admobpro" spec="~2.28.3" />
     <plugin name="cordova-plugin-console" spec="1.0.5" />
     <plugin name="cordova-plugin-device" spec="1.1.4" />
-    <plugin name="cordova-plugin-facebook4" spec="~1.7.4">
+    <plugin name="cordova-plugin-facebook4" spec="^1.9.0">
         <variable name="APP_ID" value="1244276078941737" />
-        <variable name="APP_NAME" value="Viva Cerveja" />
+        <variable name="APP_NAME" value="Geladas" />
     </plugin>
     <plugin name="cordova-plugin-file" spec="~4.3.2" />
-    <plugin name="cordova-plugin-geolocation" spec="~2.4.2" />
+    <plugin name="cordova-plugin-geolocation" spec="^2.4.3">
+        <variable name="GEOLOCATION_USAGE_DESCRIPTION" value=" " />
+    </plugin>
     <plugin name="cordova-plugin-googleplus" spec="~5.1.1">
         <variable name="REVERSED_CLIENT_ID" value="449887022881-0f3qgjul4igf4dgajgfon3uos89bpv3h.apps.googleusercontent.com" />
     </plugin>
