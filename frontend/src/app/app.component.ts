@@ -80,6 +80,7 @@ export class MyApp {
     return new Promise((resolve, reject) => {
         Diagnostic.requestLocationAuthorization("always")
         .then((value) => {
+          /*
           Diagnostic.isGpsLocationEnabled().then((enabled) => {
             if(!enabled){            
               reject(ERRO_GPS_DISABLED);
@@ -99,10 +100,13 @@ export class MyApp {
             console.log("Resultado 3: ", error);
             reject(ERRO_NOT_AUTHORIZED);
           });
+          */
+          resolve(SUCCESS);
         }).catch((error)=>{
           console.log("Resultado 1: ", error);
           reject(ERRO_NOT_AUTHORIZED);
         });
+        
     });
   }
 
