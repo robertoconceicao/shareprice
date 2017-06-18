@@ -22,7 +22,7 @@ export class LoginPage {
     let permissions = new Array();
     let nav = this.navCtrl;
     //the permissions your facebook app needs from the user
-    permissions = ["public_profile, email"];
+    permissions = ["email"];
 
     let env = this;
 
@@ -36,6 +36,8 @@ export class LoginPage {
       .then(function(user) {
         user.picture = "https://graph.facebook.com/" + userId + "/picture?type=large";
         
+        console.log("resposta FB: ", JSON.stringify(user));
+
         env.sharingService.setCdusuario(userId);
         
         //insere um novo usuario no sistema
@@ -56,7 +58,7 @@ export class LoginPage {
         })
       })
     }, function(error){
-      console.log(error);
+      console.log("Error login FB: ", JSON.stringify(error));
     });
   }
 
@@ -89,7 +91,7 @@ export class LoginPage {
     })
     .then(function (user) {
       loading.dismiss();
-      console.log("Resposta do login G+: "+JSON.stringify(user));
+      console.log("Resposta do login G+: ", JSON.stringify(user));
       env.sharingService.setCdusuario(user.userId);
         
       //insere um novo usuario no sistema
@@ -108,7 +110,7 @@ export class LoginPage {
         console.log(error);
       })
     }, function (error) {
-      console.log("Resposta Error login G+: "+JSON.stringify(error));
+      console.log("Resposta Error login G+: ", JSON.stringify(error));
       loading.dismiss();
     });
   }  

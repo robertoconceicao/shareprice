@@ -27,7 +27,9 @@ import { AdMob }  from '@ionic-native/admob';
     TutorialPage
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp,{
+        backButtonText: ''
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [

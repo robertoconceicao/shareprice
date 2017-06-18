@@ -5,28 +5,29 @@ import { Loja } from '../../models/loja';
 @Component({
     selector: 'loja-page',
     template: `
-        <ion-content>
-            <ion-navbar color="geladas">
-                <ion-searchbar 
-                    [(ngModel)]="searchTerm" 
-                    [showCancelButton]=true
-                    (ionInput)="filterItems()" 
-                    placeholder="Nome do supermercado" >
-                </ion-searchbar>
-            </ion-navbar>
+    <ion-header>
+        <ion-navbar color="geladas">
+            <ion-searchbar 
+                [(ngModel)]="searchTerm" 
+                [showCancelButton]=true
+                (ionInput)="filterItems()" 
+                placeholder="Nome do supermercado">
+            </ion-searchbar>
+        </ion-navbar>
+    </ion-header>
+    <ion-content>
+        <ion-list>
+            <button ion-item *ngFor="let loja of lojas" (click)="itemSelected(loja)">
+                <ion-icon name="basket" item-left large></ion-icon>
+                <h2>{{ loja.nome }}</h2>
+                <p>{{ loja.vicinity }}</p>                    
+            </button>
+        </ion-list>
 
-            <ion-list>
-                <button ion-item *ngFor="let loja of lojas" (click)="itemSelected(loja)">
-                    <ion-icon name="basket" item-left large></ion-icon>
-                    <h2>{{ loja.nome }}</h2>
-                    <p>{{ loja.vicinity }}</p>                    
-                </button>
-            </ion-list>
-
-            <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
-                <ion-infinite-scroll-content></ion-infinite-scroll-content>
-            </ion-infinite-scroll>        
-        </ion-content>
+        <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+        </ion-infinite-scroll>        
+    </ion-content>
     `
 })
 
