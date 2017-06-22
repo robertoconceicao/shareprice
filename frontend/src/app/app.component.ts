@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, AlertController  } from 'ionic-angular';
 import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage, Deeplinks, Diagnostic } from 'ionic-native';
-import { Home, ViewProdutoPage, LoginPage } from '../pages';
+import { Home, ViewProdutoPage, TutorialPage } from '../pages';
 import { SharingService } from '../services/sharing-service';
 import { AppSettings }  from './app-settings';
 
@@ -54,7 +54,7 @@ export class MyApp {
                     Splashscreen.hide();
                   }
                 }, function (error) {
-                  env.nav.setRoot(LoginPage);
+                  env.nav.setRoot(TutorialPage);
                   Splashscreen.hide();
                 });
           }).catch((error) => {
