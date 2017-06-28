@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController }  from 'ionic-angular';
-import { LoginPage } from '../../pages';
+import { Home } from '../../pages';
 
 @Component({
   templateUrl: 'tutorial.html'
@@ -30,6 +30,6 @@ export class TutorialPage {
   ];
 
   onComecar(){
-    this.navCtrl.setRoot(LoginPage);
+    this.navCtrl.setRoot(Home);
   }
 }

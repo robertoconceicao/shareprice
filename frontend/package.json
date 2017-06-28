@@ -110,12 +110,12 @@
             "phonegap-plugin-push": {
                 "SENDER_ID": "449887022881"
             },
-            "cordova-plugin-geolocation": {
-                "GEOLOCATION_USAGE_DESCRIPTION": " "
-            },
             "cordova-plugin-facebook4": {
                 "APP_ID": "1244276078941737",
                 "APP_NAME": "Geladas"
+            },
+            "cordova-plugin-geolocation": {
+                "GEOLOCATION_USAGE_DESCRIPTION": "O App precisa ter acesso a sua localização, apenas no início para buscar as cervejas próximas de você"
             }
         },
         "platforms": [

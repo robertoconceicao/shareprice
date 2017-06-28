@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, AlertController  } from 'ionic-angular';
 import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage, Deeplinks, Diagnostic } from 'ionic-native';
-import { Home, ViewProdutoPage, TutorialPage } from '../pages';
+import { Home, ViewProdutoPage, TutorialPage, LoginPage } from '../pages';
 import { SharingService } from '../services/sharing-service';
 import { AppSettings }  from './app-settings';
 
@@ -54,8 +54,28 @@ export class MyApp {
                     Splashscreen.hide();
                   }
                 }, function (error) {
-                  env.nav.setRoot(TutorialPage);
-                  Splashscreen.hide();
+                     NativeStorage.getItem('tutorial')
+                      .then( function (resp){
+                          let confirmAlert = this.alertCtrl.create({
+                              title: "Usuário não identificado",
+                              message: "Faça o login, para acesso a todas funcionalidades.",
+                              buttons: [{
+                                text: 'Ignorar',
+                                role: 'cancel'
+                              }, {
+                                text: 'Login',
+                                handler: () => {
+                                  env.nav.setRoot(LoginPage);
+                                }
+                              }]
+                            });
+                            confirmAlert.present();
+                            Splashscreen.hide();
+                      }, function (error) {
+                          env.nav.setRoot(TutorialPage);
+                          NativeStorage.setItem('tutorial', 1);
+                          Splashscreen.hide();
+                      });
                 });
           }).catch((error) => {
               // this.verificaGPSAtivo();
@@ -78,7 +98,7 @@ export class MyApp {
 
   verificaGPSAtivo(): Promise<any> {
     return new Promise((resolve, reject) => {
-        Diagnostic.requestLocationAuthorization("always")
+        Diagnostic.requestLocationAuthorization("when_in_use")
         .then((value) => {
           /*
           Diagnostic.isGpsLocationEnabled().then((enabled) => {

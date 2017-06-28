@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild}  from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { NavController, LoadingController, Searchbar}  from 'ionic-angular';
+import { NavController, LoadingController, Searchbar, AlertController}  from 'ionic-angular';
+import { NativeStorage } from 'ionic-native';
 import { FiltrosPage }         from '../filtros/filtros';
 import { CadProdutoPage } from '../cad-produto/cad-produto';
 import { ConfigPage } from '../config/config';
+import { LoginPage } from '../login/login';
 import { Produto } from '../../models/produto';
 import { Filtro } from '../../models/filtro';
 import { SharingService } from '../../services/sharing-service';
@@ -30,10 +32,12 @@ export class Home implements OnInit {
    public lng: any;
    public filtro: Filtro;
    public search: boolean;
+   public flLogado: boolean;
 
    constructor(public navCtrl: NavController,
                public sharingService: SharingService,
                public loadingCtrl: LoadingController,
+               public alertCtrl: AlertController,
                public admob: AdMob) {
      this.searchTermControl = new FormControl();
      this.searchTermControl.valueChanges
@@ -45,6 +49,7 @@ export class Home implements OnInit {
         });
 
      this.search = false;   
+     this.verifyLogado();
    }
 
    ngOnInit(){
@@ -149,11 +154,19 @@ export class Home implements OnInit {
    }
 
    showConfig(){
-      this.navCtrl.push(ConfigPage);
+      if(this.flLogado){
+         this.navCtrl.push(ConfigPage);
+       } else {
+           this.showAlertLogin();
+       }
    }
 
    newProduto(){
-       this.navCtrl.push(CadProdutoPage);
+       if(this.flLogado){
+         this.navCtrl.push(CadProdutoPage);
+       } else {
+           this.showAlertLogin();
+       }
    }
 
    isEmpty(){
@@ -203,4 +216,35 @@ export class Home implements OnInit {
             infiniteScroll.complete();
         });
    }  
+
+   verifyLogado(){
+       NativeStorage.getItem('user')
+        .then( function(resp) {
+                console.log("verifyLogado ....", resp);
+                this.flLogado = true;
+            }, function(err){
+                this.flLogado = false;
+            })
+        .catch((error) => {
+            console.log("verifyLogado CATCH", error);
+            this.flLogado = false;
+        });
+   }
+
+   showAlertLogin(){
+       let confirmAlert = this.alertCtrl.create({
+                              title: "Usuário não identificado",
+                              message: "Faça o login, para acesso a todas funcionalidades.",
+                              buttons: [{
+                                text: 'Ignorar',
+                                role: 'cancel'
+                              }, {
+                                text: 'Login',
+                                handler: () => {
+                                  this.navCtrl.setRoot(LoginPage);
+                                }
+                              }]
+                            });
+                            confirmAlert.present();
+   }
 }
