@@ -52,6 +52,13 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
+              "client_id": "449887022881-nvp0lef4fp7ho1rtm8j2kbhuk76ja9uj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.rdc.vivacerveja"
+              }
+            },
+            {
               "client_id": "449887022881-vphs6g92c44nani3jqibr14ok4j2es8d.apps.googleusercontent.com",
               "client_type": 3
             }

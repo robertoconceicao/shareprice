@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>449887022881-nvp0lef4fp7ho1rtm8j2kbhuk76ja9uj.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.449887022881-nvp0lef4fp7ho1rtm8j2kbhuk76ja9uj</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>449887022881-14gn3v02m0sbf9iif0l5qsrkrdpanhfp.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC4NAsJ7Vbe8Bv0T0ejThZ5l4zuC5y74FM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>449887022881</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>br.com.rdc.vivacerveja</string>
+	<key>PROJECT_ID</key>
+	<string>tahbarato-154614</string>
+	<key>STORAGE_BUCKET</key>
+	<string>tahbarato-154614.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:449887022881:ios:c6dce229e41c90a6</string>
+	<key>DATABASE_URL</key>
+	<string>https://tahbarato-154614.firebaseio.com</string>
+</dict>
+</plist>

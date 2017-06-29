@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild}  from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NavController, LoadingController, Searchbar, AlertController}  from 'ionic-angular';
-import { NativeStorage } from 'ionic-native';
 import { FiltrosPage }         from '../filtros/filtros';
 import { CadProdutoPage } from '../cad-produto/cad-produto';
 import { ConfigPage } from '../config/config';
@@ -68,7 +67,7 @@ export class Home implements OnInit {
        });
 
        this.carregandoPage();
-       //this.createBanner();
+       this.createBanner();
    }
 
    ionViewWillEnter() {
@@ -78,7 +77,6 @@ export class Home implements OnInit {
    createBanner(){     
      this.admob.createBanner({
         adId: 'ca-app-pub-6167102128376930/5839727008',
-        isTesting: true,
         autoShow: true
      });
    }
@@ -106,7 +104,6 @@ export class Home implements OnInit {
         this.loading.present();
         this.filtro.lat = this.lat;
         this.filtro.lng = this.lng;
-        console.log("lat: "+this.lat+" lng: " +this.lng);
 
         this.sharingService.setFiltro(this.filtro);
         this.findProdutos();
@@ -218,17 +215,10 @@ export class Home implements OnInit {
    }  
 
    verifyLogado(){
-       NativeStorage.getItem('user')
-        .then( function(resp) {
-                console.log("verifyLogado ....", resp);
-                this.flLogado = true;
-            }, function(err){
-                this.flLogado = false;
-            })
-        .catch((error) => {
-            console.log("verifyLogado CATCH", error);
-            this.flLogado = false;
-        });
+       this.sharingService.cdusuario.subscribe(cdusuario=>{
+           console.log("verifyLogado .... ", cdusuario);
+           this.flLogado = !!cdusuario;
+       });
    }
 
    showAlertLogin(){

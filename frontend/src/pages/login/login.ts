@@ -38,11 +38,11 @@ export class LoginPage {
         
         console.log("resposta FB: ", JSON.stringify(user));
 
-        env.sharingService.setCdusuario(userId);
+        env.sharingService.setCdusuario("F"+userId);
         
         //insere um novo usuario no sistema
         let usuario: Usuario = new Usuario();
-        usuario.cdusuario = userId;
+        usuario.cdusuario = "F"+userId;
         usuario.nome = user.name;
         usuario.avatar = user.picture;
         usuario.email = user.email;
@@ -92,11 +92,11 @@ export class LoginPage {
     .then(function (user) {
       loading.dismiss();
       console.log("Resposta do login G+: ", JSON.stringify(user));
-      env.sharingService.setCdusuario(user.userId);
+      env.sharingService.setCdusuario("G"+user.userId);
         
       //insere um novo usuario no sistema
       let usuario: Usuario = new Usuario();
-      usuario.cdusuario = user.userId;
+      usuario.cdusuario = "G"+user.userId;
       usuario.nome = user.displayName;
       usuario.avatar = user.imageUrl;
       usuario.email = user.email;
