@@ -10,6 +10,11 @@ var router  = express.Router();
 var gcm = require('node-gcm');
 var gcmApiKey = 'AIzaSyAFoZL_ofOX3kT5W_k77gyT99QCz5_XbqA';//'AIzaSyANN9rbE4VXHxIhS0_T5vnN2puc2tG0WLg'; // GCM API KEY OF YOUR GOOGLE CONSOLE PROJECT
 
+
+var FCM = require('fcm-push');
+var serverKey = 'AAAAaL9bLyE:APA91bFzJykIhJrU-t6VXtVqKgf-UnKGO7wka4HmG04aiKtQ-86rbJvban5MXZ7KgwkO_9CkZnuAMhhahrA6_ZD2VAz0o3ylrL6HMZOcwCLB1V2PAeAB_QUseeZRnK0Sg70YRxc030IB';
+var fcm = new FCM(serverKey);
+
 // TESTES LOCAIS
 var pool  = mysql.createPool({  
     connectionLimit : 100,    
@@ -569,35 +574,40 @@ router.post('/produto', function(req, res) {
 });
 
 /*apenas para testes depois remover esse codigo
-router.get('/push', function (req, res) {
-    var device_tokens = []; //create array for storing device tokens
-    var retry_times = 4; //the number of times to retry sending the message if it fails
-    var sender = new gcm.Sender(gcmApiKey); //create a new sender
-    var message = new gcm.Message(); //create a new message    
-    message.addData('title', 'Titulo da cerveja...');
-    message.addData('message', "Mensagem de teste de notificacao");
-    message.addData('sound', 'default');
-    message.addData('icon', 'assets/images/111.png');
-    message.collapseKey = 'Testing Push'; //grouping messages
-    message.delayWhileIdle = true; //delay sending while receiving device is offline
-    message.timeToLive = 3; //number of seconds to keep the message on 
-    //server if the device is offline
-    
-    //Take the registration id(lengthy string) that you logged 
-    //in your ionic v2 app and update device_tokens[0] with it for testing.
-    //Later save device tokens to db and 
-    //get back all tokens and push to multiple devices        
-    device_bob = "cHuB9agvyCY:APA91bFwXmQuliTLKP7cp2Z0aQxzPwm-SXOrcF405vnBOJkc11CVDadPZCmKdfpbNLwjYZut-2NWdAYpF9DNCu-MH_Bj_a_cUndt9z2kBEMJ-DH580YcZkWOjWuS88rUvRpJfqQOveWA";
-    device_tokens.push(device_bob);
-    
-    sender.send(message, device_tokens, retry_times, function (result) {
-        console.log('push sent to: ' + device_tokens);
-        res.status(200).send('Pushed notification ' + device_tokens);
-    }, function (err) {
-        res.status(500).send('failed to push notification ');
-    });
-});
 */
+router.get('/push', function (req, res) {
+    var produto = {"codigo":125,"preco":2.08,"dtpublicacao":"2017-04-29T03:02:52.000Z","cdloja":"ef3cb4a8d7598f41f7485a873886ad8a8636e9f0","cdmarca":1,"cdtipo":1,"cdmedida":7,"cdusuario":"115862700861296845675","marca":"Skol","loja":"Bistek Supermercado","vicinity":"Avenida Osvaldo José do Amaral, s/n - Bela Vista, São José","lat":-27.5757004,"lng":-48.6244824,"tipo":"Pilsen","medida":"Latinha","ml":269,"nomeusuario":"Roberto da conceicao","avatar":"https://lh5.googleusercontent.com/-NkphZfbAqNI/AAAAAAAAAAI/AAAAAAAAC2Y/2RbWqlwadFI/s96-c/photo.jpg"};
+    pushNotification(produto, null);
+    res.status(200).send('Pushed notification ');
+    /*
+    var device_tokens = []; //create array for storing device tokens     
+    device_tokens.push('e3dJhjDsKQ4:APA91bETVTm1HVDeqzsidcIeXlK-jPt8hirFTMA73elUqbLdti-uTsmBX7x_HiFV1Tj-02q7Cv2JlI83viQOksY6CEPLFRk9kU9STSZfOC2lfqUcMy1ml27hBYq28-v6g_sX_8uysf3q');
+    
+    var message = {  
+        to : 'e3dJhjDsKQ4:APA91bETVTm1HVDeqzsidcIeXlK-jPt8hirFTMA73elUqbLdti-uTsmBX7x_HiFV1Tj-02q7Cv2JlI83viQOksY6CEPLFRk9kU9STSZfOC2lfqUcMy1ml27hBYq28-v6g_sX_8uysf3q',
+        collapse_key : 'Teste de Push',
+        data : {
+         'title': 'Titulo da cerveja...',
+         'message': 'Mensagem de teste de notificacao',
+         'sound': 'default',
+         'icon': 'assets/images/111.png'
+        },
+        notification : {
+            title : 'Teste de notificação',
+            body : 'Body of the notification'
+        }
+    };
+
+    fcm.send(message, function(err,response){  
+        if(err) {
+            console.log("Something has gone wrong !", err);
+        } else {
+            console.log("Successfully sent with resposne :",response);
+            res.status(200).send('Pushed notification ' + device_tokens);
+        }
+    });
+    */
+});
 /*
 var produto = {
     codigo: resultProduto[0].codigo,
@@ -608,6 +618,60 @@ var produto = {
 };
 */
 function pushNotification(produto, device_tokens){
+    //var imgSrc = "assets/images/"+produto.cdtipo+""+produto.cdmarca+""+produto.cdmedida+".png";
+    var data   = {
+        'title': 'Cerveja '+produto.marca+' '+produto.medida+' R$ '+produto.preco,
+        'message': "Promoção de cerveja no estabelecimento "+produto.loja,
+        'sound': 'default',
+        'codigo': produto.codigo,
+        'icon': produto.cdtipo+""+produto.cdmarca+""+produto.cdmedida+".png"
+    };
+    
+    if(device_tokens.length <= 0 ){
+        console.log("Nao encontrou ninguem para notificar");
+        return;
+    }
+
+    //converter a lista de result que veio do banco para uma lista de string device-token
+    var listaDeviceToken = new Array();    
+    for(var i = 0; i < device_tokens.length; i++){
+        listaDeviceToken.push(device_tokens[i].devicetoken);
+    }
+
+    //guarda em cada possicao uma lista de devices de no máximo 1000(valor maximo da API de push notification) elementos
+    var arrayDevices = new Array(); 
+    if(listaDeviceToken.length > 1000){        
+        while(listaDeviceToken.length > 1000){
+            //remove da posicao 0, 1000 elementos e add esses 1000 na lista de push
+            arrayDevices.push(listaDeviceToken.splice(0, 1000));
+        }
+        arrayDevices.push(listaDeviceToken.splice(0, listaDeviceToken.length - 1));
+    } else {
+        arrayDevices.push(listaDeviceToken);
+    }
+
+    var message = {  
+        registration_ids : [],
+        data,
+        notification : {
+            data
+        }
+    };
+
+    for(var i = 0; i < arrayDevices.length; i++){
+        console.log("Enviando push: ", arrayDevices[i]);
+        message.registration_ids = arrayDevices[i];
+        fcm.send(message, function(err,response){
+            if(err) {
+                console.log("Something has gone wrong !", err);
+            } else {
+                console.log("Successfully sent with resposne :",response);
+            }
+        });
+    }
+}
+
+function pushNotificationOLD(produto, device_tokens){
     //var device_tokens = []; //create array for storing device tokens
     
     var retry_times = 4; //the number of times to retry sending the message if it fails
