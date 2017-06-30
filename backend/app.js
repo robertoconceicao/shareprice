@@ -58,9 +58,9 @@ app.use(function (req, res, next) {
 
 //Define url para deeplink
 app.get('/deeplink', deeplink({ 
-    fallback: 'https://google.com',
+    fallback: 'http://geladasoficial.com',
     android_package_name: 'br.com.rdc.vivacerveja', 
-    ios_store_link: 'https://todo',
+    ios_store_link: 'https://itunes.apple.com/br/app/geladas/id1244776128?mt=8',
 }));
 
 // ROTAS ===============================================

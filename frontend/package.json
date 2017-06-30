@@ -27,6 +27,7 @@
         "@ionic/storage": "1.1.7",
         "angular2-jwt": "^0.1.27",
         "auth0-lock": "^10.11.0",
+        "cordova-android": "^6.2.3",
         "cordova-custom-config": "~3.1.2",
         "cordova-ios": "^4.4.0",
         "cordova-plugin-admobpro": "~2.28.3",
@@ -47,7 +48,7 @@
         "cordova.plugins.diagnostic": "~3.4.2",
         "ionic-angular": "2.0.0-rc.4",
         "ionic-native": "2.2.11",
-        "ionic-plugin-deeplinks": "~1.0.14",
+        "ionic-plugin-deeplinks": "^1.0.15",
         "ionic-plugin-keyboard": "~2.2.1",
         "ionicons": "3.0.0",
         "phonegap-plugin-push": "~1.10.0",
@@ -100,12 +101,6 @@
             "cordova-plugin-x-socialsharing": {},
             "cordova-sqlite-storage": {},
             "cordova.plugins.diagnostic": {},
-            "ionic-plugin-deeplinks": {
-                "URL_SCHEME": "geladas",
-                "DEEPLINK_SCHEME": "https",
-                "DEEPLINK_HOST": "geladas.com",
-                "DEEPLINK_2_HOST": "produto"
-            },
             "ionic-plugin-keyboard": {},
             "phonegap-plugin-push": {
                 "SENDER_ID": "449887022881"
@@ -116,9 +111,15 @@
             },
             "cordova-plugin-geolocation": {
                 "GEOLOCATION_USAGE_DESCRIPTION": "O App precisa ter acesso a sua localização, apenas no início para buscar as cervejas próximas de você"
+            },
+            "ionic-plugin-deeplinks": {
+                "URL_SCHEME": "geladas",
+                "DEEPLINK_SCHEME": "https",
+                "DEEPLINK_HOST": "geladasoficial.com"
             }
         },
         "platforms": [
+            "android",
             "ios"
         ]
     }

@@ -122,7 +122,7 @@ export class ViewProdutoPage {
         + ' ' + this.produto.medida.descricaoML 
         + ' R$ ' + NumberUtil.formataMoeda(this.produto.preco)
         + ' ' + this.produto.loja.nome
-        + ' https://geladas.com/produto/'+this.produto.codigo;
+        + ' http://geladasoficial.com/produto/'+this.produto.codigo;
     }
 
     pathImagem(){

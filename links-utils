@@ -16,6 +16,10 @@ https://medium.com/@ankushaggarwal/push-notifications-in-ionic-2-658461108c59#.s
 http://ionicframework.com/docs/v1/guide/publishing.html
 
 
+#Ajusda para add/rm plugins e platform
+https://stackoverflow.com/questions/30333494/ionic-plugin-need-to-remove-platform-and-readd-platform-before-it-work
+
+
 Compilar versao release
 ionic run android --prod --release
 
