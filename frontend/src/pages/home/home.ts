@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild}  from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NavController, LoadingController, Searchbar, AlertController}  from 'ionic-angular';
-import { FiltrosPage }         from '../filtros/filtros';
-import { CadProdutoPage } from '../cad-produto/cad-produto';
-import { ConfigPage } from '../config/config';
-import { LoginPage } from '../login/login';
+
+import { LoginPage, ConfigPage, CadProdutoPage, FiltrosPage } from '../../pages';
+
 import { Produto } from '../../models/produto';
 import { Filtro } from '../../models/filtro';
 import { SharingService } from '../../services/sharing-service';
@@ -222,6 +221,7 @@ export class Home implements OnInit {
    }
 
    showAlertLogin(){
+       let env = this;
        let confirmAlert = this.alertCtrl.create({
                               title: "Usuário não identificado",
                               message: "Faça o login, para acesso a todas funcionalidades.",
@@ -231,7 +231,7 @@ export class Home implements OnInit {
                               }, {
                                 text: 'Login',
                                 handler: () => {
-                                  this.navCtrl.setRoot(LoginPage);
+                                  env.navCtrl.push(LoginPage);
                                 }
                               }]
                             });

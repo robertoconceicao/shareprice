@@ -56,12 +56,14 @@ export class MyApp {
                 }, function (error) {
                      NativeStorage.getItem('tutorial')
                       .then( function (resp){
-                          let confirmAlert = this.alertCtrl.create({
+                          let confirmAlert = env.alertCtrl.create({
                               title: "Usuário não identificado",
                               message: "Faça o login, para acesso a todas funcionalidades.",
                               buttons: [{
                                 text: 'Ignorar',
-                                role: 'cancel'
+                                handler: () => {
+                                  env.nav.setRoot(Home);
+                                }
                               }, {
                                 text: 'Login',
                                 handler: () => {
