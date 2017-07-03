@@ -33,6 +33,7 @@ app.use(bodyParser.json());
 // parse application/vnd.api+json as json
 app.use(bodyParser.json({ type: 'application/json' }));
 
+
 //http://expressjs.com/pt-br/starter/static-files.html
 app.use('/', express.static(__dirname + '/site'));
 
@@ -59,7 +60,7 @@ app.use(function (req, res, next) {
 //Define url para deeplink
 app.get('/deeplink', deeplink({ 
     fallback: 'http://geladasoficial.com',
-    android_package_name: 'br.com.rdc.vivacerveja', 
+    android_package_name: 'https://play.google.com/store/apps/details?id=br.com.rdc.vivacerveja', 
     ios_store_link: 'https://itunes.apple.com/br/app/geladas/id1244776128?mt=8',
 }));
 
