@@ -26,6 +26,18 @@ interface Produto {
 	cdusuario: string;
 }
 
+interface DadoProduto {	
+	marca: string;
+	medida: string;
+	ml: string;
+	loja: string;
+	preco: string;
+	dtpublicacao: Date;
+	nomeusuario: string;
+	lat: number;
+	lng: number;
+}
+
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
@@ -43,8 +55,14 @@ export class AppComponent {
 
 	usuarios: marker[];
 	lojas: marker[];
-	iconLoja: string = "/assets/icon/supermarket.png";	
+	produtos: DadoProduto[];
+
+	iconLoja: string = "/assets/icon/supermarket.png";
+	iconProduto: string = "/assets/icon/beer.png";	
+
 	flUsuario: boolean = false;
+	flLocal: boolean = false;
+	flProduto: boolean = false;
 
 	produto: Produto;
 	marcas: any[];
@@ -53,15 +71,15 @@ export class AppComponent {
 	msg: string;
 	error: string;
 
+	filtro: any;
+
 	loja: marker;
 
 	constructor(public gService: GeladasService) {
-		if (this.flUsuario) {
-			this.buscaDadosUsuario(this.lat, this.lng);
-		}
+		this.buscaDadosUsuario(this.lat, this.lng);
 		this.buscaQtdeUsuario(this.lat, this.lng);
 		this.buscaLojas(this.lat, this.lng);
-
+		this.buscaProdutos(this.lat, this.lng);
 
 		this.msg = "";
 		this.error = "";
@@ -73,6 +91,8 @@ export class AppComponent {
 			icon: "",
 			cdloja: ""
 		};
+
+		this.filtro = "";
 
 		this.newProduto();
 	}
@@ -101,6 +121,8 @@ export class AppComponent {
 				}).catch((error) => {
 					console.log("Error: " + error);
 				});		
+		} else {
+			this.usuarios = new Array();
 		}
 	}
 
@@ -113,14 +135,47 @@ export class AppComponent {
 			});
 	}
 
+	btBuscaLojas(){
+		this.buscaLojas(this.lat, this.lng);
+	}
+
 	buscaLojas(lat: any, lng: any) {
-		this.gService.getLojas(lat, lng, this.radius)
-			.then((dados) => {
-				this.lojas = dados;
-				console.log("lojas: ", dados);
-			}).catch((error) => {
-				console.log("Error: " + error);
-			});
+		if(this.flLocal){
+			console.log("BuscaLojas: ", lat, lng, this.radius);
+			if(!!this.filtro){
+				this.gService.getLojasByName(this.filtro, lat, lng, this.radius)
+					.then((dados) => {
+						this.lojas = dados;
+						console.log("lojas: ", dados);
+					}).catch((error) => {
+						console.log("Error: " + error);
+					});
+			} else {
+				this.gService.getLojas(lat, lng, this.radius)
+					.then((dados) => {
+						this.lojas = dados;
+						console.log("lojas: ", dados);
+					}).catch((error) => {
+						console.log("Error: " + error);
+					});
+			}
+		} else {
+			this.lojas = new Array();
+			this.filtro = "";
+		}
+	}
+
+	buscaProdutos(lat: any, lng: any) {
+		if(this.flProduto){
+			this.gService.getProdutos(lat, lng, this.radius)
+				.then((dados) => {
+					this.produtos = dados;
+				}).catch((error) => {
+					console.log("Error: " + error);
+				});
+		} else {
+			this.produtos = new Array();
+		}
 	}
 
 	onClickLoja(_loja) {
@@ -131,13 +186,15 @@ export class AppComponent {
 		this.radius = $event;
 		this.buscaLojas(this.lat, this.lng);
 		this.buscaQtdeUsuario(this.lat, this.lng);		
-		this.buscaDadosUsuario(this.lat, this.lng);		
+		this.buscaDadosUsuario(this.lat, this.lng);	
+		this.buscaProdutos(this.lat, this.lng);	
 	}
 
 	eventoDragEnd($event: MouseEvent) {
 		this.buscaLojas($event['coords'].lat, $event['coords'].lng);		
 		this.buscaDadosUsuario($event['coords'].lat, $event['coords'].lng);
-		this.buscaQtdeUsuario($event['coords'].lat, $event['coords'].lng);		
+		this.buscaQtdeUsuario($event['coords'].lat, $event['coords'].lng);	
+		this.buscaProdutos($event['coords'].lat, $event['coords'].lng);	
 	}
 
 	postar(): void {

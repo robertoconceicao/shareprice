@@ -1,7 +1,37 @@
 <table>
   <tr>
     <td style="width: 80%">
-      <h1>latitude: {{lat}} longitude: {{lng}} raio: {{radius/1000}} quantide de usuarios: {{qtdeUsuario}}</h1>
+      <div>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <label>Latitude: </label> {{lat}} &nbsp; <label>Longitude: </label> {{lng}} &nbsp;
+              <label>Raio: </label> {{radius/1000}} &nbsp;
+              <label>Quantide de usuários: </label> {{qtdeUsuario}} &nbsp;
+            </div>
+          </div>
+          <br />
+
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <label for="ckusuario">Mostrar Usuários ({{usuarios.length}}): </label>
+              <input type="checkbox" name="ckusuario" [(ngModel)]="flUsuario" /> <br />
+
+              <label for="cklocal">Mostrar Estabelecimentos ({{lojas.length}}): </label>
+              <input type="checkbox" name="cklocal" [(ngModel)]="flLocal" /> <br />
+
+              <label for="ckproduto">Mostrar Produtos ({{produtos.length}}): </label>
+              <input type="checkbox" name="ckproduto" [(ngModel)]="flProduto" /> <br />
+
+              <label for="filtro">Nome do Estabelecimento: </label>
+              <input [(ngModel)]="filtro" type="text" name="filtro" class="form-control"> 
+              <button type="button" class="btn btn-secondary"  (click)="btBuscaLojas()">
+                Buscar
+              </button>
+              <br />
+            </div>
+          </div>
+
+      </div>
 
       <sebm-google-map 
             [latitude]="-27.6210716"
@@ -30,6 +60,23 @@
               <sebm-google-map-info-window>
                 <strong>{{loja.label}}</strong>
               </sebm-google-map-info-window>              
+            </sebm-google-map-marker>
+
+            <sebm-google-map-marker 
+                *ngFor="let produto of produtos"
+                [latitude]="produto.lat"
+                [longitude]="produto.lng"
+                [iconUrl]="iconProduto">
+                
+              <sebm-google-map-info-window>
+                <strong>
+                  Marca: {{produto.marca }} - {{produto.ml}} ml <br />
+                  Preco: {{produto.preco}} <br />
+                  Usuario: {{produto.nomeusuario}} <br />
+                  Loja: {{produto.loja}} <br />
+                  Data: {{produto.dtpublicacao}} <br />
+                </strong>
+              </sebm-google-map-info-window>              
             </sebm-google-map-marker>      
 
             <sebm-google-map-circle [latitude]="lat" [longitude]="lng" 
@@ -44,7 +91,7 @@
     </td>
 
     <td>
-      <div class="container">          
+      <div class="container">
           <form (ngSubmit)="postar()">
             <alert *ngIf="msg" type="success">{{msg}}</alert>
             <alert *ngIf="error" type="danger">{{error}}</alert>

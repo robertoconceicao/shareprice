@@ -28,11 +28,12 @@ interface Produto {
     cdusuario: string;
 }
 
-const MANAGER_ENDPOINT = 'http://geladasoficial.com/manager/';
-const API_ENDPOINT     = 'http://geladasoficial.com/api/';
+const MANAGER_ENDPOINT = 'http://localhost:3000/manager/';//'http://geladasoficial.com/manager/';
+const API_ENDPOINT     = 'http://localhost:3000/api/';//'http://geladasoficial.com/api/';
 const GET_USER_NO_RAIO = "usernoraio";
 const GET_QTDE_USER_NO_RAIO = "qtdeusernoraio";
 const GET_LOJAS = "lojas";
+const GET_PRODUTOS = "produtos";
 const GET_MARCAS = 'marcas';
 const GET_TIPOS = 'tipos';
 const GET_MEDIDAS = 'medidas';
@@ -122,6 +123,16 @@ export class GeladasService {
   getLojas(lat: any, lng: any, raio: any) {
     let params: string = "/"+lat+"/"+lng+"/"+raio;
     return this.getHttp(MANAGER_ENDPOINT + GET_LOJAS + params);            
+  }
+
+  getLojasByName(name: any, lat: any, lng: any, raio: any) {
+    let params: string = "/"+name+"/"+lat+"/"+lng+"/"+raio;
+    return this.getHttp(MANAGER_ENDPOINT + GET_LOJAS + params);            
+  }
+
+  getProdutos(lat: any, lng: any, raio: any) {
+    let params: string = "/"+lat+"/"+lng+"/"+raio;
+    return this.getHttp(MANAGER_ENDPOINT + GET_PRODUTOS + params);            
   }
 
   get marcas() {
