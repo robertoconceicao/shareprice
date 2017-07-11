@@ -65,7 +65,7 @@
         </ion-list>
 
         <p>
-            <button type="submit" ion-button block icon-left [disabled]="!cervejaForm.form.valid">                
+            <button type="submit" ion-button block icon-left [disabled]="!cervejaForm.form.valid || isDisable">                
                 <ion-icon name="cloud-upload"></ion-icon>
                 Publicar
             </button>

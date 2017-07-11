@@ -4,7 +4,7 @@ import { Confignotificacao }  from '../models/confignotificacao';
 export class AppSettings {
 
    public static get API_ENDPOINT(): string {      
-       return 'http://geladasoficial.com/api/';//'http://node-express-geladas.misais4yjc.us-west-2.elasticbeanstalk.com/api/';
+       return 'http://localhost:3000/api/';//http://geladasoficial.com/api/';//'http://node-express-geladas.misais4yjc.us-west-2.elasticbeanstalk.com/api/';
    }
 
    //API marca

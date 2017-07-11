@@ -4,11 +4,13 @@ import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage, Dee
 import { Home, ViewProdutoPage, TutorialPage, LoginPage } from '../pages';
 import { SharingService } from '../services/sharing-service';
 import { AppSettings }  from './app-settings';
+import { Usuario } from '../models/usuario';
 
 //Utilizado para tratar as resposta de verificacao do GPS
 const SUCCESS             = 0;
 const ERRO_GPS_DISABLED   = 1;
 const ERRO_NOT_AUTHORIZED = 2;
+const MODO_DEBUGGER       = true;
 
 @Component({
   templateUrl: 'app.html'
@@ -42,43 +44,57 @@ export class MyApp {
           .then((resp) => {
               this.sharingService.setLat(resp.coords.latitude);
               this.sharingService.setLng(resp.coords.longitude); 
-            
-              let env = this;
-              NativeStorage.getItem('user')
-                .then( function (usuario) {
-                  env.sharingService.setCdusuario(usuario.cdusuario);
-                  env.sharingService.insereUsuario(usuario);
-                  // se o usuario esta entrando pelo push notification ele cai direto dentro da tela de ViewProdutoPage
-                  if(!env.flVeioDoPush){
-                    env.nav.setRoot(Home);
-                    Splashscreen.hide();
-                  }
-                }, function (error) {
-                     NativeStorage.getItem('tutorial')
-                      .then( function (resp){
-                          let confirmAlert = env.alertCtrl.create({
-                              title: "Usuário não identificado",
-                              message: "Faça o login, para acesso a todas funcionalidades.",
-                              buttons: [{
-                                text: 'Ignorar',
-                                handler: () => {
-                                  env.nav.setRoot(Home);
-                                }
-                              }, {
-                                text: 'Login',
-                                handler: () => {
-                                  env.nav.setRoot(LoginPage);
-                                }
-                              }]
-                            });
-                            confirmAlert.present();
+              
+              if(MODO_DEBUGGER){
+                console.log("Modo Debugger");
+                //insere um novo usuario no sistema
+                let usuario: Usuario = new Usuario();
+                usuario.cdusuario = "G115862700861296845675";
+                usuario.avatar = "https://lh5.googleusercontent.com/-NkphZfbAqNI/AAAAAAAAAAI/AAAAAAAAC2Y/2RbWqlwadFI/s96-c/photo.jpg";
+                usuario.nome = "Roberto da conceicao";
+                usuario.email = "conceicao.roberto@gmail.com";
+                NativeStorage.setItem('user', usuario);
+                this.sharingService.setCdusuario(usuario.cdusuario);
+                this.nav.setRoot(Home);
+                Splashscreen.hide();
+              } else {
+                let env = this;
+                NativeStorage.getItem('user')
+                  .then( function (usuario) {
+                    env.sharingService.setCdusuario(usuario.cdusuario);
+                    env.sharingService.insereUsuario(usuario);
+                    // se o usuario esta entrando pelo push notification ele cai direto dentro da tela de ViewProdutoPage
+                    if(!env.flVeioDoPush){
+                      env.nav.setRoot(Home);
+                      Splashscreen.hide();
+                    }
+                  }, function (error) {
+                      NativeStorage.getItem('tutorial')
+                        .then( function (resp){
+                            let confirmAlert = env.alertCtrl.create({
+                                title: "Usuário não identificado",
+                                message: "Faça o login, para acesso a todas funcionalidades.",
+                                buttons: [{
+                                  text: 'Ignorar',
+                                  handler: () => {
+                                    env.nav.setRoot(Home);
+                                  }
+                                }, {
+                                  text: 'Login',
+                                  handler: () => {
+                                    env.nav.setRoot(LoginPage);
+                                  }
+                                }]
+                              });
+                              confirmAlert.present();
+                              Splashscreen.hide();
+                        }, function (error) {
+                            env.nav.setRoot(TutorialPage);
+                            NativeStorage.setItem('tutorial', 1);
                             Splashscreen.hide();
-                      }, function (error) {
-                          env.nav.setRoot(TutorialPage);
-                          NativeStorage.setItem('tutorial', 1);
-                          Splashscreen.hide();
-                      });
-                });
+                        });
+                  });
+              }
           }).catch((error) => {
               // this.verificaGPSAtivo();
               this.openAlertNotGeolocation("O Geladas não conseguiu pegar sua localização", "Por favor ligue sua localização e tente novamente.");
@@ -99,6 +115,11 @@ export class MyApp {
   }
 
   verificaGPSAtivo(): Promise<any> {
+    if(MODO_DEBUGGER){
+        return new Promise((resolve, reject) => {
+          resolve(SUCCESS);
+        });
+    }
     return new Promise((resolve, reject) => {
         Diagnostic.requestLocationAuthorization("when_in_use")
         .then((value) => {

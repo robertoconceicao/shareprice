@@ -24,6 +24,7 @@ export class CadProdutoPage implements OnInit {
   public medidas: Array<Medida> = [];
   public medidasFiltradas: Array<Medida> = [];
   public isBusy: boolean = true;
+  public isDisable: boolean = false;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -82,15 +83,18 @@ export class CadProdutoPage implements OnInit {
 
   postar(): void {
  //   if(this.validaCamposObrigatorios()){
+      this.isDisable = true;
       this.produto.preco = this.produto.preco.replace(/,/, '.'); //replace , por .
       this.sharingService.postar(this.produto)
         .then(success => {
               let msg = "Obrigado por cadastrar o produto";            
               this.presentToast(msg);
               this.goBack();
+              this.isDisable = false;
           })
           .catch(error => {
               this.presentToast("Erro ao publicar produto, favor tentar mais tarde.");
+              this.isDisable = false;
           });
  //   }
   }
