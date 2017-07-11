@@ -7,7 +7,7 @@ import { Home, CadProdutoPage, FiltrosPage, ConfigPage,
 import { SharingService }         from '../services/sharing-service';
 import { MoedaRealPipe }          from '../pipes/moeda-real';
 
-import { ProdutoItem, PrecoComponent } from '../componentes';
+import { ProdutoItem, PrecoComponent, AutocompleteComponent } from '../componentes';
 import { AdMob }  from '@ionic-native/admob';
 
 @NgModule({
@@ -24,7 +24,8 @@ import { AdMob }  from '@ionic-native/admob';
     PrecoComponent,
     ViewProdutoPage,
     MapaPage,
-    TutorialPage
+    TutorialPage,
+    AutocompleteComponent
   ],
   imports: [
     IonicModule.forRoot(MyApp,{
@@ -44,7 +45,8 @@ import { AdMob }  from '@ionic-native/admob';
     PrecoComponent,
     ViewProdutoPage,
     MapaPage,
-    TutorialPage
+    TutorialPage,
+    AutocompleteComponent
   ],
   providers: [
       {provide: ErrorHandler, useClass: IonicErrorHandler},

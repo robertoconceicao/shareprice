@@ -8,3 +8,4 @@ export * from  './medidapormarca';
 export * from  './produto';
 export * from  './tipo';
 export * from  './usuario';
+export * from  './codigodescricao';
