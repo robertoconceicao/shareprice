@@ -1,1 +1,12 @@
-<!-- TODO Implementar o teste para utilizacao do componente de autocomplete -->
+<ion-header>
+  <ion-navbar color="geladas">
+    <ion-title>Teste componente marca</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+   <ion-label>Marca</ion-label>
+   <div *ngIf="listaMarcas">
+        <autocomplete-comp [selected]="marca" [lista]="listaMarcas" (notify)="onNotifyMarca($event)" [placeholder]="placeholder"></autocomplete-comp>
+   </div>
+</ion-content>

@@ -7,3 +7,4 @@ export * from  './loja/loja-page';
 export * from  './mapa/mapa';
 export * from  './produto/view-produto';
 export * from  './tutorial/tutorial';
+export * from  './marca/marca';

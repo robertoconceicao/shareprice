@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, AlertController  } from 'ionic-angular';
 import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage, Deeplinks, Diagnostic } from 'ionic-native';
-import { Home, ViewProdutoPage, TutorialPage, LoginPage } from '../pages';
+import { Home, ViewProdutoPage, TutorialPage, LoginPage, MarcaPage } from '../pages';
 import { SharingService } from '../services/sharing-service';
 import { AppSettings }  from './app-settings';
 import { Usuario } from '../models/usuario';
@@ -55,7 +55,7 @@ export class MyApp {
                 usuario.email = "conceicao.roberto@gmail.com";
                 NativeStorage.setItem('user', usuario);
                 this.sharingService.setCdusuario(usuario.cdusuario);
-                this.nav.setRoot(Home);
+                this.nav.setRoot(MarcaPage);//Home);
                 Splashscreen.hide();
               } else {
                 let env = this;

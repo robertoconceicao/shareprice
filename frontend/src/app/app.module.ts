@@ -2,7 +2,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp }                  from './app.component';
 import { Home, CadProdutoPage, FiltrosPage, ConfigPage, 
-        LojaPage, LoginPage, MapaPage, TutorialPage, ViewProdutoPage } from '../pages';
+        LojaPage, LoginPage, MapaPage, TutorialPage, ViewProdutoPage, MarcaPage } from '../pages';
 
 import { SharingService }         from '../services/sharing-service';
 import { MoedaRealPipe }          from '../pipes/moeda-real';
@@ -25,7 +25,8 @@ import { AdMob }  from '@ionic-native/admob';
     ViewProdutoPage,
     MapaPage,
     TutorialPage,
-    AutocompleteComponent
+    AutocompleteComponent,
+    MarcaPage
   ],
   imports: [
     IonicModule.forRoot(MyApp,{
@@ -46,7 +47,8 @@ import { AdMob }  from '@ionic-native/admob';
     ViewProdutoPage,
     MapaPage,
     TutorialPage,
-    AutocompleteComponent
+    AutocompleteComponent,
+    MarcaPage
   ],
   providers: [
       {provide: ErrorHandler, useClass: IonicErrorHandler},
