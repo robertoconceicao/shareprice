@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 import { CodigoDescricao, Marca } from '../../models';
 import { NavController }  from 'ionic-angular';
 import { SharingService } from '../../services/sharing-service';
+import { Home } from '../../pages';
 
 @Component({
    selector: 'page-marca',
@@ -12,38 +13,38 @@ import { SharingService } from '../../services/sharing-service';
 export class MarcaPage implements OnInit {
     
 
+    iconBeer: string = "beer";
     marca: CodigoDescricao;
     listaMarcas: CodigoDescricao[];
     public placeholder: string = "Informe uma marca"; 
 
     constructor( private _http: Http,
-        public navCtrl: NavController,
-               public sharingService: SharingService){
+                 public navCtrl: NavController,
+                 public sharingService: SharingService){
         
     }
 
     ngOnInit(): void {
-        this.marca = {'codigo': 1, 'descricao': "Skol"};
+        this.marca = {'codigo': 1, 'titulo':"Skol", 'descricao': ""};
 
-           // this.converteCodigoDescricao(marcas);
         this.sharingService.marcas
             .map( x => {
                     var dados = [];
                     for(let m of x){
-                        dados.push({"codigo": m.cdmarca, "descricao": m.descricao});
+                        dados.push({"codigo": m.cdmarca, "titulo": m.descricao, "descricao": ""});
                     }
                     return dados;
             })
             .subscribe(x => this.listaMarcas = x );
-        
-   //     subscribe(x => this.listaMarcas = x);
-   //     this.getMarcas()
-   //         .subscribe(x => this.listaMarcas = x );        
     }
 
     onNotifyMarca(marcaSelc: CodigoDescricao):void {
         console.log("marca selecionada: ", marcaSelc);
         this.marca = marcaSelc;
+    }
+
+    onClickAdd(event: Boolean) : void {
+        this.navCtrl.push(Home);
     }
 /*
     getMarcas(){
