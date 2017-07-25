@@ -1,32 +1,44 @@
-import { Component, OnInit }  from '@angular/core';
+import { Component, OnInit, Input }  from '@angular/core';
 import { Http } from '@angular/http';
 import { FormControl } from '@angular/forms';
+import { NavParams, ViewController } from 'ionic-angular';
 import { CodigoDescricao, Marca } from '../../models';
 import { NavController }  from 'ionic-angular';
 import { SharingService } from '../../services/sharing-service';
-import { Home } from '../../pages';
+import { IndiqueMarcaPage } from '../../pages';
 
 @Component({
    selector: 'page-marca',
-   templateUrl: 'marca.html'
+   template: `
+        <searchlist *ngIf="listaMarcas"
+                [selected]="marca" 
+                [lista]="listaMarcas" 
+                (onSelected)="onNotifyMarca($event)" 
+                (onAdd)="onClickAdd($event)"
+                [showButtonAdd]="true"
+                [icon]="iconBeer"
+                [placeholder]="placeholder"></searchlist>
+   `
 })
 export class MarcaPage implements OnInit {
-    
 
-    iconBeer: string = "beer";
-    marca: CodigoDescricao;
-    listaMarcas: CodigoDescricao[];
+    @Input() selected: CodigoDescricao;
+    public iconBeer: string = "beer";
+    public marca: CodigoDescricao;
+    public listaMarcas: CodigoDescricao[];
     public placeholder: string = "Informe uma marca"; 
 
     constructor( private _http: Http,
                  public navCtrl: NavController,
+                 public navParams: NavParams,
+                 public viewCtrl: ViewController,
                  public sharingService: SharingService){
-        
+
+        this.converteCodigoDescricao(this.navParams.get('marcas'));
     }
 
     ngOnInit(): void {
-        this.marca = {'codigo': 1, 'titulo':"Skol", 'descricao': ""};
-
+        /*
         this.sharingService.marcas
             .map( x => {
                     var dados = [];
@@ -36,30 +48,22 @@ export class MarcaPage implements OnInit {
                     return dados;
             })
             .subscribe(x => this.listaMarcas = x );
+        */
     }
 
     onNotifyMarca(marcaSelc: CodigoDescricao):void {
-        console.log("marca selecionada: ", marcaSelc);
         this.marca = marcaSelc;
+        this.viewCtrl.dismiss({"cdmarca": this.marca.codigo, "descricao": this.marca.descricao});
     }
 
     onClickAdd(event: Boolean) : void {
-        this.navCtrl.push(Home);
+        this.navCtrl.push(IndiqueMarcaPage);
     }
-/*
-    getMarcas(){
-        const url = 'assets/mock-marcas.json';
-        return this._http.get(url)
-                         .map(x => x.json());
-    }
-*/
+
     converteCodigoDescricao(marcas: Array<Marca>){
-        let codigoDescricao: CodigoDescricao;
+        this.listaMarcas = new Array<CodigoDescricao>();
         for(let m of marcas){
-            codigoDescricao = new CodigoDescricao();
-            codigoDescricao.codigo = m.cdmarca;
-            codigoDescricao.descricao = m.descricao;
-            this.listaMarcas.push(codigoDescricao);
+            this.listaMarcas.push({"codigo": m.cdmarca, "titulo": "", "descricao": m.descricao});
         }
     }
 }

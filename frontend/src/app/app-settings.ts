@@ -9,6 +9,7 @@ export class AppSettings {
 
    //API marca
    public static GET_MARCAS = 'marcas';
+   public static POST_INDIQUE_MARCA = 'indiquemarca';
 
    //API tipo
    public static GET_TIPOS = 'tipos';
@@ -44,6 +45,7 @@ export class AppSettings {
 
    //API medidas por marca
    public static GET_MEDIDA_POR_MARCA = "medidapormarca";
+   
    
    public static convertToProduto(data): Produto {
      var produto = new Produto();

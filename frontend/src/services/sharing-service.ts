@@ -303,6 +303,20 @@ export class SharingService {
     return  this.getHttpParamns(AppSettings.API_ENDPOINT + AppSettings.GET_VALIDA_PRECO_QTDE, params);
   }
   
+  indiqueMarca(marca: string){
+    let jsonDado = {
+      cdusuario: this._cdusuario.value,
+      marca: marca,
+      dtcadastro: new Date()
+    };
+    
+    return  this.http
+                .post(AppSettings.API_ENDPOINT + AppSettings.POST_INDIQUE_MARCA, 
+                    JSON.stringify(jsonDado), 
+                    {headers: contentHeaders}
+                ).toPromise();
+  }
+
   private getHttpParamns(url: string, params: URLSearchParams){
     return this.http.get(url, {search: params})
           .toPromise()

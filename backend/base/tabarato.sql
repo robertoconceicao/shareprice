@@ -33,6 +33,14 @@ CREATE TABLE IF NOT EXISTS `configmarca` (
   PRIMARY KEY (`cdconfigmarca`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+--
+-- Estrutura da tabela `indiquemarca`
+--
+CREATE TABLE IF NOT EXISTS `indiquemarca` (
+  `cdusuario` text NOT NULL,
+  `marca` text NOT NULL,
+  `dtcadastro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 -- --------------------------------------------------------
 
 -- --------------------------------------------------------

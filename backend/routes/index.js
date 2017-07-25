@@ -47,6 +47,22 @@ const PROJECAO_PRODUTO = `
 `;
 
 router.get('/medidapormarca', getMedidapormarca);
+router.get('/confignotificacao', confignotificacao);
+router.post('/indiquemarca', indiqueMarca);
+
+function indiqueMarca(req, res) {
+    console.log("Dados recebidos: "+JSON.stringify(req.body));
+    pool.getConnection(function(err, connection) {
+        connection.query('INSERT INTO indiquemarca SET ? ', req.body,
+            function(err,result){
+                if(err) {
+                    return res.status(400).json(err);
+                }
+                return res.status(200).json(result);            
+            });
+        connection.release();       
+    });    
+}
 
 function getMedidapormarca(req, res){    
     pool.getConnection(function(err, connection) {
@@ -87,8 +103,6 @@ function getMedidapormarca(req, res){
         connection.release();
     });
 }
-
-router.get('/confignotificacao', confignotificacao);
 
 function confignotificacao(req, res){
     var cdusuario = req.query.cdusuario;

@@ -12,13 +12,9 @@
                 <img  width="200" height="200" [src]="produto.icon">
             </div>
             
-            <ion-item>            
-                <ion-label>Marca</ion-label>            
-                    <ion-select [ngModel]="produto.marca.cdmarca" (ngModelChange)="onChangeMarca($event)" name="cdmarca">
-                        <ion-option [value]="marca.cdmarca" *ngFor="let marca of sharingService.marcas | async">
-                            {{ marca.descricao }}
-                        </ion-option>
-                    </ion-select>
+            <ion-item (click)="changeMarca()">
+                <span class="corLabel">Marca</span>
+                <span style="float: right;">{{produto.marca.descricao}}</span>
             </ion-item>
             
             <ion-item>            

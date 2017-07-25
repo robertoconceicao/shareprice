@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, ToastController, ModalController, AlertController  } from 'ionic-angular';
 import { Geolocation } from 'ionic-native';
-import { Medida, Produto, Loja } from '../../models';
+import { Medida, Produto, Loja, Marca } from '../../models';
 
-import { LojaPage } from '../loja/loja-page';
-import { Home } from '../home/home';
+import { Home, LojaPage, MarcaPage } from '../../pages';
 import { SharingService } from '../../services/sharing-service';
 import { NumberUtil } from '../../util/number-util';
 
@@ -14,7 +13,12 @@ var self;
 
 @Component({
   selector: 'page-cad-produto',
-  templateUrl: 'cad-produto.html'
+  templateUrl: 'cad-produto.html',
+  styles: [`       
+        .corLabel {
+            color: #999 !important;             
+        }      
+    `]
 })
 export class CadProdutoPage implements OnInit {
   public produto: Produto;
@@ -23,6 +27,7 @@ export class CadProdutoPage implements OnInit {
   public lojas: Array<Loja> = [];  
   public medidas: Array<Medida> = [];
   public medidasFiltradas: Array<Medida> = [];
+  public marcas: Array<Marca> = [];
   public isBusy: boolean = true;
   public isDisable: boolean = false;
 
@@ -40,6 +45,8 @@ export class CadProdutoPage implements OnInit {
 
     this.sharingService.marcas.subscribe(marcas => {
       this.produto.marca.cdmarca = marcas[0].cdmarca;
+      this.produto.marca.descricao = marcas[0].descricao;
+      this.marcas = marcas;
     });
     this.sharingService.tipos.subscribe(tipos => {
       this.produto.tipo.cdtipo = tipos[0].cdtipo;
@@ -195,6 +202,18 @@ export class CadProdutoPage implements OnInit {
       }
     });
     lojaModal.present();
+  }
+
+  changeMarca(){
+    let marcaModal = this.modalCtrl.create(MarcaPage, {'marcas': this.marcas});
+    marcaModal.onDidDismiss(data => {
+      if(!!data){
+        this.produto.marca = data;
+        this.filtraMedidas();
+        this.buscarIconeCerveja();
+      }
+    });
+    marcaModal.present();
   }
 
   onChangeMarca(event){

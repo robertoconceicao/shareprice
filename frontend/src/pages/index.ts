@@ -8,3 +8,4 @@ export * from  './mapa/mapa';
 export * from  './produto/view-produto';
 export * from  './tutorial/tutorial';
 export * from  './marca/marca';
+export * from  './marca/indique-marca';
