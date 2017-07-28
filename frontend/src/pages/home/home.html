@@ -1,25 +1,81 @@
 <ion-header>
 
-  <ion-navbar *ngIf="!isSearch()" color="geladas">
-    <ion-title>
-        Geladas
+<!--
+  <ion-navbar color="geladas" align-title="center">    
+    <ion-title (click)="changeLocal();">
+        <span class="titulo-geladas">Geladas</span><br />
+        <span class="municipio">{{ municipio.municipio + ", "+ municipio.uf }}</span><br />
     </ion-title>
 
     <ion-buttons end>
-        <button ion-button icon-only (click)="clickSearch()">
-            <ion-icon name="search"></ion-icon>
-        </button>
-        <button ion-button icon-only (click)="showFilters()">
-            <ion-icon name="funnel" [style.color]="hasFilter() ? 'red' : 'inherit'"></ion-icon>
-        </button>
+       <button ion-button icon-only (click)="showFilters()">
+          <ion-icon ios="ios-funnel" md="md-funnel"></ion-icon>
+       </button>
 
-        <button ion-button icon-only (click)="showConfig()">
-            <ion-icon name="ios-notifications"></ion-icon>
-        </button>
+       <button ion-button icon-only (click)="showConfig()">
+          <ion-icon ios="ios-cog" md="md-cog"></ion-icon>
+       </button>
     </ion-buttons>
   </ion-navbar>
+  -->
 
-  <ion-navbar *ngIf="isSearch()" color="geladas">
+  <ion-toolbar color="geladas" no-border-top>    
+    <ion-title (click)="changeLocal();">
+        <span class="titulo-geladas">Geladas</span><br />
+        <span class="municipio">{{ municipio.municipio + ", "+ municipio.uf }}</span><br />
+    </ion-title>
+
+    <ion-buttons end>
+       <button ion-button icon-only (click)="showFilters()">
+          <ion-icon ios="ios-funnel" md="md-funnel"></ion-icon>
+       </button>
+
+       <button ion-button icon-only (click)="showConfig()">
+          <ion-icon ios="ios-cog" md="md-cog"></ion-icon>
+       </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<!--
+
+<ion-header>
+  <ion-toolbar color="geladas">
+    <ion-buttons start>
+       <button ion-button icon-only (click)="showConfig()">
+          <ion-icon ios="ios-cog" md="md-cog"></ion-icon>
+       </button>
+    </ion-buttons>
+    <ion-title>Geladas</ion-title>
+    <ion-buttons end>
+       <button ion-button icon-only (click)="showFilters()">
+          <ion-icon ios="ios-funnel" md="md-funnel"></ion-icon>
+       </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+-->
+<ion-content>
+    
+    <div *ngIf="isEmpty()" class="logo">
+      <ion-grid>
+        <ion-row>
+          <ion-col col-md-4>
+          </ion-col>
+          <ion-col col-md-4>
+              <ion-img [src]="logo"></ion-img>
+              <p align="center">
+                 Ainda não tem promoções
+                 cadastradas na sua região,
+                 seja o primeiro a publicar.
+              </p>
+          </ion-col>
+          <ion-col col-md-4>
+          </ion-col>
+        </ion-row>        
+      </ion-grid>
+    </div>
+
     <ion-searchbar 
         #searchbar
         [(ngModel)]="searchTerm" 
@@ -30,28 +86,6 @@
         placeholder="busca..."
         (ionInput)="filterItems()">
     </ion-searchbar>
-  </ion-navbar>
-</ion-header>
-
-<ion-content>
-    
-    <div *ngIf="isEmpty()" class="logo">
-      <ion-grid>
-        <ion-row>
-          <ion-col col-md-4>
-          </ion-col>
-          <ion-col col-md-4>
-              <ion-img src="assets/images/logo-BEA.png"></ion-img>
-              <p align="center">
-                 As melhores cervejas
-                 próximas a você!
-              </p>
-          </ion-col>
-          <ion-col col-md-4>
-          </ion-col>
-        </ion-row>        
-      </ion-grid>
-    </div>
 
     <ion-refresher (ionRefresh)="doRefresh($event)" [pullMin]=90>
         <ion-refresher-content
@@ -62,6 +96,7 @@
         </ion-refresher-content>
     </ion-refresher> 
 
+
     <ion-list>
         <produto-item *ngFor="let produto of produtos" [produto]="produto"></produto-item>
     </ion-list>
@@ -71,7 +106,6 @@
             loadingText="Carregando mais promoções ...">
         </ion-infinite-scroll-content>
     </ion-infinite-scroll> 
-
     <ion-fab right bottom>
         <button ion-fab (click)="newProduto()">
             <ion-icon name="add" mini></ion-icon>

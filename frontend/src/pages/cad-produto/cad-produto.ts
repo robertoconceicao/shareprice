@@ -3,7 +3,7 @@ import { NavController, NavParams, ToastController, ModalController, AlertContro
 import { Geolocation } from 'ionic-native';
 import { Medida, Produto, Loja, Marca } from '../../models';
 
-import { Home, LojaPage, MarcaPage } from '../../pages';
+import { Home, LojaPage, MarcaPage, LocalusuarioPage } from '../../pages';
 import { SharingService } from '../../services/sharing-service';
 import { NumberUtil } from '../../util/number-util';
 
@@ -13,12 +13,7 @@ var self;
 
 @Component({
   selector: 'page-cad-produto',
-  templateUrl: 'cad-produto.html',
-  styles: [`       
-        .corLabel {
-            color: #999 !important;             
-        }      
-    `]
+  templateUrl: 'cad-produto.html'
 })
 export class CadProdutoPage implements OnInit {
   public produto: Produto;

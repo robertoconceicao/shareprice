@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild}  from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { NavController, LoadingController, Searchbar, AlertController}  from 'ionic-angular';
+import { NavController, LoadingController, Searchbar, AlertController, ModalController }  from 'ionic-angular';
 
-import { LoginPage, ConfigPage, CadProdutoPage, FiltrosPage } from '../../pages';
+import { LoginPage, ConfigPage, CadProdutoPage, FiltrosPage, LocalusuarioPage } from '../../pages';
 
-import { Produto } from '../../models/produto';
-import { Filtro } from '../../models/filtro';
+import { Produto, Filtro, Municipio} from '../../models';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
 import { AdMob }  from '@ionic-native/admob';
@@ -21,6 +20,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 export class Home implements OnInit {
 
    @ViewChild('searchbar') searchbar: Searchbar;
+   public logo: string = "assets/images/logo-BEA.png";
    public searchTerm: string = "";
    public produtos: Array<Produto>;
    public noFilter: Array<Produto> = [];
@@ -31,11 +31,13 @@ export class Home implements OnInit {
    public filtro: Filtro;
    public search: boolean;
    public flLogado: boolean;
+   public municipio: Municipio;
 
    constructor(public navCtrl: NavController,
                public sharingService: SharingService,
                public loadingCtrl: LoadingController,
                public alertCtrl: AlertController,
+               public modalCtrl: ModalController,
                public admob: AdMob) {
      this.searchTermControl = new FormControl();
      this.searchTermControl.valueChanges
@@ -65,6 +67,8 @@ export class Home implements OnInit {
           this.lng = lng;
        });
 
+       this.sharingService.municipio.subscribe( m => this.municipio = m);
+
        this.carregandoPage();
        this.createBanner();
    }
@@ -92,6 +96,16 @@ export class Home implements OnInit {
       this.searchTerm = "";
       this.search = false;
       this.filterItems();
+   }
+
+   changeLocal(){
+        let localModal = this.modalCtrl.create(LocalusuarioPage);
+        localModal.onDidDismiss(municipio => {
+            this.sharingService.setMunicipio(municipio);
+            this.sharingService.atualizaLocalusuario(municipio.cdIbge);
+            this.carregandoPage();
+        });
+        localModal.present();
    }
 
    carregandoPage(){

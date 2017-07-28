@@ -3,7 +3,8 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp }                  from './app.component';
 import { Home, CadProdutoPage, FiltrosPage, ConfigPage, 
         LojaPage, LoginPage, MapaPage, TutorialPage, ViewProdutoPage, 
-        MarcaPage, IndiqueMarcaPage } from '../pages';
+        MarcaPage, IndiqueMarcaPage, LocalusuarioPage,
+        SelecionalocalizacaoPage } from '../pages';
 
 import { SharingService }         from '../services/sharing-service';
 import { MoedaRealPipe }          from '../pipes/moeda-real';
@@ -29,11 +30,14 @@ import { AdMob }  from '@ionic-native/admob';
     AutocompleteComponent,
     MarcaPage,
     SearchlistComponent,
-    IndiqueMarcaPage
+    IndiqueMarcaPage,
+    LocalusuarioPage,
+    SelecionalocalizacaoPage
   ],
   imports: [
     IonicModule.forRoot(MyApp,{
-        backButtonText: ''
+        backButtonText: '',
+        statusbarPadding: true
     })
   ],
   bootstrap: [IonicApp],
@@ -53,7 +57,9 @@ import { AdMob }  from '@ionic-native/admob';
     AutocompleteComponent,
     MarcaPage,
     SearchlistComponent,
-    IndiqueMarcaPage
+    IndiqueMarcaPage,
+    LocalusuarioPage,
+    SelecionalocalizacaoPage
   ],
   providers: [
       {provide: ErrorHandler, useClass: IonicErrorHandler},

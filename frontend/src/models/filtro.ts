@@ -1,5 +1,7 @@
+import { Marca } from './marca';
+
 export class Filtro {
-    marca: number;
+    marca: Marca = new Marca();
     medida: number;
     tipo: number;
     maxvalor: number;

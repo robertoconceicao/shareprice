@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, URLSearchParams } from '@angular/http';
+import { NativeStorage } from 'ionic-native';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { Produto, Filtro, Usuario, Marca, Tipo, Medida, Confignotificacao, Medidapormarca }  from '../models';
+import { Produto, Filtro, Usuario, Marca, Tipo, Medida, Confignotificacao, Medidapormarca, Municipio }  from '../models';
 import { AppSettings }  from '../app/app-settings';
 
 
@@ -27,6 +28,8 @@ export class SharingService {
   private _lat: BehaviorSubject<number>;
   private _lng: BehaviorSubject<number>;
   private _cdusuario: BehaviorSubject<string>;
+  private _municipios: BehaviorSubject<Municipio[]>;
+  private _municipio: BehaviorSubject<Municipio>;
 
   constructor(public http: Http) {
     console.log('Hello SharingService Provider');
@@ -39,7 +42,8 @@ export class SharingService {
     this._lat = <BehaviorSubject<number>> new BehaviorSubject(0);
     this._lng = <BehaviorSubject<number>> new BehaviorSubject(0);
     this._cdusuario = <BehaviorSubject<string>> new BehaviorSubject("");
-
+    this._municipios = <BehaviorSubject<Municipio[]>>new BehaviorSubject([]);
+    this._municipio = <BehaviorSubject<Municipio>> new BehaviorSubject(new Municipio());
     this.medidaspormarcas = new Array<Medidapormarca>();
     this.loadListas();
   }
@@ -77,6 +81,17 @@ export class SharingService {
       .catch(error => {
         console.log("Erro ao tentar carregar medidas por marca");
       });
+
+    if(this._municipios.value.length <= 0){
+      this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MUNICIPIOS)      
+        .then(lista => {
+          this._municipios.next(lista); 
+          NativeStorage.setItem(AppSettings.KEY_LISTA_MUNICIPIOS, lista);       
+        })
+        .catch(error => {
+          console.log("Erro ao tentar carregar municipios");
+        });
+    }
 
     let filtro = new Filtro();
     filtro.distancia = 30;
@@ -158,6 +173,15 @@ export class SharingService {
     return this.getHttpParamns(AppSettings.API_ENDPOINT + AppSettings.GET_CONFIG_NOTIFICACAO, params);
   }
 
+  buscaMunicipioByLatLng(lat: any, lng: any) {
+    let params: string = "/"+lat+"/"+lng;
+    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MUNICIPIO + params);            
+  }
+
+  buscaMunicipioByUsuario(cdusuario: string) {
+    let params: string = "/"+cdusuario;
+    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_MUNICIPIO + params);            
+  }
 
   validarPreco(cdproduto: any, opcao: any){    
     let jsonValidaPreco = {
@@ -170,6 +194,21 @@ export class SharingService {
                     JSON.stringify(jsonValidaPreco), 
                     {headers: contentHeaders}
                 ).toPromise();
+  }
+
+  atualizaLocalusuario(cdIbge: any){
+    if(!!this._cdusuario.value) {
+      let jsonParam = {
+        cdIbge: cdIbge,
+        cdusuario: this._cdusuario.value
+      };
+      return  this.http
+                  .post(AppSettings.API_ENDPOINT + AppSettings.POST_LOCAL_USUARIO, 
+                      JSON.stringify(jsonParam), 
+                      {headers: contentHeaders}
+                  ).toPromise();
+    }
+    return null;
   }
 
   /* 
@@ -201,8 +240,8 @@ export class SharingService {
     if(!!filtro.posicao){
       params.set('posicao', filtro.posicao +"");
     }
-    if(!!filtro.marca){
-      params.set('marca', filtro.marca +"");
+    if(!!filtro.marca.cdmarca){
+      params.set('marca', filtro.marca.cdmarca +"");
     }
     if(!!filtro.medida){
       params.set('medida', filtro.medida +"");
@@ -218,14 +257,19 @@ export class SharingService {
     }
 
     params.set('distancia', filtro.distancia +"");    
-    params.set('lat', filtro.lat +"");
-    params.set('lng', filtro.lng +"");
+    params.set('lat', this._lat.value +"");
+    params.set('lng', this._lng.value +"");
     return params;
   }
 
   findProdutoById(codigo: any){
     let params: string = "/"+codigo;
     return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_PRODUTO + params);            
+  }
+
+//TODO 
+  findMunicipioByIbge(cdIbge: number){
+    return this._municipios.value.filter(x => x.cdIbge === cdIbge)[0];
   }
 
   get marcas() {
@@ -258,6 +302,24 @@ export class SharingService {
 
   get cdusuario(){
     return this._cdusuario.asObservable();
+  }
+
+  get municipios(){
+    return this._municipios.asObservable();
+  }
+
+  get municipio(){
+    return this._municipio.asObservable();
+  }
+
+  setMunicipios(lista: Municipio[]){
+    this._municipios.next(lista);
+  }
+
+  setMunicipio(municipio: Municipio){
+    this._municipio.next(municipio);
+    this.setLat(municipio.lat);
+    this.setLng(municipio.lng);
   }
 
   setCdusuario(cdusuario: string){

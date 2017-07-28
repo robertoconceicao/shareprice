@@ -44,10 +44,9 @@
                     ></ion-input>
             </ion-item>           
 
-            <ion-list-header>
-                <h2>Estabelecimento</h2>
-            </ion-list-header>
-            
+            <ion-item class="group">
+                 <span class="title-group">Estabelecimento</span>
+            </ion-item>
             
             <ion-item *ngIf="!isBusy" (click)="changeLoja()">
                 <ion-icon name="basket" item-left large></ion-icon>
@@ -60,11 +59,13 @@
             </ion-item>
         </ion-list>
 
-        <p>
-            <button type="submit" ion-button block icon-left [disabled]="!cervejaForm.form.valid || isDisable">                
-                <ion-icon name="cloud-upload"></ion-icon>
-                Publicar
-            </button>
-        </p>
+        <ion-footer no-border>
+            <ion-toolbar color="white">
+                    <button type="submit" ion-button block icon-left [disabled]="!cervejaForm.form.valid || isDisable">                
+                        <ion-icon name="cloud-upload"></ion-icon>
+                        Publicar
+                    </button>
+            </ion-toolbar>
+        </ion-footer>
     </form>
 </ion-content>

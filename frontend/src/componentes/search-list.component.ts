@@ -73,7 +73,7 @@ export class SearchlistComponent implements OnInit {
     }
 
     ngOnInit(){
-        this.listaFiltrada = this.lista;
+        this.inicializa();
     }
 
     filterItems() {
@@ -81,10 +81,14 @@ export class SearchlistComponent implements OnInit {
                     item.titulo.toUpperCase().indexOf(this.searchTerm.toUpperCase()) !== -1 
                     || item.descricao.toUpperCase().indexOf(this.searchTerm.toUpperCase()) !== -1
                     );
+        if(this.listaFiltrada.length > 100){
+            this.listaFiltrada = this.listaFiltrada.slice(0, 100);
+        }
     }
 
     itemSelecionado(codigodescricao: CodigoDescricao){
       this.selected = codigodescricao;
+      console.log("itemSelecionado: ", this.selected);
       this.onSelected.emit(this.selected);
     }
 
@@ -93,7 +97,15 @@ export class SearchlistComponent implements OnInit {
     }
 
     onCancel(event){
-      this.searchTerm = "";
-      this.listaFiltrada = this.lista;
-   }
+      this.inicializa();
+    }
+
+    inicializa(){
+        this.searchTerm = "";
+        if(this.lista.length > 100){
+            this.listaFiltrada = this.lista.slice(0, 100);
+        } else {
+            this.listaFiltrada = this.lista;
+        }
+    }
 }

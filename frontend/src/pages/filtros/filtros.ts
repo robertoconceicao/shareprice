@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { Filtro, Medida } from '../../models';
 import { NumberUtil } from '../../util/number-util';
 import { SharingService } from '../../services/sharing-service';
-import { Home } from '../home/home';
+import { ModalController  } from 'ionic-angular';
+import { Home, MarcaPage, LocalusuarioPage } from '../../pages';
+import { Filtro, Medida, Marca, Municipio } from '../../models';
 
 @Component({
   selector: 'page-filtros',
@@ -14,13 +15,25 @@ export class FiltrosPage implements OnInit {
   public filtro: Filtro;
   public medidas: Array<Medida> = [];
   public medidasFiltradas: Array<Medida> = [];
-  
-  constructor(public navCtrl: NavController, public navParams: NavParams, public sharingService: SharingService) {
+  public marcas: Array<Marca> = [];
+  public municipio: Municipio;
+
+  constructor(public navCtrl: NavController, 
+              public navParams: NavParams, 
+              public modalCtrl: ModalController,
+              public sharingService: SharingService) {
   }
 
   ngOnInit(){
+
+    this.sharingService.municipio.subscribe(dado => this.municipio = dado);
+
     this.sharingService.filtro.subscribe(filtrosDados => {
         this.filtro = filtrosDados;
+    });
+
+    this.sharingService.marcas.subscribe(marcas => {
+      this.marcas = marcas;
     });
 
     this.sharingService.medidas.subscribe(medidas => {
@@ -54,16 +67,30 @@ export class FiltrosPage implements OnInit {
     this.navCtrl.setRoot(Home);
   }
 
-  onChangeMarca(event){
-    this.filtro.marca = event;
-    this.filtraMedidas();
+  changeMarca(){
+    let marcaModal = this.modalCtrl.create(MarcaPage, {'marcas': this.marcas});
+    marcaModal.onDidDismiss(data => {
+      if(!!data){
+        this.filtro.marca = data;
+        this.filtraMedidas();
+      }
+    });
+    marcaModal.present();
+  }
+
+  changeLocal() {
+      let localModal = this.modalCtrl.create(LocalusuarioPage);
+      localModal.onDidDismiss(m => {
+          this.sharingService.setMunicipio(m);
+      });
+      localModal.present();
   }
   
   filtraMedidas() {
     var medidaspormarcas = this.sharingService.medidaspormarcas;
     var _medidas = new Array<number>();
     for(let i=0; i < medidaspormarcas.length; i++){
-      if(!!this.filtro && medidaspormarcas[i].cdmarca == this.filtro.marca){        
+      if(!!this.filtro && medidaspormarcas[i].cdmarca == this.filtro.marca.cdmarca){        
         _medidas = medidaspormarcas[i].medidas; //retorna um array de cdmedidas configurados por marca
         break;
       }

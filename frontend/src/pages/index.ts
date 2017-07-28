@@ -9,3 +9,5 @@ export * from  './produto/view-produto';
 export * from  './tutorial/tutorial';
 export * from  './marca/marca';
 export * from  './marca/indique-marca';
+export * from  './localusuario/localusuario';
+export * from  './localusuario/seleciona-localizacao';

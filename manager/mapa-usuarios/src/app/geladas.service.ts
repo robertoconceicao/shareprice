@@ -28,8 +28,8 @@ interface Produto {
     cdusuario: string;
 }
 
-const MANAGER_ENDPOINT = 'http://localhost:3000/manager/';//'http://geladasoficial.com/manager/';
-const API_ENDPOINT     = 'http://localhost:3000/api/';//'http://geladasoficial.com/api/';
+const MANAGER_ENDPOINT = 'http://geladasoficial.com/manager/';//'http://localhost:3000/manager/';//'http://geladasoficial.com/manager/';
+const API_ENDPOINT     = 'http://geladasoficial.com/api/';//'http://localhost:3000/api/';//'http://geladasoficial.com/api/';
 const GET_USER_NO_RAIO = "usernoraio";
 const GET_QTDE_USER_NO_RAIO = "qtdeusernoraio";
 const GET_LOJAS = "lojas";

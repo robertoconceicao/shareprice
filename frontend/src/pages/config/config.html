@@ -11,7 +11,8 @@
                 <ion-label>
                     <h3>Notificações de e-mail</h3>
                     <p>
-                        Desejas receber notificações de e-mail?
+                        Desejas receber notificações <br /> 
+                        de e-mail?
                     </p>                
                 </ion-label>
                 <ion-toggle [(ngModel)]="config.flemail" item-right></ion-toggle>                
@@ -45,11 +46,13 @@
                 </ion-range>
             </ion-item>
         </ion-list>
-
-        <p>
-            <button type="submit" ion-button block icon-left (click)="salvar()">
-                <ion-icon name="cloud-upload"></ion-icon>
-                Enviar
-            </button>            
-        </p>
 </ion-content>
+
+<ion-footer no-border>
+    <ion-toolbar color="white">
+        <button type="submit" ion-button block icon-left (click)="salvar()">
+            <ion-icon name="cloud-upload"></ion-icon>
+            Enviar
+        </button>
+    </ion-toolbar>
+</ion-footer>

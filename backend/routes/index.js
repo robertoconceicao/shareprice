@@ -48,7 +48,105 @@ const PROJECAO_PRODUTO = `
 
 router.get('/medidapormarca', getMedidapormarca);
 router.get('/confignotificacao', confignotificacao);
+router.get('/municipios', getMunicipios);
+router.get('/municipio/:lat/:lng', getMunicipioByLatLng);
+router.get('/municipio/:cdusuario', getMunicipioByUsuario);
+
 router.post('/indiquemarca', indiqueMarca);
+router.post('/localusuario', insereLocalusuario);
+
+
+
+function insereLocalusuario(req, res) {
+     pool.getConnection(function(err, connection) {
+        connection.beginTransaction(function(err) {
+            if (err) { throw err; }
+            connection.query(`delete from localusuario where cdusuario = ? `,[req.body.cdusuario],function(err, result2){
+                if(err) {
+                    console.log("Erro ao tentar deletar localusuario");
+                    return connection.rollback(function() {
+                        throw error;
+                    });
+                }
+                connection.query('INSERT INTO localusuario(cdusuario, cdIbge ) values(?, ?) ', [req.body.cdusuario, req.body.cdIbge], function(err,result4){
+                        if(err) {
+                            console.log("Erro ao tentar inserir localusuario");                        
+                            return connection.rollback(function() {
+                                throw error;
+                            });                        
+                        }                        
+                        connection.commit(function(err) {
+                            if (err) {
+                                return connection.rollback(function() {
+                                    throw err;
+                                });
+                            }
+                            console.log('success!');
+                            return res.status(200).json();
+                        });
+                    });
+                });
+        });                 
+        connection.release();
+        return res.status(200).json();
+    });
+}
+
+// Pega o municipio pela lat e lng
+function getMunicipioByLatLng(req, res) {
+    //busca as lojas da base ordenadas por loja mais próximas do usuario e envia a resposta pra ele
+    pool.getConnection(function(err, connection) {        
+        connection.query(`SELECT *, (6371 * 
+                acos(
+                    cos(radians( ? )) *
+                    cos(radians(lat)) *
+                    cos(radians( ? ) - radians(lng)) +
+                    sin(radians( ? )) *
+                    sin(radians(lat))
+                )) AS distance
+                FROM municipio HAVING distance < 20.0 
+                ORDER BY distance ASC 
+                `,[req.params.lat, req.params.lng, req.params.lat],function(err,result){
+
+                if(result.length > 0) {
+                    return res.json(result[0]);
+                }
+                return res.status(400).json(err);                  
+        });
+        connection.release();
+    });
+}
+
+function getMunicipioByUsuario(req, res) {
+    //busca as lojas da base ordenadas por loja mais próximas do usuario e envia a resposta pra ele
+    pool.getConnection(function(err, connection) {        
+        connection.query(`SELECT m.* FROM municipio m
+                        join localusuario lu on lu.cdibge = m.cdibge
+                        where
+                        lu.cdusuario = ? 
+                `,[req.params.cdusuario],function(err,result){
+
+                if(result.length > 0) {
+                    return res.json(result[0]);
+                }
+                return res.status(400).json(err);                  
+        });
+        connection.release();
+    });
+}
+
+// Municipios ============================================
+function getMunicipios(req, res) {	
+    pool.getConnection(function(err, connection) {
+        connection.query('SELECT * FROM municipio order by municipio',[],function(err,result){
+            if(err) {
+                return res.status(400).json(err);
+            }
+            return res.json(result);            
+        });
+        connection.release();
+    });
+}
 
 function indiqueMarca(req, res) {
     console.log("Dados recebidos: "+JSON.stringify(req.body));

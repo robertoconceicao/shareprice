@@ -26,13 +26,9 @@
         </p>
 
         <ion-list>
-            <ion-item>            
-                <ion-label>Marca</ion-label>            
-                    <ion-select [(ngModel)]="filtro.marca" (ngModelChange)="onChangeMarca($event)" >
-                        <ion-option [value]="marca.cdmarca" *ngFor="let marca of sharingService.marcas | async ">
-                            {{ marca.descricao }}
-                        </ion-option>
-                    </ion-select>
+            <ion-item (click)="changeMarca()">
+                <span>Marca</span>
+                <span style="float: right;">{{filtro.marca.descricao}}</span>
             </ion-item>
             
             <ion-item>            
@@ -62,6 +58,15 @@
                     ></ion-input>
             </ion-item>
             
+            <ion-item class="group">
+                 <span class="title-group">Localização</span>
+            </ion-item>
+        
+            <ion-item (click)="changeLocal()">
+                <ion-icon name="compass" item-left></ion-icon>
+                <h2>{{municipio.municipio +", "+ municipio.uf}}</h2>
+            </ion-item>
+
             <ion-item>
                 <ion-label>Raio de distância {{filtro.distancia}} Km</ion-label>
                 <ion-range min="1" max="30" pin="true" [(ngModel)]="filtro.distancia" color="primary">
@@ -70,11 +75,21 @@
                 </ion-range>
             </ion-item>
         </ion-list>
-
+<!--
         <p>
             <button ion-button block icon-left (click)="goBack()">
                 <ion-icon name="search"></ion-icon>
                 Buscar
             </button>
         </p>
+        -->
 </ion-content>
+
+<ion-footer no-border>
+  <ion-toolbar color="white">
+        <button ion-button block icon-left (click)="goBack()">
+            <ion-icon name="search"></ion-icon>
+            Buscar
+        </button>
+  </ion-toolbar>
+</ion-footer>

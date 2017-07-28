@@ -47,6 +47,10 @@ $colors: (
   geladas:(
     base: #C99005,
     contrast: #ffffff
+  ),
+  white:(
+    base: #ffffff,
+    contrast: #ffffff
   )
 );
 
@@ -54,7 +58,7 @@ $colors: (
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
-
+$color-group: #eeeeee;
 
 // App Material Design Variables
 // --------------------------------------------------

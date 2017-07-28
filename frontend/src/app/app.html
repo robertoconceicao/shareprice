@@ -1,1 +1,16 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<ion-nav *ngIf="flConectado" [root]="rootPage"></ion-nav>
+
+<ion-header *ngIf="!flConectado">
+  <ion-navbar color="danger">
+    <ion-title>Sem Internet :-(</ion-title>
+  </ion-navbar>
+</ion-header>
+<!--
+<ion-tabs class="tabs-icon">
+    <ion-tab tabIcon="home" [root]="tabHome"></ion-tab>
+    <ion-tab tabIcon="search" [root]="tabFilter"></ion-tab>
+    <ion-tab tabIcon="add-circle" [root]="tabAdd"></ion-tab>
+    <ion-tab tabIcon="notifications" [root]="tabNotificacao"></ion-tab>
+    <ion-tab tabIcon="compass" [root]="tabLocal"></ion-tab>
+</ion-tabs>
+ -->

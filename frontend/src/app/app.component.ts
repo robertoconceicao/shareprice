@@ -1,16 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, AlertController  } from 'ionic-angular';
 import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage, Deeplinks, Diagnostic } from 'ionic-native';
-import { Home, ViewProdutoPage, TutorialPage, LoginPage, MarcaPage, CadProdutoPage } from '../pages';
+import { Home, ViewProdutoPage, TutorialPage, LoginPage, MarcaPage, CadProdutoPage, FiltrosPage,  ConfigPage, SelecionalocalizacaoPage } from '../pages';
 import { SharingService } from '../services/sharing-service';
 import { AppSettings }  from './app-settings';
 import { Usuario } from '../models/usuario';
-
-//Utilizado para tratar as resposta de verificacao do GPS
-const SUCCESS             = 0;
-const ERRO_GPS_DISABLED   = 1;
-const ERRO_NOT_AUTHORIZED = 2;
-const MODO_DEBUGGER       = true;
 
 @Component({
   templateUrl: 'app.html'
@@ -20,137 +14,66 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
   rootPage: any;
   pages: Array<{title: string, component: any}>;  
+  connectSubscription: any;
   disconnectSubscription: any;
   flVeioDoPush: boolean;
+  flConectado: boolean = true;
 
+  tabHome = Home;
+  tabFilter = FiltrosPage;
+  tabAdd = CadProdutoPage;
+  tabNotificacao = ConfigPage;
+  tabLocal = SelecionalocalizacaoPage;
+  
   constructor(public platform: Platform, 
               public sharingService: SharingService,
               public alertCtrl: AlertController) {    
     this.initializeApp();    
-    // watch network for a disconnect
+    
     this.disconnectSubscription = Network.onDisconnect().subscribe(() => {
-      this.openAlertNotInternet();
+      this.flConectado = false;
     }); 
+
+    this.connectSubscription = Network.onConnect().subscribe(() => {
+      this.flConectado = true;
+    });
   }
 
  initializeApp() {
     this.flVeioDoPush = false;
     this.platform.ready().then(() => {
-      
-    this.verificaGPSAtivo()
-      .then((resp) => {                
-        //pega os produtos pela localizacao do usuario
-        Geolocation.getCurrentPosition({timeout: 10000})
-          .then((resp) => {
-              this.sharingService.setLat(resp.coords.latitude);
-              this.sharingService.setLng(resp.coords.longitude); 
-              
-              if(MODO_DEBUGGER){
-                console.log("Modo Debugger");
-                //insere um novo usuario no sistema
-                let usuario: Usuario = new Usuario();
-                usuario.cdusuario = "G115862700861296845675";
-                usuario.avatar = "https://lh5.googleusercontent.com/-NkphZfbAqNI/AAAAAAAAAAI/AAAAAAAAC2Y/2RbWqlwadFI/s96-c/photo.jpg";
-                usuario.nome = "Roberto da conceicao";
-                usuario.email = "conceicao.roberto@gmail.com";
-                NativeStorage.setItem('user', usuario);
-                this.sharingService.setCdusuario(usuario.cdusuario);
-                this.nav.setRoot(Home);//Home);
-                Splashscreen.hide();
-              } else {
-                let env = this;
-                NativeStorage.getItem('user')
-                  .then( function (usuario) {
-                    env.sharingService.setCdusuario(usuario.cdusuario);
-                    env.sharingService.insereUsuario(usuario);
-                    // se o usuario esta entrando pelo push notification ele cai direto dentro da tela de ViewProdutoPage
-                    if(!env.flVeioDoPush){
-                      env.nav.setRoot(Home);
-                      Splashscreen.hide();
-                    }
-                  }, function (error) {
-                      NativeStorage.getItem('tutorial')
-                        .then( function (resp){
-                            let confirmAlert = env.alertCtrl.create({
-                                title: "Usuário não identificado",
-                                message: "Faça o login, para acesso a todas funcionalidades.",
-                                buttons: [{
-                                  text: 'Ignorar',
-                                  handler: () => {
-                                    env.nav.setRoot(Home);
-                                  }
-                                }, {
-                                  text: 'Login',
-                                  handler: () => {
-                                    env.nav.setRoot(LoginPage);
-                                  }
-                                }]
-                              });
-                              confirmAlert.present();
-                              Splashscreen.hide();
-                        }, function (error) {
-                            env.nav.setRoot(TutorialPage);
-                            NativeStorage.setItem('tutorial', 1);
-                            Splashscreen.hide();
-                        });
-                  });
-              }
-          }).catch((error) => {
-              // this.verificaGPSAtivo();
-              this.openAlertNotGeolocation("O Geladas não conseguiu pegar sua localização", "Por favor ligue sua localização e tente novamente.");
-          });
-      }).catch((error) => {
-        console.log("Error verificaGPSAtivo: "+error); 
-        if(error === ERRO_GPS_DISABLED){
-          this.openAlertNotGeolocation("O serviço de localização esta desligado", "Por favor ligue sua localização e tente novamente.");
-        } else {
-          this.openAlertNotGeolocation("Você deve permitir que o aplicativo pegue sua localização", "Por favor autorize o serviço de localização e tente novamente.");        
-        }
-      });
-      
+      let env = this;
+      NativeStorage.getItem(AppSettings.KEY_TUTORIAL)
+                   .then( function (resp){
+                        Splashscreen.hide();
+                        if(!env.flVeioDoPush){
+                           env.verificaSeTemMunicipioConfig();
+                        }
+                    }, function (error) {
+                        env.nav.setRoot(TutorialPage);
+                        NativeStorage.setItem(AppSettings.KEY_TUTORIAL, 1);
+                        Splashscreen.hide();
+                    });
       StatusBar.styleDefault();
       this.initPushNotification();      
       this.initDeeplink();
     });
   }
+  
+  verificaSeTemMunicipioConfig(){
+    let env = this;
+    NativeStorage.getItem(AppSettings.KEY_LISTA_MUNICIPIOS)
+                 .then(function(resp) {
+                    env.sharingService.setMunicipios(resp);
+                 });
 
-  verificaGPSAtivo(): Promise<any> {
-    if(MODO_DEBUGGER){
-        return new Promise((resolve, reject) => {
-          resolve(SUCCESS);
-        });
-    }
-    return new Promise((resolve, reject) => {
-        Diagnostic.requestLocationAuthorization("when_in_use")
-        .then((value) => {
-          /*
-          Diagnostic.isGpsLocationEnabled().then((enabled) => {
-            if(!enabled){            
-              reject(ERRO_GPS_DISABLED);
-            }
-          }).catch((error) => {
-            console.log("Resultado 2: ", error);
-            reject(ERRO_GPS_DISABLED);          
-          });
-          
-          Diagnostic.isLocationAuthorized().then((enabled) => {
-            if(!enabled){
-              reject(ERRO_NOT_AUTHORIZED);            
-            } else {
-              resolve(SUCCESS);
-            }
-          }).catch((error) => {
-            console.log("Resultado 3: ", error);
-            reject(ERRO_NOT_AUTHORIZED);
-          });
-          */
-          resolve(SUCCESS);
-        }).catch((error)=>{
-          console.log("Resultado 1: ", error);
-          reject(ERRO_NOT_AUTHORIZED);
-        });
-        
-    });
+    NativeStorage.getItem(AppSettings.KEY_LOCAL_USUARIO)
+                 .then( function (resp) {
+                    env.sharingService.setMunicipio(resp);
+                    this.nav.setRoot(Home);
+                 }, function (error) {
+                    this.nav.setRoot(SelecionalocalizacaoPage); //seleciona-localizacao
+                 });
   }
 
   initDeeplink(){
@@ -170,7 +93,7 @@ export class MyApp {
           })
           .catch(error => {                        
             console.log("Erro ao carregar viewProduto direto do Deeplink", error);
-            self.nav.setRoot(Home);
+            self.nav.setRoot(SelecionalocalizacaoPage);
           });  
     }, (nomatch) => {      
     });
@@ -231,7 +154,7 @@ export class MyApp {
                     })
                     .catch(error => {                        
                       console.log("Erro ao carregar viewProduto direto do push", error);
-                      self.nav.setRoot(Home);
+                      self.nav.setRoot(SelecionalocalizacaoPage);
                     });
               }
             }]
@@ -249,7 +172,7 @@ export class MyApp {
               })
               .catch(error => {                        
                 console.log("Erro ao carregar viewProduto direto do push", error);
-                self.nav.setRoot(Home);
+                self.nav.setRoot(SelecionalocalizacaoPage);
               });
         }
       });
@@ -259,6 +182,7 @@ export class MyApp {
       });
   } 
 
+/*
   openAlertNotInternet(){
     let alert = this.alertCtrl.create({
             title: "Sem conexão com a internet",
@@ -286,4 +210,5 @@ export class MyApp {
         });
     alert.present();
   }
+  */
 }

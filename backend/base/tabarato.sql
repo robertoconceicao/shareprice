@@ -288,6 +288,16 @@ INSERT INTO `validapreco` (`cdproduto`, `cdusuario`, `flcerto`) VALUES
 (11, 'google-oauth2|115862700861296845675', 1),
 (12, 'google-oauth2|115862700861296845675', 1);
 
+--
+-- Extraindo dados da tabela `localusuario`
+--
+
+CREATE TABLE IF NOT EXISTS `localusuario` (
+  `cdibge` int(11) NOT NULL,
+  `cdusuario` varchar(200) NOT NULL,
+  PRIMARY KEY (`cdibge`,`cdusuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -7,6 +7,13 @@ export class AppSettings {
        return 'http://localhost:3000/api/';//http://geladasoficial.com/api/';//'http://node-express-geladas.misais4yjc.us-west-2.elasticbeanstalk.com/api/';
    }
 
+   //Storage keys
+   public static KEY_TUTORIAL = 'tutorial';
+   public static KEY_LISTA_MUNICIPIOS = 'municipios';
+   public static KEY_LOCAL_USUARIO = 'localusuario';
+   public static KEY_USUARIO = 'user';
+
+
    //API marca
    public static GET_MARCAS = 'marcas';
    public static POST_INDIQUE_MARCA = 'indiquemarca';
@@ -46,6 +53,12 @@ export class AppSettings {
    //API medidas por marca
    public static GET_MEDIDA_POR_MARCA = "medidapormarca";
    
+   //API municipios
+   public static GET_MUNICIPIOS = "municipios";
+   public static GET_MUNICIPIO  = "municipio";
+
+   //API localizacao do usuario
+   public static POST_LOCAL_USUARIO = "localusuario";
    
    public static convertToProduto(data): Produto {
      var produto = new Produto();
