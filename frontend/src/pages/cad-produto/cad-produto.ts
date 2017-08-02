@@ -165,7 +165,7 @@ export class CadProdutoPage implements OnInit {
 
   buscarIconeCerveja(){
     if(this.produto.marca.cdmarca != 0 && this.produto.tipo.cdtipo != 0 && this.produto.medida.cdmedida != 0){
-       this.produto.icon = "assets/images/"+this.produto.tipo.cdtipo+""+this.produto.marca.cdmarca+""+this.produto.medida.cdmedida+".png";
+       this.produto.icon = "http://geladasoficial.com/images/"+this.produto.marca.cdmarca+"/"+this.produto.tipo.cdtipo+"/"+this.produto.medida.cdmedida+".png";
     }
   }
 

@@ -36,6 +36,7 @@ app.use(bodyParser.json({ type: 'application/json' }));
 
 //http://expressjs.com/pt-br/starter/static-files.html
 app.use('/', express.static(__dirname + '/site'));
+app.use('/images', express.static(__dirname +'/images'));
 
 // Add headers
 app.use(function (req, res, next) {

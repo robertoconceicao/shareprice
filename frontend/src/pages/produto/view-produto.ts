@@ -108,7 +108,7 @@ export class ViewProdutoPage {
 
     shareProduto() {
         let message = this.formataShareMessage();     
-        SocialSharing.share(message, "*Promoção de Cerveja*", "www/"+this.pathImagem(), 'https://geladasoficial.com/produto/'+this.produto.codigo)
+        SocialSharing.share(message, "*Promoção de Cerveja*", this.pathImagem(), 'https://geladasoficial.com/produto/'+this.produto.codigo)
             .then(resp => {
                 console.log("Funcionou o compartilhamento... "+ resp);
             })
@@ -125,6 +125,6 @@ export class ViewProdutoPage {
     }
 
     pathImagem(){
-       return "assets/images/"+this.produto.tipo.cdtipo+""+this.produto.marca.cdmarca+""+this.produto.medida.cdmedida+".png";
+       return "http://geladasoficial.com/images/"+this.produto.marca.cdmarca+"/"+this.produto.tipo.cdtipo+"/"+this.produto.medida.cdmedida+".png";
     }
 }

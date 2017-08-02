@@ -1,0 +1,7 @@
+O padrão de armazenamento de imagens é:
+
+cdMarca + "/"+ cdTipo +"/"+ cdMedida +".png"
+
+Essas informações vem do banco, basta add uma nova marca no banco e seus tipos e medidas e criar
+uma sequencia de pasta conforme estrutura acima.
+
