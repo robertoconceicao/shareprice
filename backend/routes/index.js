@@ -844,8 +844,8 @@ router.post('/usuario', function(req, res) {
              if(result.length > 0) {
                  console.log("Usuario ja existe na base, ;-)");
 
-                 connection.query('update usuario set lat = ?, lng = ?, devicetoken = ? where cdusuario = ? ',
-                    [req.body.lat, req.body.lng, req.body.devicetoken,req.body.cdusuario], function(err, result){
+                 connection.query('update usuario set lat = ?, lng = ?, devicetoken = ?, dtlogin = ? where cdusuario = ? ',
+                    [req.body.lat, req.body.lng, req.body.devicetoken, new Date(), req.body.cdusuario], function(err, result){
                         connection.release();
                         return res.status(200).json(); 
                     })
@@ -864,6 +864,18 @@ router.post('/usuario', function(req, res) {
                     });
              }
         });
+    });    
+});
+
+router.put('/usuario', function(req, res) {
+    console.log("Dados recebidos: "+JSON.stringify(req.body));
+    
+    pool.getConnection(function(err, connection) {
+        connection.query('update usuario set lat = ?, lng = ?, devicetoken = ?, dtlogin = ? where cdusuario = ? ',
+                    [req.body.lat, req.body.lng, req.body.devicetoken, new Date(), req.body.cdusuario], function(err, result){
+                        connection.release();
+                        return res.status(200).json(); 
+                    });
     });    
 });
 
@@ -1000,13 +1012,13 @@ router.get('/lojas/:lat/:lng', function(req, res, callback) {
         response.on('end', function() {
             var parsed = JSON.parse(body);
             var lojas = listaLojas(parsed);
-            
             persisteNovasLojas(lojas);
+            return res.json(lojas);
         });
     });
 
     
-    //busca as lojas da base ordenadas por loja mais próximas do usuario e envia a resposta pra ele
+    /*busca as lojas da base ordenadas por loja mais próximas do usuario e envia a resposta pra ele
     pool.getConnection(function(err, connection) {        
         connection.query(`SELECT *, (6371 * 
                 acos(
@@ -1026,6 +1038,7 @@ router.get('/lojas/:lat/:lng', function(req, res, callback) {
         });
         connection.release();
     });
+    */
 });     
 
 function persisteNovasLojas(lojas){

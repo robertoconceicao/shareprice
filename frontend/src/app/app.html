@@ -1,10 +1,4 @@
-<ion-nav *ngIf="flConectado" [root]="rootPage"></ion-nav>
-
-<ion-header *ngIf="!flConectado">
-  <ion-navbar color="danger">
-    <ion-title>Sem Internet :-(</ion-title>
-  </ion-navbar>
-</ion-header>
+<ion-nav [root]="rootPage"></ion-nav>
 <!--
 <ion-tabs class="tabs-icon">
     <ion-tab tabIcon="home" [root]="tabHome"></ion-tab>

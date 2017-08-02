@@ -264,6 +264,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `lat` double NOT NULL,
   `lng` double NOT NULL,
   `devicetoken` text NOT NULL,
+  `dtlogin` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`cdusuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

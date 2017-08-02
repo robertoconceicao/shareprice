@@ -4,7 +4,7 @@ import { Confignotificacao }  from '../models/confignotificacao';
 export class AppSettings {
 
    public static get API_ENDPOINT(): string {      
-       return 'http://localhost:3000/api/';//http://geladasoficial.com/api/';//'http://node-express-geladas.misais4yjc.us-west-2.elasticbeanstalk.com/api/';
+       return 'http://geladasoficial.com/api/';//'http://localhost:3000/api/';'http://node-express-geladas.misais4yjc.us-west-2.elasticbeanstalk.com/api/';
    }
 
    //Storage keys
@@ -34,6 +34,7 @@ export class AppSettings {
 
    //API usuario
    public static POST_USUARIO = 'usuario';
+   public static PUT_USUARIO = 'usuario';
 
    //API loja
    public static GET_LOJAS = 'lojas';

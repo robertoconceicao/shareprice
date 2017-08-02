@@ -6,4 +6,5 @@ export class Usuario {
     devicetoken: string;
     lat: number;
     lng: number;
+    dtlogin: Date;
 }

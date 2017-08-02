@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild}  from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NavController, LoadingController, Searchbar, AlertController, ModalController }  from 'ionic-angular';
-
 import { LoginPage, ConfigPage, CadProdutoPage, FiltrosPage, LocalusuarioPage } from '../../pages';
-
 import { Produto, Filtro, Municipio} from '../../models';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
@@ -55,7 +53,6 @@ export class Home implements OnInit {
    ngOnInit(){
        console.log("OnInit HomePage");
        this.sharingService.filtro.subscribe(filtrosDados => {
-           console.log("Evento filtro HOME");
            this.filtro = filtrosDados;
        });
 
@@ -69,8 +66,11 @@ export class Home implements OnInit {
 
        this.sharingService.municipio.subscribe( m => this.municipio = m);
 
+       if(this.flLogado){
+            this.sharingService.updateUsuario();
+        }
        this.carregandoPage();
-       this.createBanner();
+       //this.createBanner();
    }
 
    ionViewWillEnter() {
@@ -103,6 +103,9 @@ export class Home implements OnInit {
         localModal.onDidDismiss(municipio => {
             this.sharingService.setMunicipio(municipio);
             this.sharingService.atualizaLocalusuario(municipio.cdIbge);
+            if(this.flLogado){
+                this.sharingService.updateUsuario();
+            }
             this.carregandoPage();
         });
         localModal.present();

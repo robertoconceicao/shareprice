@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav, AlertController  } from 'ionic-angular';
+import { Platform, Nav, AlertController, ToastController } from 'ionic-angular';
 import { StatusBar, Splashscreen, Network, Push, Geolocation, NativeStorage, Deeplinks, Diagnostic } from 'ionic-native';
 import { Home, ViewProdutoPage, TutorialPage, LoginPage, MarcaPage, CadProdutoPage, FiltrosPage,  ConfigPage, SelecionalocalizacaoPage } from '../pages';
 import { SharingService } from '../services/sharing-service';
@@ -17,7 +17,7 @@ export class MyApp {
   connectSubscription: any;
   disconnectSubscription: any;
   flVeioDoPush: boolean;
-  flConectado: boolean = true;
+  toast: any;
 
   tabHome = Home;
   tabFilter = FiltrosPage;
@@ -27,17 +27,29 @@ export class MyApp {
   
   constructor(public platform: Platform, 
               public sharingService: SharingService,
-              public alertCtrl: AlertController) {    
+              public alertCtrl: AlertController,
+              public toastCtrl: ToastController) {    
     this.initializeApp();    
-    
+
+    if (Network.connection === 'none' || Network.connection === 'unknown') {
+      this.criarToastConexao();
+    }
+
     this.disconnectSubscription = Network.onDisconnect().subscribe(() => {
-      this.flConectado = false;
+      this.criarToastConexao();
     }); 
 
     this.connectSubscription = Network.onConnect().subscribe(() => {
-      this.flConectado = true;
+      this.toast.dismiss();
     });
-  }
+ }
+
+ criarToastConexao(){
+      this.toast = this.toastCtrl.create({
+        message: "Sem conexão com a Internet :-("
+      });
+      this.toast.present();
+ }
 
  initializeApp() {
     this.flVeioDoPush = false;
@@ -70,9 +82,9 @@ export class MyApp {
     NativeStorage.getItem(AppSettings.KEY_LOCAL_USUARIO)
                  .then( function (resp) {
                     env.sharingService.setMunicipio(resp);
-                    this.nav.setRoot(Home);
+                    env.nav.setRoot(Home);
                  }, function (error) {
-                    this.nav.setRoot(SelecionalocalizacaoPage); //seleciona-localizacao
+                    env.nav.setRoot(SelecionalocalizacaoPage); //seleciona-localizacao
                  });
   }
 
@@ -147,7 +159,7 @@ export class MyApp {
             }, {
               text: 'Ver',
               handler: () => {
-                this.sharingService.findProdutoById(json.codigo)
+                self.sharingService.findProdutoById(json.codigo)
                     .then(produtos => {
                         var _produto = AppSettings.convertToProduto(produtos[0]);
                         self.nav.push(ViewProdutoPage, {produto: _produto});

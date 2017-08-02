@@ -156,5 +156,6 @@ export class SelecionalocalizacaoPage implements OnInit {
   setMunicipio(m: Municipio){
       this.municipio = m;
       this.sharingService.setMunicipio(m);
+      NativeStorage.setItem(AppSettings.KEY_LOCAL_USUARIO, m);
   }
 }

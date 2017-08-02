@@ -32,7 +32,6 @@ export class SharingService {
   private _municipio: BehaviorSubject<Municipio>;
 
   constructor(public http: Http) {
-    console.log('Hello SharingService Provider');
     this.produtos = new Array<Produto>();
     this._marcas = <BehaviorSubject<Marca[]>>new BehaviorSubject([]);
     this._tipos = <BehaviorSubject<Tipo[]>>new BehaviorSubject([]);
@@ -142,6 +141,21 @@ export class SharingService {
     
     return  this.http
                 .post(AppSettings.API_ENDPOINT + AppSettings.POST_USUARIO, 
+                    JSON.stringify(jsonUsuario), 
+                    {headers: contentHeaders}
+                ).toPromise();
+  }
+
+  updateUsuario(){
+    let jsonUsuario = {
+      cdusuario: this._cdusuario.value,
+      devicetoken: this._device_token.getValue(),
+      lat: this._lat.getValue(),
+      lng: this._lng.getValue()
+    };
+
+    return  this.http
+                .put(AppSettings.API_ENDPOINT + AppSettings.PUT_USUARIO, 
                     JSON.stringify(jsonUsuario), 
                     {headers: contentHeaders}
                 ).toPromise();
@@ -342,8 +356,8 @@ export class SharingService {
     this._filtro.next(filtro);
   }
 
-  findLojasByLocation(lat: any, lng: any) {
-    let params: string = "/"+lat+"/"+lng;
+  findLojasByLocation() {
+    let params: string = "/"+this._lat.value+"/"+this._lng.value;
     return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_LOJAS + params);            
   }
 

@@ -7,6 +7,11 @@ import { Loja } from '../../models/loja';
     template: `
     <ion-header>
         <ion-navbar color="geladas">
+            <ion-buttons start>
+                <button ion-button (click)="cancelar()">
+                    Cancelar
+                </button>
+            </ion-buttons>
             <ion-searchbar 
                 [(ngModel)]="searchTerm" 
                 [showCancelButton]=true
@@ -46,6 +51,10 @@ export class LojaPage {
     this.viewCtrl.dismiss(loja);
   }
 
+  cancelar(){
+      this.viewCtrl.dismiss();
+  }
+  
   doInfinite(infiniteScroll) {
     infiniteScroll.complete();
   }

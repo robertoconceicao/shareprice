@@ -147,13 +147,8 @@ export class CadProdutoPage implements OnInit {
   }
 
   getLojasByLocation(){
-    //pega as lojas pela localizacao do usuario
-    Geolocation.getCurrentPosition({timeout: 20000}).then((resp) => {
-      this.lat = resp.coords.latitude;
-      this.lng = resp.coords.longitude;
-
       this.isBusy = true;
-      this.sharingService.findLojasByLocation(this.lat, this.lng)
+      this.sharingService.findLojasByLocation()
           .then(lojas => {
             this.lojas = lojas;
 
@@ -164,23 +159,8 @@ export class CadProdutoPage implements OnInit {
           })
           .catch((error) => {
               this.isBusy = false;
-              console.log('Error ao tentar buscar lojas', error);             
-              let alert = this.alertCtrl.create({
-                      title: "O serviço de localização esta desligado",
-                      subTitle: "Por favor ligue sua localização e tente novamente.",
-                      buttons: [{
-                        text: 'Ok',
-                        handler: () => {
-                          this.goBack();
-                        }
-                      }]
-                  });
-              alert.present();
-          })
-    }).catch((error) => {
-      console.log('Error getting location', error);      
-      this.goBack();
-    });
+              console.log('Error ao tentar buscar lojas', error);
+          });
   }
 
   buscarIconeCerveja(){
