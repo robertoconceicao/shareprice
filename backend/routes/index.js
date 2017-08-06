@@ -991,16 +991,12 @@ router.get('/tipos', function(req, res) {
 // Esse metodo busca a loja onde o usuário esta pela sua localizacao, estou mapeando um raio em 100 metros (0.1) 
 //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-27.6210716,-48.6739947&radius=500&types=grocery_or_supermarket&key=AIzaSyDUAHiT2ptjlIRhAaVCY0J-qyNguPeCPfc
 router.get('/lojas/:lat/:lng', function(req, res, callback) {
-    console.log("Dados recebidos: lat: "+req.params.lat+", lng: "+req.params.lng);  
-    //Segundo Passo se não encontrou na base local, busca na API place
     var location = "location="+req.params.lat + "," + req.params.lng;
     var url = API_GOOGLE_PLACE;
     url += '?'+location;
     url += '&'+RADIUS;
     url += '&'+TYPES;
     url += '&'+API_KEY;
-
-    console.log("url: "+url);
 
     //busca as lojas do google e insere na base
     https.get(url, function(response) {
@@ -1012,8 +1008,7 @@ router.get('/lojas/:lat/:lng', function(req, res, callback) {
         response.on('end', function() {
             var parsed = JSON.parse(body);
             var lojas = listaLojas(parsed);
-            persisteNovasLojas(lojas);
-            return res.json(lojas);
+            persisteNovasLojas(req, res, lojas);
         });
     });
 
@@ -1041,7 +1036,7 @@ router.get('/lojas/:lat/:lng', function(req, res, callback) {
     */
 });     
 
-function persisteNovasLojas(lojas){
+function persisteNovasLojas(req, res, lojas){
     console.log("Persistindo na base local novas lojas");
         pool.getConnection(function(err, connection) {
         for(var i=0; i < lojas.length; i++){
@@ -1054,7 +1049,21 @@ function persisteNovasLojas(lojas){
                         console.log("Nova loja inserida com sucesso: "+result);
                     }
                 });
-        }        
+        }    
+        // retorna as lojas da base para o usuario, Obs.: nao retorno direto da Api do Google pq eh limitado a 20 registro.
+        connection.query(`SELECT *, (6371 * 
+                acos(
+                    cos(radians( ? )) *
+                    cos(radians(lat)) *
+                    cos(radians( ? ) - radians(lng)) +
+                    sin(radians( ? )) *
+                    sin(radians(lat))
+                )) AS distance
+                FROM loja HAVING distance <= 10.0 
+                ORDER BY distance ASC 
+                `,[req.params.lat, req.params.lng, req.params.lat],function(err,result){
+                   return res.json(result);
+        });    
         connection.release();       
     });
 }

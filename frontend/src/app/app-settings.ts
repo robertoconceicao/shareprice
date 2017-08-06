@@ -7,7 +7,11 @@ export class AppSettings {
        return 'http://geladasoficial.com/api/';//'http://localhost:3000/api/';'http://node-express-geladas.misais4yjc.us-west-2.elasticbeanstalk.com/api/';
    }
 
-   //Storage keys
+   // IDs das propagandas
+   public static ADMOB_BANNER       = 'ca-app-pub-6167102128376930/5839727008';
+   public static ADMOB_INTERSTITIAL = 'ca-app-pub-6167102128376930/9203492607';
+   
+   //Storage keys 
    public static KEY_TUTORIAL = 'tutorial';
    public static KEY_LISTA_MUNICIPIOS = 'municipios';
    public static KEY_LOCAL_USUARIO = 'localusuario';

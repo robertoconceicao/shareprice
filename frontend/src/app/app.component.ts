@@ -78,7 +78,13 @@ export class MyApp {
                  .then(function(resp) {
                     env.sharingService.setMunicipios(resp);
                  });
-
+    
+    NativeStorage.getItem(AppSettings.KEY_USUARIO)
+                .then( function (usuario) {
+                    env.sharingService.setCdusuario(usuario.cdusuario);
+                }, function (error) {
+                });
+                
     NativeStorage.getItem(AppSettings.KEY_LOCAL_USUARIO)
                  .then( function (resp) {
                     env.sharingService.setMunicipio(resp);

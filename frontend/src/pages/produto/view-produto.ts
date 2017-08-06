@@ -5,6 +5,8 @@ import { SharingService } from '../../services/sharing-service';
 import { SocialSharing } from 'ionic-native';
 import { MapaPage } from '../mapa/mapa';
 import { NumberUtil } from '../../util/number-util';
+import { AdMob }  from '@ionic-native/admob';
+import { AppSettings }  from '../../app/app-settings';
 
 @Component({
     selector: 'view-produto',
@@ -32,7 +34,8 @@ export class ViewProdutoPage {
                 public loadingCtrl: LoadingController,
                 public toastCtrl: ToastController,
                 public navCtrl: NavController,
-                public alertCtrl: AlertController){
+                public alertCtrl: AlertController,
+                public admob: AdMob){
 
         this.produto = new Produto();
         this.produto = this.navParams.get('produto');
@@ -52,7 +55,24 @@ export class ViewProdutoPage {
         this.flValidou = false;
         this.getQtdeValidarPreco();        
         this.editarProduto();
+        this.showBanner();
     }
+
+    ionViewDidLeave() {
+        this.removeAds();
+    }
+
+    showBanner(){
+        console.log("showBanner" );
+        this.admob.createBanner({
+            adId: AppSettings.ADMOB_BANNER,
+            autoShow: true
+        });
+    }
+
+    removeAds() {
+   		this.admob.removeBanner();
+   	}
 
     editarProduto(){                
         let origem =  this.lat + ","+ this.lng;
@@ -108,23 +128,59 @@ export class ViewProdutoPage {
 
     shareProduto() {
         let message = this.formataShareMessage();     
-        SocialSharing.share(message, "*Promoção de Cerveja*", this.pathImagem(), 'https://geladasoficial.com/produto/'+this.produto.codigo)
-            .then(resp => {
-                console.log("Funcionou o compartilhamento... "+ resp);
+        this.getBase64Image()
+            .then((strBase64) => {
+                console.log("#### SocialSharing strBase64: ", strBase64);
+                SocialSharing.share(message, null, strBase64, 'https://geladasoficial.com/produto/'+this.produto.codigo)
+                    .then(resp => {
+                        console.log("Funcionou o compartilhamento... "+ resp);
+                    })
+                    .catch(() => {
+                        console.log("Error ao tentar compartilhar informação");
+                    });
             })
             .catch(() => {
-                console.log("Error ao tentar compartilhar informação");
+                SocialSharing.share(message, null, null, 'https://geladasoficial.com/produto/'+this.produto.codigo)
+                    .then(resp => {
+                        console.log("Funcionou o compartilhamento... "+ resp);
+                    })
+                    .catch(() => {
+                        console.log("Error ao tentar compartilhar informação");
+                    });
             });
     }
 
     formataShareMessage(){        
-        return this.produto.marca.descricao 
+        return ' Geladas http://geladasoficial.com '
+        + ' ' + this.produto.marca.descricao 
         + ' ' + this.produto.medida.descricaoML 
         + ' R$ ' + NumberUtil.formataMoeda(this.produto.preco)
-        + ' ' + this.produto.loja.nome;
+        + ' - ' + this.produto.loja.nome;
     }
 
     pathImagem(){
-       return "http://geladasoficial.com/images/"+this.produto.marca.cdmarca+"/"+this.produto.tipo.cdtipo+"/"+this.produto.medida.cdmedida+".png";
+        return "http://geladasoficial.com/images/"+this.produto.marca.cdmarca+"/"+this.produto.tipo.cdtipo+"/"+this.produto.medida.cdmedida+".png";
+    }
+
+    getBase64Image() : Promise<any> {
+       return new Promise((resolve, reject) => {
+            var image = new Image();
+            image.onload = function(){
+                try {
+                    var canvas  = document.createElement("canvas");
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(image, 0, 0);
+                    var dataURL = canvas.toDataURL("image/png");
+                   // var strBase64 = dataURL.replace(/^data:image\/(png|jpg);base64,/,"");
+                    resolve(dataURL);
+                } catch (error) {
+                    console.log("erro ao converter imagem para base64");
+                    reject(error);
+                }
+            };
+            image.src = this.pathImagem();
+       });
     }
 }

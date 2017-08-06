@@ -67,14 +67,14 @@ app.get('/deeplink', deeplink({
 
 // ROTAS ===============================================
 // Incluindo nossas rotas definidas no arquivo routes/index.js
-var index = require('./routes/index');
+var index   = require('./routes/index');
 var manager = require('./routes/manager');
-
+var produto = require('./routes/produto');
 
 // definindo nossas rotas na aplicação
 app.use('/api', index);
 app.use('/manager', manager);
-
+app.use('/produto', produto);
 
 // LISTEN (iniciando nossa aplicação em node) ==========
 // Define a porta 8080 onde será executada nossa aplicação

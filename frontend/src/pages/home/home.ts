@@ -30,6 +30,7 @@ export class Home implements OnInit {
    public search: boolean;
    public flLogado: boolean;
    public municipio: Municipio;
+   public flJaMostrouPropaganda: boolean = false;
 
    constructor(public navCtrl: NavController,
                public sharingService: SharingService,
@@ -74,14 +75,19 @@ export class Home implements OnInit {
    }
 
    ionViewWillEnter() {
-      console.log("ionViewWillEnter HomePage");      
+      console.log("ionViewWillEnter HomePage"); 
+      this.showInterstitial();
    }
 
-   createBanner(){     
-     this.admob.createBanner({
-        adId: 'ca-app-pub-6167102128376930/5839727008',
-        autoShow: true
-     });
+   showInterstitial(){
+        console.log("showInterstitial");
+        if(!this.flJaMostrouPropaganda) {
+            this.flJaMostrouPropaganda = true;
+            this.admob.prepareInterstitial({
+                adId: AppSettings.ADMOB_INTERSTITIAL,
+                autoShow: true
+            });
+        }
    }
 
    clickSearch(){

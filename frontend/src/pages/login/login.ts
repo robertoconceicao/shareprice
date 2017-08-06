@@ -125,4 +125,8 @@ export class LoginPage {
       console.log(error);
     })
   }
+
+  close(){
+    this.navCtrl.pop();
+  }
 }

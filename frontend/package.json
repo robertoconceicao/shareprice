@@ -36,7 +36,7 @@
         "cordova-plugin-facebook4": "^1.9.0",
         "cordova-plugin-file": "~4.3.2",
         "cordova-plugin-geolocation": "^2.4.3",
-        "cordova-plugin-googleplus": "~5.1.1",
+        "cordova-plugin-googleplus": "^5.1.1",
         "cordova-plugin-inappbrowser": "~1.7.0",
         "cordova-plugin-nativestorage": "~2.2.2",
         "cordova-plugin-network-information": "~1.3.2",
@@ -89,9 +89,6 @@
             "cordova-plugin-console": {},
             "cordova-plugin-device": {},
             "cordova-plugin-file": {},
-            "cordova-plugin-googleplus": {
-                "REVERSED_CLIENT_ID": "449887022881-0f3qgjul4igf4dgajgfon3uos89bpv3h.apps.googleusercontent.com"
-            },
             "cordova-plugin-inappbrowser": {},
             "cordova-plugin-nativestorage": {},
             "cordova-plugin-network-information": {},
@@ -116,6 +113,9 @@
                 "URL_SCHEME": "geladas",
                 "DEEPLINK_SCHEME": "https",
                 "DEEPLINK_HOST": "geladasoficial.com"
+            },
+            "cordova-plugin-googleplus": {
+                "REVERSED_CLIENT_ID": "com.googleusercontent.apps.449887022881-nvp0lef4fp7ho1rtm8j2kbhuk76ja9uj"
             }
         },
         "platforms": [
