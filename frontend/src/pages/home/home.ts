@@ -6,6 +6,7 @@ import { Produto, Filtro, Municipio} from '../../models';
 import { SharingService } from '../../services/sharing-service';
 import { AppSettings }  from '../../app/app-settings';
 import { AdMob }  from '@ionic-native/admob';
+import { Geolocation } from 'ionic-native';
 
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/map';
@@ -69,14 +70,25 @@ export class Home implements OnInit {
 
        if(this.flLogado){
             this.sharingService.updateUsuario();
-        }
+       }
+        
        this.carregandoPage();
-       //this.createBanner();
+       this.buscarLojasDeOndeOusuarioEsta();
+       this.showInterstitial();
+   }
+
+   buscarLojasDeOndeOusuarioEsta(){
+        Geolocation.getCurrentPosition({timeout: 5000})
+                    .then((resp) => {
+                        this.sharingService.findLojasByLocationGPS(resp.coords.latitude, resp.coords.longitude);
+                    }).catch((error) => {
+                        
+                    });
+
    }
 
    ionViewWillEnter() {
       console.log("ionViewWillEnter HomePage"); 
-      this.showInterstitial();
    }
 
    showInterstitial(){
@@ -107,12 +119,14 @@ export class Home implements OnInit {
    changeLocal(){
         let localModal = this.modalCtrl.create(LocalusuarioPage);
         localModal.onDidDismiss(municipio => {
-            this.sharingService.setMunicipio(municipio);
-            this.sharingService.atualizaLocalusuario(municipio.cdIbge);
-            if(this.flLogado){
-                this.sharingService.updateUsuario();
+            if(!!municipio) {
+                this.sharingService.setMunicipio(municipio);
+                this.sharingService.atualizaLocalusuario(municipio.cdIbge);
+                if(this.flLogado){
+                    this.sharingService.updateUsuario();
+                }
+                this.carregandoPage();
             }
-            this.carregandoPage();
         });
         localModal.present();
    }

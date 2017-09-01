@@ -14,6 +14,16 @@ interface marker {
 	cdloja?: string;
 }
 
+interface Municipio {
+	cdIbge: number;
+	municipio: string;
+	cduf: number;
+	uf: string;
+	estado: string;
+	lat: number;
+	lng: number;
+}
+
 interface Produto {
 	codigo: number;
 	cdloja: string;
@@ -55,6 +65,7 @@ export class AppComponent {
 
 	usuarios: marker[];
 	lojas: marker[];
+	municipios: Municipio[];
 	produtos: DadoProduto[];
 
 	iconLoja: string = "/assets/icon/supermarket.png";
@@ -63,6 +74,7 @@ export class AppComponent {
 	flUsuario: boolean = false;
 	flLocal: boolean = false;
 	flProduto: boolean = false;
+	flMunicipios: boolean = false;
 
 	produto: Produto;
 	marcas: any[];
@@ -80,6 +92,7 @@ export class AppComponent {
 		this.buscaQtdeUsuario(this.lat, this.lng);
 		this.buscaLojas(this.lat, this.lng);
 		this.buscaProdutos(this.lat, this.lng);
+		this.buscaMunicipios();
 
 		this.msg = "";
 		this.error = "";
@@ -109,6 +122,15 @@ export class AppComponent {
 			icon: '',
 			cdusuario: '395753717458940'//'115862700861296845675'
 		};
+	}
+
+	buscaMunicipios(){
+		if(this.flMunicipios) {
+			this.gService.municipios
+			.map( lista => {
+                    return lista;
+            }).subscribe(x => this.municipios = x );
+		}
 	}
 
 	buscaDadosUsuario(lat: any, lng: any) {		

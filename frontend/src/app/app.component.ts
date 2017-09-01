@@ -81,7 +81,11 @@ export class MyApp {
     
     NativeStorage.getItem(AppSettings.KEY_USUARIO)
                 .then( function (usuario) {
-                    env.sharingService.setCdusuario(usuario.cdusuario);
+                    if(usuario.cdusuario == 'G115862700861296845675'){
+                       NativeStorage.remove(AppSettings.KEY_USUARIO);
+                    } else {
+                      env.sharingService.setCdusuario(usuario.cdusuario);
+                    }
                 }, function (error) {
                 });
                 

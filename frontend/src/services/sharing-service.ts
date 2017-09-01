@@ -361,6 +361,11 @@ export class SharingService {
     return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_LOJAS + params);            
   }
 
+  findLojasByLocationGPS(lat: number, lng: number) {
+    let params: string = "/"+lat+"/"+lng;
+    return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_LOJAS + params);            
+  }
+
   findIconeCerveja(cdmarca: any, cdtipo: any, cdmedida: any) {
     let params: string = "/"+cdmarca+"/"+cdtipo+"/"+cdmedida;
     return this.getHttp(AppSettings.API_ENDPOINT + AppSettings.GET_ICONE + params);            

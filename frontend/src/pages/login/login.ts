@@ -86,7 +86,7 @@ export class LoginPage {
 
     GooglePlus.login({
       'scopes': '', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
-      'webClientId': '449887022881-nvp0lef4fp7ho1rtm8j2kbhuk76ja9uj.apps.googleusercontent.com',
+      //'webClientId': '449887022881-nvp0lef4fp7ho1rtm8j2kbhuk76ja9uj.apps.googleusercontent.com',
       'offline': true
     })
     .then(function (user) {

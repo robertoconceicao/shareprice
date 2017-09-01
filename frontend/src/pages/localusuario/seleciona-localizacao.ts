@@ -10,7 +10,6 @@ import { AppSettings }  from '../../app/app-settings';
 
 const SUCCESS             = 0;
 const ERRO_NOT_AUTHORIZED = 1;
-const MODO_DEBUGGER       = true;
 
 @Component({
    selector: 'seleciona-localizacao',
@@ -82,17 +81,6 @@ export class SelecionalocalizacaoPage implements OnInit {
     }
     
     buscaInformacaoLocalizacao() {
-        if(MODO_DEBUGGER){
-            console.log("Modo Debugger");
-            //insere um novo usuario no sistema
-            this.usuario = new Usuario();
-            this.usuario.cdusuario = "G115862700861296845675";
-            this.usuario.avatar = "https://lh5.googleusercontent.com/-NkphZfbAqNI/AAAAAAAAAAI/AAAAAAAAC2Y/2RbWqlwadFI/s96-c/photo.jpg";
-            this.usuario.nome = "Roberto da conceicao";
-            this.usuario.email = "conceicao.roberto@gmail.com";
-            NativeStorage.setItem('user', this.usuario);
-            this.sharingService.setCdusuario(this.usuario.cdusuario);
-        }
         let env = this;
         this.verificaGPSAtivo()
             .then((resp) => {

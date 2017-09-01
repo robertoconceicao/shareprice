@@ -38,6 +38,7 @@ const GET_MARCAS = 'marcas';
 const GET_TIPOS = 'tipos';
 const GET_MEDIDAS = 'medidas';
 const POST_PRODUTO = 'produto';
+const GET_MUNICIPIOS = "municipios";
 
 @Injectable()
 export class GeladasService {
@@ -45,11 +46,13 @@ export class GeladasService {
   private _marcas: BehaviorSubject<any>;
   private _tipos: BehaviorSubject<any>;
   private _medidas: BehaviorSubject<any>;
+  private _municipios: BehaviorSubject<any[]>;
 
   constructor(public http: Http) { 
     this._marcas = <BehaviorSubject<any>>new BehaviorSubject([]);
     this._tipos = <BehaviorSubject<any>>new BehaviorSubject([]);
     this._medidas = <BehaviorSubject<any>>new BehaviorSubject([]);
+    this._municipios = <BehaviorSubject<any>>new BehaviorSubject([]);
     
     this.getHttp(API_ENDPOINT + GET_MARCAS)
       .then(marcas => {
@@ -87,6 +90,14 @@ export class GeladasService {
       .catch(error => { 
           console.log("Erro ao buscar as Medidas");
       });
+
+      this.getHttp(API_ENDPOINT + GET_MUNICIPIOS)      
+        .then(lista => {
+          this._municipios.next(lista);    
+        })
+        .catch(error => {
+          console.log("Erro ao tentar carregar municipios");
+        });
   }
 
   postar(produto: Produto) :Promise<any> {
@@ -145,6 +156,10 @@ export class GeladasService {
 
   get medidas() {
     return this._medidas.asObservable();
+  }
+
+  get municipios() {
+    return this._municipios.asObservable();
   }
 
   private getHttpParamns(url: string, params: URLSearchParams){

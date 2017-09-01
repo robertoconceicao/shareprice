@@ -22,8 +22,12 @@
               <label for="ckproduto">Mostrar Produtos ({{produtos.length}}): </label>
               <input type="checkbox" name="ckproduto" [(ngModel)]="flProduto" /> <br />
 
+              <label for="ckmunicipio">Municípios: </label>
+              <input type="checkbox" name="ckmunicipio" [(ngModel)]="flMunicipios" /> <br />
+
               <label for="filtro">Nome do Estabelecimento: </label>
               <input [(ngModel)]="filtro" type="text" name="filtro" class="form-control"> 
+              
               <button type="button" class="btn btn-secondary"  (click)="btBuscaLojas()">
                 Buscar
               </button>
@@ -78,6 +82,17 @@
                 </strong>
               </sebm-google-map-info-window>              
             </sebm-google-map-marker>      
+
+            <sebm-google-map-marker 
+                *ngFor="let m of municipios"
+                [latitude]="m.lat"
+                [longitude]="m.lng">
+              <sebm-google-map-info-window>
+                <strong>
+                  Municipio: {{ m.municipio }} <br />
+                </strong>
+              </sebm-google-map-info-window>              
+            </sebm-google-map-marker>   
 
             <sebm-google-map-circle [latitude]="lat" [longitude]="lng" 
                 [radius]="radius"
