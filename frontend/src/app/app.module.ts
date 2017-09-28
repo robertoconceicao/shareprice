@@ -6,6 +6,8 @@ import { Home, CadProdutoPage, FiltrosPage, ConfigPage,
         MarcaPage, IndiqueMarcaPage, LocalusuarioPage,
         SelecionalocalizacaoPage } from '../pages';
 
+import { IonicImageLoader } from 'ionic-image-loader';
+
 import { SharingService }         from '../services/sharing-service';
 import { MoedaRealPipe }          from '../pipes/moeda-real';
 
@@ -38,7 +40,8 @@ import { AdMob }  from '@ionic-native/admob';
     IonicModule.forRoot(MyApp,{
         backButtonText: '',
         statusbarPadding: true
-    })
+    }),
+     IonicImageLoader.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [

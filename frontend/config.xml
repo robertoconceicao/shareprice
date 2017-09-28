@@ -101,6 +101,7 @@
         <variable name="APP_NAME" value="Geladas" />
     </plugin>
     <plugin name="cordova-plugin-file" spec="~4.3.2" />
+    <plugin name="cordova-plugin-file-transfer" spec="^1.6.3" />
     <plugin name="cordova-plugin-geolocation" spec="^2.4.3">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="O App precisa ter acesso a sua localização, apenas no início para buscar as cervejas próximas de você" />
     </plugin>

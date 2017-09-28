@@ -5,6 +5,7 @@ import { Home, ViewProdutoPage, TutorialPage, LoginPage, MarcaPage, CadProdutoPa
 import { SharingService } from '../services/sharing-service';
 import { AppSettings }  from './app-settings';
 import { Usuario } from '../models/usuario';
+import { ImageLoaderConfig } from 'ionic-image-loader';
 
 @Component({
   templateUrl: 'app.html'
@@ -28,6 +29,7 @@ export class MyApp {
   constructor(public platform: Platform, 
               public sharingService: SharingService,
               public alertCtrl: AlertController,
+              public imageLoaderConfig: ImageLoaderConfig,
               public toastCtrl: ToastController) {    
     this.initializeApp();    
 
@@ -70,8 +72,30 @@ export class MyApp {
       this.initPushNotification();      
       this.initDeeplink();
     });
+
+    this.initImageLoaderConfig();
   }
   
+  initImageLoaderConfig() {
+    // enable debug mode to get console logs and stuff
+    // this.imageLoaderConfig.enableDebugMode();
+    // set a fallback url to use by default in case an image is not found
+    this.imageLoaderConfig.setFallbackUrl('assets/fallback.png');
+
+    //this.imageLoaderConfig.setImageReturnType('base64');
+
+    this.imageLoaderConfig.setSpinnerColor('primary');
+    this.imageLoaderConfig.setSpinnerName('bubbles');
+
+    this.imageLoaderConfig.setWidth('64px');
+    this.imageLoaderConfig.setHeight('64px');
+
+    this.imageLoaderConfig.setConcurrency(5); 
+
+    this.imageLoaderConfig.setMaximumCacheSize(20 * 1024 * 1024); // set max size to 20MB
+    this.imageLoaderConfig.setMaximumCacheAge(7 * 24 * 60 * 60 * 1000); // 7 days
+  }
+
   verificaSeTemMunicipioConfig(){
     let env = this;
     NativeStorage.getItem(AppSettings.KEY_LISTA_MUNICIPIOS)

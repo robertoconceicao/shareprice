@@ -8,9 +8,8 @@ import { NumberUtil } from '../util/number-util';
     selector: 'produto-item',
     template: `
         <button ion-item (click)="itemSelected()">
-            <ion-thumbnail item-left>
-                <img [src]="pathImagem()">
-            </ion-thumbnail>
+            <img-loader item-left [src]="pathImagem()">
+            </img-loader>
             <h3>{{ produto.marca.descricao + ' ' + produto.medida.descricaoML }}</h3>
             <p>{{ produto.loja.nome }}</p>
             <span class="dtpublicacaoClass">publicado em: {{ produto.dtpublicacao | date: 'dd/MM/yyyy' }}</span>
@@ -23,12 +22,12 @@ import { NumberUtil } from '../util/number-util';
         .dtpublicacaoClass {
             font-size: 0.7em;
             color: #666666 !important;             
-        }      
+        }     
     `]
 })
 export class ProdutoItem {
    @Input() produto: Produto;
-
+   
    constructor(public navCtrl: NavController) { }
     
    itemSelected(){
